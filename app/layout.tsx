@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-import { Roboto } from "next/font/google";
 
-import Header from "@/components/home/Header";
+import { Roboto } from "next/font/google";
+import HomeHeader from "@/components/home/HomeHeader";
+
 const roboto = Roboto({
 	weight: ["300", "400", "500", "700"],
 	subsets: ["latin"],
@@ -25,10 +25,8 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={roboto.variable}>
-				<AppRouterCacheProvider>
-					<Header />
-					{children}
-				</AppRouterCacheProvider>
+				<HomeHeader />
+				<main className="max-w-[1280px] mx-auto">{children}</main>
 			</body>
 		</html>
 	);
