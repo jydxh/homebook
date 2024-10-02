@@ -60,6 +60,11 @@ model User{
   vendorProfile VendorProfile?
 }
 
+enum ApplicationStatus {
+  PENDING
+  DENY
+  ARRPOVED
+}
 
 //  this table will also be used to save the vendor application form, and admin will see these info on the page, and decide to approve
 model VendorProfile{
@@ -68,14 +73,14 @@ model VendorProfile{
   user            User       @relation(fields: [userId], references: [clerkId], onDelete: Cascade) 
   businessName    String
   businessAddress String
-  applicationStatus  Boolean
-  adminComment String?
+  applicationStatus  ApplicationStatus 
+  adminComment  String?
 }
 
 
 model Role{
    id          String     @id @default(uuid()) 
-   name         String     @unique
+   name        String     @unique
    user        User[]       // one - many
   }
 
@@ -86,9 +91,9 @@ properties Property[]
 }
 
 model Amenities{
-  id        String        @id @default(uuid())
+  id          String        @id @default(uuid())
   name        String
-  properties Property[]       @relation("PropertyAmenities")   // many to many
+  properties  Property[]       @relation("PropertyAmenities")   // many to many
 }   
 
 
@@ -105,8 +110,8 @@ model Favorite{
 
 model Order {
     id         String      @id @default(uuid())
-    user      User    @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
-    userId    String
+    user       User    @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+    userId     String
     property      Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
     propertyId    String
     orderTotal    Int 
