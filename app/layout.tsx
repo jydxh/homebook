@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
 
-const inter = Inter({ subsets: ["greek"], weight: "300" });
+import "./globals.css";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { Roboto } from "next/font/google";
+
+import Header from "@/components/home/Header";
+const roboto = Roboto({
+	weight: ["300", "400", "500", "700"],
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-roboto",
+});
+
 export const metadata: Metadata = {
-	title: "Away Home Tour",
-	description: "booking an amazing property for travel",
+	title: "Airbnb",
+	description: "vacation rentals",
 };
 
 export default function RootLayout({
@@ -15,7 +24,12 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>{children}</body>
+			<body className={roboto.variable}>
+				<AppRouterCacheProvider>
+					<Header />
+					{children}
+				</AppRouterCacheProvider>
+			</body>
 		</html>
 	);
 }
