@@ -1,10 +1,24 @@
+import { currentUser } from "@clerk/nextjs/server";
+import Image from "next/image";
 import Link from "next/link";
 import { LuUser2 } from "react-icons/lu";
 
-function UserAvatar() {
+async function UserAvatar() {
+	const user = await currentUser();
+
 	return (
 		<Link href="/profile">
-			<LuUser2 className="w-8 h-8 bg-primary rounded-full text-white" />
+			{!user ? (
+				<LuUser2 className="w-8 h-8 bg-primary rounded-full text-white" />
+			) : (
+				<Image
+					src={user.imageUrl}
+					alt="avatar"
+					width={40}
+					height={40}
+					className="w-[45px] h-[45px] rounded-full"
+				/>
+			)}
 		</Link>
 	);
 }
