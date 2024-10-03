@@ -6,8 +6,8 @@ export const customerNavList = [
 ];
 
 export const vendorNavList = [
-	{ title: "create rental", href: "/rental/create" },
-	{ title: "my rentals", href: "/rental" },
+	{ title: "create rental", href: "/rentals/create" },
+	{ title: "my rentals", href: "/rentals" },
 	{ title: "reservations", href: "/reservations" },
 ];
 
