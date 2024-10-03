@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { Roboto } from "next/font/google";
 import HomeHeader from "@/components/home/HomeHeader";
-
+import { ThemeProvider } from "./providers/ThemeProvider";
 const roboto = Roboto({
 	weight: ["300", "400", "500", "700"],
 	subsets: ["latin"],
@@ -25,8 +25,14 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={roboto.variable}>
-				<HomeHeader />
-				<main className="max-w-[1280px] mx-auto">{children}</main>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange>
+					<HomeHeader />
+					<main className="max-w-[1280px] mx-auto">{children}</main>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
