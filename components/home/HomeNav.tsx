@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 function HomeNav() {
 	const pathname = usePathname();
 	return (
-		<nav className="flex justify-center gap-x-4">
+		<nav className="md:flex justify-center gap-x-4 hidden">
 			{customerNavList.map(list => {
 				const { href, title } = list;
 				const active = pathname === href;
