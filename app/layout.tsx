@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 
 import "./globals.css";
 
@@ -25,14 +26,16 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={roboto.variable}>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange>
-					<HomeHeader />
-					<main className="max-w-[1280px] mx-auto">{children}</main>
-				</ThemeProvider>
+				<ClerkProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange>
+						<HomeHeader />
+						<main className="max-w-[1280px] mx-auto">{children}</main>
+					</ThemeProvider>
+				</ClerkProvider>
 			</body>
 		</html>
 	);
