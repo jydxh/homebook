@@ -1,9 +1,11 @@
 import { Separator } from "../ui/separator";
-import HomeAvatar from "./HomeAvatar";
+
 import HomeLogo from "./HomeLogo";
 import HomeNav from "./HomeNav";
 import ToggleTheme from "./ToggleTheme";
 import HomeNavVertical from "./HomeNavVertical";
+
+import HomeAvatar from "./HomeAvatar";
 
 function HomeHeader() {
 	return (

@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { CgSpinner } from "react-icons/cg";
 import { useFormStatus } from "react-dom";
 
-export const SubmitButton = ({ text = "submit" }: { text?: string }) => {
+export const SubmitButton = ({ text = "Submit" }: { text?: string }) => {
 	const { pending } = useFormStatus();
 	return (
-		<Button disabled={pending} className="mt-2">
+		<Button className="mb-2 " disabled={pending}>
 			{pending ? (
 				<>
 					<CgSpinner className="animate-spin" />

@@ -11,7 +11,7 @@ function FormInput({
 	name: string;
 }) {
 	return (
-		<div>
+		<div className="mb-2">
 			<Label className="mb-2">{label}</Label>
 			<Input type={type} name={name} />
 		</div>

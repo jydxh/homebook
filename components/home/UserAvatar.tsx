@@ -1,13 +1,13 @@
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
-import Link from "next/link";
+
 import { LuUser2 } from "react-icons/lu";
 
 async function UserAvatar() {
 	const user = await currentUser();
 
 	return (
-		<Link href="/profile">
+		<>
 			{!user ? (
 				<LuUser2 className="w-8 h-8 bg-primary rounded-full text-white" />
 			) : (
@@ -19,7 +19,7 @@ async function UserAvatar() {
 					className="w-[45px] h-[45px] rounded-full"
 				/>
 			)}
-		</Link>
+		</>
 	);
 }
 export default UserAvatar;

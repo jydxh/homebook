@@ -41,20 +41,25 @@ model Property {
   reviews Review[]
 }
 
+enum Role {
+  USER
+  HOSTER
+  ADMIN
+}
+
 model User{
-  id          String     @id @default(uuid())
+  id          Int     @id @default(autoincrement())
   clerkId     String     @unique
   property    Property[]    // one - to -many
   favorite    Favorite[]   // one to many
-  firstName   String
-  LastName    String
+  firstName   String?
+  LastName    String?
   userName    String
   email       String
   profileImage  String?
   createAt    DateTime @default(now())
   updateAt    DateTime @updatedAt
-  role        Role @relation(fields: [roleId], references: [id], onDelete: Cascade) // one to one , since one user can only have one role
-  roleId      String
+  role       Role     @default(USER)
   orders       Order[]
   reviews     Review[]
   vendorProfile VendorProfile?
@@ -78,11 +83,7 @@ model VendorProfile{
 }
 
 
-model Role{
-   id          String     @id @default(uuid()) 
-   name        String     @unique
-   user        User[]       // one - many
-  }
+
 
 model Category{
 id            String      @id @default(uuid())
