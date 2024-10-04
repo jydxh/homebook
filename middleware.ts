@@ -3,7 +3,9 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 const publicRoute = createRouteMatcher(["/", "/properties(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
-	if (!publicRoute(req)) auth().protect();
+	if (!publicRoute(req)) {
+		auth().protect();
+	}
 });
 
 export const config = {

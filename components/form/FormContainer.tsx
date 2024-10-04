@@ -29,7 +29,7 @@ function FormContainer({
 	}, [state, toast]);
 
 	return (
-		<form method="POST" action={formAction} className={className}>
+		<form action={formAction} className={className}>
 			{children}
 		</form>
 	);

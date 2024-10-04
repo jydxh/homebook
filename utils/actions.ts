@@ -20,26 +20,36 @@ export const updateAvatar = async (prevState: unknown, formData: FormData) => {
 			/* zod image validation logic */
 
 			/* upload cloudinary */
-			const imageUrl = await cloudinaryUpload(image);
-			console.log(imageUrl);
+			// const imageUrl = await cloudinaryUpload(image);
+			console.log(image);
+			console.log(user);
 
 			/* push image url into db user table */
-			const result = await db.user.update({
-				where: {
-					clerkId: user.id,
-				},
-				data: {
-					profileImage: imageUrl,
-				},
-			});
+			// const result = await db.user.update({
+			// 	where: {
+			// 		clerkId: user.id,
+			// 	},
+			// 	data: {
+			// 		profileImage: imageUrl,
+			// 	},
+			// });
 			revalidatePath("/profile");
-			console.log(result);
+			//console.log(result);
 			return { message: "upload success" };
 		} else {
 			throw new Error("image is required!");
 		}
 	} catch (error) {
 		console.log(error);
-		return { message: (error as Error).message };
+		return { message: "failed upload" };
 	}
+};
+
+export const createUserProfile = async (
+	prevState: unknown,
+	formData: FormData
+) => {
+	console.log(prevState);
+	console.log(Object.fromEntries(formData));
+	return { message: "create user profile" };
 };

@@ -52,8 +52,8 @@ model User{
   clerkId     String     @unique
   property    Property[]    // one - to -many
   favorite    Favorite[]   // one to many
-  firstName   String?
-  LastName    String?
+  firstName   String
+  LastName    String
   userName    String
   email       String
   profileImage  String?
