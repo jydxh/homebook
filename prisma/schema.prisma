@@ -43,7 +43,7 @@ model Property {
 
 enum Role {
   USER
-  HOSTER
+  VENDOR
   ADMIN
 }
 
@@ -62,24 +62,30 @@ model User{
   role       Role     @default(USER)
   orders       Order[]
   reviews     Review[]
-  vendorProfile VendorProfile?
+  vendorProfile VendorProfile[]
 }
 
 enum ApplicationStatus {
   PENDING
   DENY
-  ARRPOVED
+  APPROVED
+  CANCELLED
 }
 
 //  this table will also be used to save the vendor application form, and admin will see these info on the page, and decide to approve
 model VendorProfile{
   id              String     @id @default(uuid())
-  userId          String     @unique
   user            User       @relation(fields: [userId], references: [clerkId], onDelete: Cascade) 
+  userId          String  
   businessName    String
   businessAddress String
-  applicationStatus  ApplicationStatus 
+  governmentId    String
+  proofOfAddress  String
+  acceptTerm      Boolean    @default(true)
+  applicationStatus  ApplicationStatus  @default(PENDING)
   adminComment  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 

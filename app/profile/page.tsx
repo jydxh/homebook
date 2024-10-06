@@ -6,10 +6,14 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import UploadAvatar from "@/components/profile/UploadAvatar";
 import { fetchUserProfile } from "@/utils/actions/ProfileActions";
+import { Separator } from "@/components/ui/separator";
+import UserInfo from "@/components/profile/UserInfo";
+import ApplyVendor from "@/components/profile/ApplyVendor";
 
 async function ProfilePage() {
 	const user = await currentUser();
 	const userProfile = await fetchUserProfile();
+	console.log(userProfile);
 	if (!user) redirect("/");
 	if (!userProfile) redirect("/profile/create");
 	return (
@@ -25,7 +29,21 @@ async function ProfilePage() {
 					height={98}
 					className="mx-auto rounded-full my-4 object-cover w-[6rem] h-[6rem]"
 				/>
+				<p className="mx-auto text-center mb-4 font-medium capitalize">
+					{userProfile.userName} &middot; {userProfile.role.toLowerCase()}
+				</p>
 				<UploadAvatar />
+				<Separator className="my-4" />
+				<UserInfo />
+				{/* later add update vendor info UI here */}
+				<Separator className="my-4" />
+				{/* apply to be a vendor, when role is user and did not apply as vendor  */}
+				{(userProfile.role === "USER" &&
+					userProfile.vendorProfile.length === 0) ||
+				userProfile.vendorProfile[0].applicationStatus === "DENY" ||
+				userProfile.vendorProfile[0].applicationStatus === "CANCELLED" ? (
+					<ApplyVendor />
+				) : null}
 				<Button asChild>
 					<SignOutButton />
 				</Button>

@@ -8,6 +8,7 @@ function FormInput({
 	required = true,
 	defaultValue,
 	accept,
+	placeholder,
 }: {
 	label: string;
 	type: string;
@@ -15,6 +16,7 @@ function FormInput({
 	required?: boolean;
 	defaultValue?: string;
 	accept?: string;
+	placeholder?: string;
 }) {
 	return (
 		<div className="mb-2">
@@ -22,6 +24,7 @@ function FormInput({
 				{label}
 			</Label>
 			<Input
+				placeholder={placeholder}
 				accept={accept}
 				type={type}
 				id={name}

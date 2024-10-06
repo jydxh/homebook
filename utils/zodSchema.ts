@@ -44,3 +44,40 @@ export const ImageSchema = z.object({
 			{ message: "file must be an image" }
 		),
 });
+
+function acceptImgAndPdf() {
+	return z
+		.instanceof(File)
+		.refine(
+			file => {
+				return !file || file.size < 2 * 1024 * 1024;
+			},
+			{ message: "File must be less than 2 MB" }
+		)
+		.refine(
+			file => {
+				const fileTypes = [
+					"image/jpeg",
+					"image/png",
+					"image/gif",
+					"image/webp",
+					"application/pdf",
+				];
+				return !file || fileTypes.includes(file.type);
+			},
+			{ message: "file must be an image or in pdf formate" }
+		);
+}
+
+export const ApplyVendorSchema = z.object({
+	businessName: z
+		.string()
+		.min(2, { message: "business name should not less than 2 characters" })
+		.max(50, { message: "business name should not over 50 characters" }),
+	businessAddress: z
+		.string()
+		.min(2, { message: "business address should not less than 2 characters" })
+		.max(50, { message: "business address should not over 50 characters" }),
+	governmentId: acceptImgAndPdf(),
+	proofOfAddress: acceptImgAndPdf(),
+});

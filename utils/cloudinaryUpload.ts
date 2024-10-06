@@ -13,7 +13,10 @@ export default async function cloudinaryUpload(file: File): Promise<string> {
 
 		const uploadResult = await cloudinary.uploader.upload(
 			`data:${file.type};base64,${based64String}`,
-			{ use_filename: false, folder: "Airbnb" }
+			{
+				use_filename: false,
+				folder: "Airbnb",
+			}
 		);
 		return uploadResult.secure_url;
 	} catch (error) {
