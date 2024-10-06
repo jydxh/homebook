@@ -211,3 +211,43 @@ export const vendorApplication = async (
 		return renderError(error);
 	}
 };
+
+export const fetchVendorProfileId = async () => {
+	try {
+		const user = await getAuthUser();
+		return db.vendorProfile.findFirst({
+			where: {
+				userId: user.id,
+				applicationStatus: "PENDING",
+			},
+			select: {
+				id: true,
+			},
+		});
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export const cancelApplicationAction = async (
+	id: string
+): Promise<{ message: string }> => {
+	try {
+		const user = await getAuthUser();
+
+		await db.vendorProfile.update({
+			where: {
+				id,
+				userId: user.id,
+			},
+			data: {
+				applicationStatus: "CANCELLED",
+			},
+		});
+		revalidatePath("/profile");
+		return { message: "cancel application" };
+	} catch (error) {
+		console.log(error);
+		return renderError(error);
+	}
+};

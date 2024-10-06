@@ -9,13 +9,23 @@ import { fetchUserProfile } from "@/utils/actions/ProfileActions";
 import { Separator } from "@/components/ui/separator";
 import UserInfo from "@/components/profile/UserInfo";
 import ApplyVendor from "@/components/profile/ApplyVendor";
+import CancelApplication from "@/components/profile/CancelApplication";
 
 async function ProfilePage() {
 	const user = await currentUser();
 	const userProfile = await fetchUserProfile();
 	console.log(userProfile);
+
 	if (!user) redirect("/");
 	if (!userProfile) redirect("/profile/create");
+
+	const showApplyVendor =
+		(userProfile.role === "USER" && userProfile.vendorProfile.length === 0) ||
+		userProfile.vendorProfile[0].applicationStatus === "DENY" ||
+		userProfile.vendorProfile[0].applicationStatus === "CANCELLED";
+	const shouldShowCancelApplication =
+		userProfile.role === "USER" &&
+		userProfile.vendorProfile[0].applicationStatus === "PENDING";
 	return (
 		<section className="p-8">
 			<h2 className="font-medium mx-auto w-full text-center text-2xl mb-4">
@@ -38,15 +48,21 @@ async function ProfilePage() {
 				{/* later add update vendor info UI here */}
 				<Separator className="my-4" />
 				{/* apply to be a vendor, when role is user and did not apply as vendor  */}
-				{(userProfile.role === "USER" &&
-					userProfile.vendorProfile.length === 0) ||
-				userProfile.vendorProfile[0].applicationStatus === "DENY" ||
-				userProfile.vendorProfile[0].applicationStatus === "CANCELLED" ? (
-					<ApplyVendor />
-				) : null}
-				<Button asChild>
-					<SignOutButton />
-				</Button>
+
+				<div>
+					<div className={showApplyVendor ? "visible" : "hidden"}>
+						<ApplyVendor />
+					</div>
+				</div>
+
+				<div className="flex  gap-x-8">
+					<Button asChild>
+						<SignOutButton />
+					</Button>
+					<div className={shouldShowCancelApplication ? "visible" : "hidden"}>
+						<CancelApplication />
+					</div>
+				</div>
 			</Card>
 		</section>
 	);
