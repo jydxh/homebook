@@ -5,7 +5,7 @@ import { Card } from "../ui/card";
 import FormInput from "../form/FormInput";
 import FormContainer from "../form/FormContainer";
 import { SubmitButton } from "../form/Buttons";
-import { updateAvatar } from "@/utils/actions";
+import { updateAvatar } from "@/utils/actions/ProfileActions";
 
 function UploadAvatar() {
 	const [showForm, setShowForm] = useState(false);
@@ -23,6 +23,7 @@ function UploadAvatar() {
 					<FormContainer action={updateAvatar}>
 						<FormInput
 							type="file"
+							accept="image/png, image/jpeg"
 							label="Select image to update"
 							name="image"
 						/>

@@ -53,7 +53,7 @@ model User{
   property    Property[]    // one - to -many
   favorite    Favorite[]   // one to many
   firstName   String
-  LastName    String
+  lastName    String
   userName    String
   email       String
   profileImage  String?

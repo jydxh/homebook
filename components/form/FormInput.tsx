@@ -7,12 +7,14 @@ function FormInput({
 	name,
 	required = true,
 	defaultValue,
+	accept,
 }: {
 	label: string;
 	type: string;
 	name: string;
 	required?: boolean;
 	defaultValue?: string;
+	accept?: string;
 }) {
 	return (
 		<div className="mb-2">
@@ -20,6 +22,7 @@ function FormInput({
 				{label}
 			</Label>
 			<Input
+				accept={accept}
 				type={type}
 				id={name}
 				name={name}
