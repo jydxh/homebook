@@ -27,17 +27,17 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={roboto.variable}>
-				<ClerkProvider>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange>
+					<ClerkProvider>
 						<HomeHeader />
 						<main className="max-w-[1280px] mx-auto">{children}</main>
 						<Toaster />
-					</ThemeProvider>
-				</ClerkProvider>
+					</ClerkProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);

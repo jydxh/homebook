@@ -7,9 +7,7 @@ import {
 import UserAvatar from "./UserAvatar";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
-import { SignOutButton, SignInButton, UserProfile } from "@clerk/nextjs";
-import ClerkUserButton from "./ClerkUserButton";
-
+import { SignOutButton, SignInButton } from "@clerk/nextjs";
 async function HomeAvatar() {
 	const user = await currentUser();
 
