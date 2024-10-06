@@ -21,8 +21,10 @@ async function ProfilePage() {
 
 	const showApplyVendor =
 		(userProfile.role === "USER" && userProfile.vendorProfile.length === 0) ||
-		userProfile.vendorProfile[0].applicationStatus === "DENY" ||
-		userProfile.vendorProfile[0].applicationStatus === "CANCELLED";
+		(userProfile.role === "USER" &&
+			userProfile.vendorProfile[0].applicationStatus === "DENY") ||
+		(userProfile.role === "USER" &&
+			userProfile.vendorProfile[0].applicationStatus === "CANCELLED");
 	const shouldShowCancelApplication =
 		userProfile.role === "USER" &&
 		userProfile.vendorProfile[0].applicationStatus === "PENDING";
