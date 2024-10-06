@@ -7,10 +7,12 @@ import {
 import UserAvatar from "./UserAvatar";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
-import { SignOutButton, SignInButton } from "@clerk/nextjs";
+import { SignOutButton, SignInButton, UserProfile } from "@clerk/nextjs";
+import ClerkUserButton from "./ClerkUserButton";
 
 async function HomeAvatar() {
 	const user = await currentUser();
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
@@ -22,6 +24,11 @@ async function HomeAvatar() {
 						<DropdownMenuItem>
 							<Link href="/profile" className="w-full">
 								Profile
+							</Link>
+						</DropdownMenuItem>
+						<DropdownMenuItem>
+							<Link href="/user-profile" className="w-full text-start">
+								Manage Account
 							</Link>
 						</DropdownMenuItem>
 						<DropdownMenuItem>

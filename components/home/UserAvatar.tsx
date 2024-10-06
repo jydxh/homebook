@@ -11,14 +11,14 @@ async function UserAvatar() {
 	return (
 		<>
 			{!user ? (
-				<LuUser2 className="w-8 h-8 bg-primary rounded-full text-white" />
+				<LuUser2 className="w-[45px] h-[45px] bg-primary rounded-full text-white border-2 hover:border-none border-slate-400/75" />
 			) : (
 				<Image
 					src={profile?.profileImage || user.imageUrl}
 					alt="avatar"
 					width={98}
 					height={98}
-					className="w-[45px] h-[45px] rounded-full object-cover"
+					className="w-[45px] h-[45px] rounded-full object-cover border-2 hover:border-none border-slate-400/75"
 				/>
 			)}
 		</>
