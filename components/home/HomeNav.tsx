@@ -1,13 +1,18 @@
 "use client";
 
-import { customerNavList } from "@/utils/navList";
+import { customerNavList, vendorNavList, adminNavList } from "@/utils/navList";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-function HomeNav() {
+import { $Enums } from "@prisma/client";
+function HomeNav({ role }: { role: $Enums.Role }) {
 	const pathname = usePathname();
+	let renderList = [...customerNavList];
+	if (role === "VENDOR") renderList = [...customerNavList, ...vendorNavList];
+	if (role === "ADMIN") renderList = [...adminNavList];
 	return (
-		<nav className="md:flex justify-center gap-x-4 hidden">
-			{customerNavList.map(list => {
+		<nav className="md:flex justify-center gap-x-4 hidden flex-wrap">
+			{renderList.map(list => {
 				const { href, title } = list;
 				const active = pathname === href;
 				return (

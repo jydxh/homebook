@@ -2,7 +2,6 @@ export const customerNavList = [
 	{ title: "favorites", href: "/favorites" },
 	{ title: "bookings", href: "/bookings" },
 	{ title: "reviews", href: "/reviews" },
-	{ title: "profile", href: "/profile" },
 ];
 
 export const vendorNavList = [
