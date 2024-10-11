@@ -28,7 +28,7 @@ function CategorySelection() {
 						return (
 							<SelectItem value={label} key={label}>
 								<p className="flex gap-x-4 items-center justify-center">
-									<Icon /> {label}
+									<Icon className="w-5 h-5" /> {label}
 								</p>
 							</SelectItem>
 						);
