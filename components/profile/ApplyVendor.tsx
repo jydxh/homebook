@@ -27,13 +27,13 @@ function ApplyVendor() {
 						<FormInput
 							type="file"
 							accept="image/*,application/pdf"
-							label="Owner's government Id"
+							label="Owner's Government Id"
 							name="governmentId"
 						/>
 						<FormInput
 							type="file"
 							accept="image/*,application/pdf"
-							label="Proof of address"
+							label="Proof of Address"
 							name="proofOfAddress"
 						/>
 					</div>

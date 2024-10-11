@@ -33,19 +33,19 @@ async function CreateProfilePage() {
 				<Card className="mt-8 p-8 ">
 					<div className="grid md:grid-cols-2 gap-8">
 						<FormInput
-							label="user name"
+							label="User Name"
 							name="userName"
 							type="text"
 							defaultValue={formDefault.userName || ""}
 						/>
 						<FormInput
-							label="first name"
+							label="First Name"
 							name="firstName"
 							type="text"
 							defaultValue={formDefault.firstName || ""}
 						/>
 						<FormInput
-							label="last name"
+							label="Last Name"
 							name="lastName"
 							type="text"
 							defaultValue={formDefault.lastName || ""}
@@ -53,7 +53,7 @@ async function CreateProfilePage() {
 						{!user.imageUrl && (
 							<FormInput
 								required={false}
-								label="upload avatar (optional)"
+								label="Upload avatar (optional)"
 								name="image"
 								type="file"
 							/>

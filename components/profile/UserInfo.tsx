@@ -15,19 +15,19 @@ async function UserInfo() {
 			<Card className="mt-4 p-8">
 				<div className="grid md:grid-cols-2 gap-8">
 					<FormInput
-						label="user name"
+						label="User Name"
 						name="userName"
 						type="text"
 						defaultValue={profile?.userName || ""}
 					/>
 					<FormInput
-						label="first name"
+						label="First Name"
 						name="firstName"
 						type="text"
 						defaultValue={profile?.firstName || ""}
 					/>
 					<FormInput
-						label="last name"
+						label="Last Name"
 						name="lastName"
 						type="text"
 						defaultValue={profile?.lastName || ""}

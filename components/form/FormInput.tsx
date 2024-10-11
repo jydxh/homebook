@@ -20,7 +20,7 @@ function FormInput({
 }) {
 	return (
 		<div className="mb-2">
-			<Label className="mb-2 block capitalize text-base" htmlFor={name}>
+			<Label className="mb-2 block text-base" htmlFor={name}>
 				{label}
 			</Label>
 			<Input
@@ -31,6 +31,7 @@ function FormInput({
 				name={name}
 				required={required}
 				defaultValue={defaultValue}
+				min={0}
 			/>
 		</div>
 	);
