@@ -5,6 +5,7 @@ import "./globals.css";
 
 import { Roboto } from "next/font/google";
 import HomeHeader from "@/components/home/HomeHeader";
+import HomeFooter from "@/components/home/HomeFooter";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
 const roboto = Roboto({
@@ -35,6 +36,7 @@ export default function RootLayout({
 					<ClerkProvider>
 						<HomeHeader />
 						<main className="max-w-[1280px] mx-auto">{children}</main>
+						<HomeFooter />
 						<Toaster />
 					</ClerkProvider>
 				</ThemeProvider>

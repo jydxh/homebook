@@ -13,7 +13,7 @@ async function HomeHeader() {
 	return (
 		<>
 			<div className="max-w-[1280px] mx-auto flex items-center justify-between  py-8 px-4">
-				<HomeLogo />
+				<HomeLogo className="w-[120px] h-16" />
 				<HomeNav role={userInfo?.role || "USER"} />
 				<div className="flex items-center gap-x-4">
 					<HomeNavVertical />
