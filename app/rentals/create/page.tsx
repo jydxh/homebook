@@ -1,3 +1,4 @@
+import AddressInput from "@/components/createRental/AddressInput";
 import CategorySelection from "@/components/createRental/CategorySelection";
 import CountrySelect from "@/components/createRental/CountrySelect";
 import Description from "@/components/createRental/Description";
@@ -42,6 +43,8 @@ function CreateRentalPage() {
 				<div className="mt-4">
 					<UploadPropertyImage />
 				</div>
+				{/* address Input with google map and google input search */}
+				<AddressInput />
 			</Card>
 		</section>
 	);
