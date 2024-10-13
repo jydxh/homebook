@@ -1,6 +1,7 @@
 import CategorySelection from "@/components/createRental/CategorySelection";
 import CountrySelect from "@/components/createRental/CountrySelect";
 import Description from "@/components/createRental/Description";
+import UploadPropertyImage from "@/components/createRental/UploadPropertyImage";
 import FormInput from "@/components/form/FormInput";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -30,14 +31,16 @@ function CreateRentalPage() {
 					<FormInput label="Price" name="price" type="number" />
 					{/* category selection */}
 					<CategorySelection />
-				</div>
+					{/* text area for description */}
+					<Description />
 
-				{/* text area for description */}
-				<Description />
-				<div className="mt-6 grid md:grid-cols-2 gap-x-8 gap-y-4">
 					{/* country selection */}
 					<CountrySelect />
-					UploadImage
+				</div>
+
+				{/* profile image upload */}
+				<div className="mt-4">
+					<UploadPropertyImage />
 				</div>
 			</Card>
 		</section>

@@ -3,7 +3,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 function Description() {
 	return (
-		<div className="my-4">
+		<div className="mb-2">
 			<Label className="mb-2 block text-base" htmlFor="description">
 				Description
 			</Label>
