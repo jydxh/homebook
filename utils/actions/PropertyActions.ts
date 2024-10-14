@@ -71,10 +71,9 @@ export const createProperty = async (
 				},
 			},
 		});
-
-		return { message: "create property" };
 	} catch (error) {
 		console.log(error);
 		return renderError(error);
 	}
+	redirect("/");
 };
