@@ -1,0 +1,48 @@
+import {
+	FaWifi,
+	FaSwimmingPool,
+	FaParking,
+	FaTv,
+	FaUtensils,
+	FaDumbbell,
+	FaSpa,
+	FaConciergeBell,
+	FaCoffee,
+	FaShower,
+	FaBath,
+	FaSnowflake,
+	FaFire,
+	FaBicycle,
+	FaDog,
+	FaGamepad,
+	FaTree,
+	FaMusic,
+	FaBeer,
+	FaChild,
+} from "react-icons/fa";
+
+import { type IconType } from "react-icons/lib";
+export type Amenity = { name: string; icon: IconType };
+
+export const amenities = [
+	{ name: "WiFi", icon: FaWifi },
+	{ name: "Swimming Pool", icon: FaSwimmingPool },
+	{ name: "Parking", icon: FaParking },
+	{ name: "TV", icon: FaTv },
+	{ name: "Kitchen", icon: FaUtensils },
+	{ name: "Gym", icon: FaDumbbell },
+	{ name: "Spa", icon: FaSpa },
+	{ name: "Concierge", icon: FaConciergeBell },
+	{ name: "Coffee Maker", icon: FaCoffee },
+	{ name: "Shower", icon: FaShower },
+	{ name: "Bathtub", icon: FaBath },
+	{ name: "Air Conditioning", icon: FaSnowflake },
+	{ name: "Heating", icon: FaFire },
+	{ name: "Bicycle Rental", icon: FaBicycle },
+	{ name: "Pet Friendly", icon: FaDog },
+	{ name: "Game Room", icon: FaGamepad },
+	{ name: "Garden", icon: FaTree },
+	{ name: "Music System", icon: FaMusic },
+	{ name: "Bar", icon: FaBeer },
+	{ name: "Playground", icon: FaChild },
+];
