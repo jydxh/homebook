@@ -81,3 +81,23 @@ export const ApplyVendorSchema = z.object({
 	governmentId: acceptImgAndPdf(),
 	proofOfAddress: acceptImgAndPdf(),
 });
+
+export const CreatePropertySchema = z.object({
+	name: z.string().max(20, { message: "name cannot over 20 characters" }),
+	tagline: z.string().max(20, { message: "name cannot over 50 characters" }),
+	price: z.coerce.number().nonnegative("price cannot be less than 0"),
+	categoryId: z.string(),
+	description: z
+		.string()
+		.min(20, { message: "min 20 characters" })
+		.max(500, { message: "max 500 characters" }),
+	country: z.string().length(2, "country code can only be 2 chars"),
+	guests: z.coerce.number().nonnegative("guests cannot be less than 0"),
+	bedrooms: z.coerce.number().nonnegative("bedrooms cannot be less than 0"),
+	baths: z.coerce.number().nonnegative("baths cannot be less than 0"),
+	address: z.string().max(200, { message: "address cannot be over 200 chars" }),
+	latLng: z.string().max(400, { message: "latLng cannot over 400 chars" }),
+	amenities: z
+		.string()
+		.max(500, { message: "amenities cannot over 500 chars" }),
+});

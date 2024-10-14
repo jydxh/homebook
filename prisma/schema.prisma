@@ -7,7 +7,6 @@
 //  npx prisma migrate dev --name init
 //  npx prisma studio
 
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,30 +14,42 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_MYSQL_URL")
- // directUrl         = env("DIRECT_URL")
+  // directUrl         = env("DIRECT_URL")
 }
 
 model Property {
-  id        String        @id @default(uuid())
-  name      String
-  tagline   String
-  category  Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  categoryId String
-  image     String
-  country   String
-  description String
-  price     Int
-  guests    Int
-  bedrooms   Int
-  baths       Int
-  amenities   Amenities[]   @relation("PropertyAmenities")
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime @updatedAt
-  user        User @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
-  userId      String
-  favorites    Favorite[]
-  orders  Order[]
-  reviews Review[]
+  id                String              @id @default(uuid())
+  name              String
+  tagline           String
+  category          Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  categoryId        String
+  image             Json
+  country           String
+  description       String            @db.VarChar(500)
+  price             Int
+  guests            Int
+  bedrooms          Int
+  baths             Int
+  address           String
+  latLng            String
+  amenities         Amenities[]         @relation("PropertyAmenities")
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  user              User                @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+  userId            String
+  favorites         Favorite[]
+  orders            Order[]
+  reviews           Review[]
+  PropertyAmenities PropertyAmenities[]
+}
+
+model PropertyAmenities {
+  propertyId  String
+  amenitiesId String
+  property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  amenities   Amenities @relation(fields: [amenitiesId], references: [id], onDelete: Cascade)
+
+  @@id([propertyId, amenitiesId])
 }
 
 enum Role {
@@ -47,21 +58,21 @@ enum Role {
   ADMIN
 }
 
-model User{
-  id          Int     @id @default(autoincrement())
-  clerkId     String     @unique
-  property    Property[]    // one - to -many
-  favorite    Favorite[]   // one to many
-  firstName   String
-  lastName    String
-  userName    String
-  email       String
+model User {
+  id            Int             @id @default(autoincrement())
+  clerkId       String          @unique
+  property      Property[] // one - to -many
+  favorite      Favorite[] // one to many
+  firstName     String
+  lastName      String
+  userName      String
+  email         String
   profileImage  String?
-  createAt    DateTime @default(now())
-  updateAt    DateTime @updatedAt
-  role       Role     @default(USER)
-  orders       Order[]
-  reviews     Review[]
+  createAt      DateTime        @default(now())
+  updateAt      DateTime        @updatedAt
+  role          Role            @default(USER)
+  orders        Order[]
+  reviews       Review[]
   vendorProfile VendorProfile[]
 }
 
@@ -73,73 +84,67 @@ enum ApplicationStatus {
 }
 
 //  this table will also be used to save the vendor application form, and admin will see these info on the page, and decide to approve
-model VendorProfile{
-  id              String     @id @default(uuid())
-  user            User       @relation(fields: [userId], references: [clerkId], onDelete: Cascade) 
-  userId          String  
-  businessName    String
-  businessAddress String
-  governmentId    String
-  proofOfAddress  String
-  acceptTerm      Boolean    @default(true)
-  applicationStatus  ApplicationStatus  @default(PENDING)
-  adminComment  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model VendorProfile {
+  id                String            @id @default(uuid())
+  user              User              @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+  userId            String
+  businessName      String
+  businessAddress   String
+  governmentId      String
+  proofOfAddress    String
+  acceptTerm        Boolean           @default(true)
+  applicationStatus ApplicationStatus @default(PENDING)
+  adminComment      String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 }
 
-
-
-
-model Category{
-id            String      @id @default(uuid())
-name          String
-properties Property[]   
+model Category {
+  id         String     @id @default(uuid())
+  name       String
+  properties Property[]
 }
 
-model Amenities{
-  id          String        @id @default(uuid())
-  name        String
-  properties  Property[]       @relation("PropertyAmenities")   // many to many
-}   
-
-
-model Favorite{
-  id         String      @id @default(uuid())
-  property  Property     @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  propertyId  String
-  user        User       @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Amenities {
+  id                String              @id @default(uuid())
+  name              String
+  properties        Property[]          @relation("PropertyAmenities") // many to many
+  PropertyAmenities PropertyAmenities[]
 }
 
+model Favorite {
+  id         String   @id @default(uuid())
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  user       User     @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+  userId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
 
 model Order {
-    id         String      @id @default(uuid())
-    user       User    @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
-    userId     String
-    property      Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-    propertyId    String
-    orderTotal    Int 
-    totalNight    Int
-    checkIn  DateTime
-    checkOut DateTime
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    paymentStatus Boolean @default(false)
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+  userId        String
+  property      Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId    String
+  orderTotal    Int
+  totalNight    Int
+  checkIn       DateTime
+  checkOut      DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  paymentStatus Boolean  @default(false)
 }
 
-
 model Review {
-        id        String  @id @default(uuid())
-        rating    Int
-        comment   String
-        createAt  DateTime  @default(now())
-        updateAt  DateTime @updatedAt
-        user  User @relation(fields: [userId], references: [clerkId], onDelete: Cascade) // it tells the relation between user and review, the fields point to the review->userId, and the reference point to User->clerkId, so the review.userId will be connected a relation to the User->clerkId, the onDelete Cascade: if user is deleted, all associate reviews will also be deleted
-        userId  String
-        property  Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-        propertyId String
-
+  id         String   @id @default(uuid())
+  rating     Int
+  comment    String
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [clerkId], onDelete: Cascade) // it tells the relation between user and review, the fields point to the review->userId, and the reference point to User->clerkId, so the review.userId will be connected a relation to the User->clerkId, the onDelete Cascade: if user is deleted, all associate reviews will also be deleted
+  userId     String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
 }

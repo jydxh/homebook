@@ -10,19 +10,20 @@ import {
 import { countryList } from "@/utils/country";
 import Image from "next/image";
 
-function CountrySelect() {
+function CountrySelect({ defaultValue = "CA" }: { defaultValue?: string }) {
 	return (
 		<div>
 			<Label className="mb-2 block text-base" htmlFor="country">
 				Country
 			</Label>
-			<Select name="country">
+			<Select name="country" defaultValue={defaultValue}>
 				<SelectTrigger id="country">
-					<SelectValue placeholder="Please chooses the country where your property at" />
+					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>
 					{countryList.map(item => {
 						const { name, code } = item;
+
 						const flagUrl = `https://flagcdn.com/${code.toLowerCase()}.svg`;
 						return (
 							<SelectItem value={code} key={code}>

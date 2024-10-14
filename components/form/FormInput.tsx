@@ -9,6 +9,7 @@ function FormInput({
 	defaultValue,
 	accept,
 	placeholder,
+	maxLength,
 }: {
 	label: string;
 	type: string;
@@ -17,6 +18,7 @@ function FormInput({
 	defaultValue?: string;
 	accept?: string;
 	placeholder?: string;
+	maxLength?: number;
 }) {
 	return (
 		<div className="mb-2">
@@ -24,6 +26,7 @@ function FormInput({
 				{label}
 			</Label>
 			<Input
+				maxLength={maxLength}
 				placeholder={placeholder}
 				accept={accept}
 				type={type}

@@ -29,13 +29,14 @@ function Amenities() {
 						className="flex justify-start  sm:justify-start gap-x-2  items-center">
 						<Checkbox
 							id={item.name}
-							name={item.name}
 							onCheckedChange={() => handleChange(item.name)}
 						/>
-						<Label className="font-normal" htmlFor={item.name}>
+						<Label
+							className="flex justify-start gap-x-2 items-center"
+							htmlFor={item.name}>
 							{item.name}
+							<item.icon className="w-4 h-4  text-muted-foreground" />
 						</Label>
-						<item.icon className="w-4 h-4 font-thin" />
 					</div>
 				);
 			})}

@@ -15,7 +15,6 @@ export enum PropertyCategory {
 	Villa = "Villa",
 	Cottage = "Cottage",
 	Loft = "Loft",
-
 	Farmhouse = "Farmhouse",
 	Chalet = "Chalet",
 	Castle = "Castle",
@@ -26,16 +25,17 @@ export enum PropertyCategory {
 type Category = {
 	label: PropertyCategory;
 	icon: IconType;
+	id: string;
 };
 
 export const categories: Category[] = [
-	{ label: PropertyCategory.Cabin, icon: MdCabin },
-	{ label: PropertyCategory.Villa, icon: MdOutlineVilla },
-	{ label: PropertyCategory.Cottage, icon: MdCottage },
-	{ label: PropertyCategory.Loft, icon: SiGameloft },
-	{ label: PropertyCategory.Farmhouse, icon: FaWarehouse },
-	{ label: PropertyCategory.Chalet, icon: MdOutlineChalet },
-	{ label: PropertyCategory.Castle, icon: MdOutlineCastle },
-	{ label: PropertyCategory.Tent, icon: LuTent },
-	{ label: PropertyCategory.Other, icon: MdOutlineOtherHouses },
+	{ label: PropertyCategory.Cabin, icon: MdCabin, id: "10" },
+	{ label: PropertyCategory.Villa, icon: MdOutlineVilla, id: "20" },
+	{ label: PropertyCategory.Cottage, icon: MdCottage, id: "30" },
+	{ label: PropertyCategory.Loft, icon: SiGameloft, id: "40" },
+	{ label: PropertyCategory.Farmhouse, icon: FaWarehouse, id: "50" },
+	{ label: PropertyCategory.Chalet, icon: MdOutlineChalet, id: "60" },
+	{ label: PropertyCategory.Castle, icon: MdOutlineCastle, id: "70" },
+	{ label: PropertyCategory.Tent, icon: LuTent, id: "80" },
+	{ label: PropertyCategory.Other, icon: MdOutlineOtherHouses, id: "90" },
 ];

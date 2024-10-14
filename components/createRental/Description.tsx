@@ -8,10 +8,13 @@ function Description() {
 				Description
 			</Label>
 			<Textarea
+				required
+				minLength={20}
+				maxLength={500}
 				rows={4}
 				id="description"
 				name="description"
-				placeholder="Description of your Property"
+				placeholder="Description of your Property (20-500 characters)"
 			/>
 		</div>
 	);

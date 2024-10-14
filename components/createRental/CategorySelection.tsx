@@ -9,24 +9,24 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-function CategorySelection() {
+function CategorySelection({ defaultValue = "10" }: { defaultValue?: string }) {
 	return (
 		<div className="mb-2">
 			<Label className="mb-2 block text-base" htmlFor="category">
 				Category
 			</Label>
-			<Select name="category">
-				<SelectTrigger id="category">
+			<Select name="categoryId" defaultValue={defaultValue || categories[0].id}>
+				<SelectTrigger id="categoryId">
 					<SelectValue
 						placeholder="Please chooses one category in the list"
-						defaultValue={categories[0].label}
+						defaultValue={categories[0].id}
 					/>
 				</SelectTrigger>
 				<SelectContent>
 					{categories.map(item => {
-						const { label, icon: Icon } = item;
+						const { label, icon: Icon, id } = item;
 						return (
-							<SelectItem value={label} key={label}>
+							<SelectItem value={id} key={id}>
 								<p className="flex gap-x-4 items-center justify-center">
 									<Icon className="w-5 h-5" /> {label}
 								</p>
