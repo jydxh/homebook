@@ -77,3 +77,23 @@ export const createProperty = async (
 	}
 	redirect("/");
 };
+
+export const fetchProperties = async () => {
+	try {
+		const propertyList = await db.property.findMany({
+			where: {},
+			select: {
+				id: true,
+				name: true,
+				tagline: true,
+				price: true,
+				country: true,
+				image: true,
+			},
+		});
+		return propertyList;
+	} catch (error) {
+		console.log(error);
+		return [];
+	}
+};
