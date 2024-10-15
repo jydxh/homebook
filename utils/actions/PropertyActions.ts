@@ -89,6 +89,7 @@ export const fetchProperties = async () => {
 				price: true,
 				country: true,
 				image: true,
+				latLng: true,
 			},
 		});
 		return propertyList;

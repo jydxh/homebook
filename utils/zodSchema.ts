@@ -84,7 +84,7 @@ export const ApplyVendorSchema = z.object({
 
 export const CreatePropertySchema = z.object({
 	name: z.string().max(20, { message: "name cannot over 20 characters" }),
-	tagline: z.string().max(20, { message: "name cannot over 50 characters" }),
+	tagline: z.string().max(50, { message: "tagline cannot over 50 characters" }),
 	price: z.coerce.number().nonnegative("price cannot be less than 0"),
 	categoryId: z.string(),
 	description: z

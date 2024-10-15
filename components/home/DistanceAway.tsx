@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { calculateDistance } from "@/utils/calculateDistance";
 
-function DistanceAway() {
+function DistanceAway({ latLng }: { latLng: string }) {
+	const latLngObj = JSON.parse(latLng) as { lat: number; lng: number };
 	const [distance, setDistance] = useState<number | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	useEffect(() => {
@@ -12,8 +13,8 @@ function DistanceAway() {
 				position => {
 					const clientLat = position.coords.latitude;
 					const clientLng = position.coords.longitude;
-					const locationLat = 34.0522; // Replace with actual location latitude
-					const locationLng = -118.2437; // Replace with actual location longitude
+					const locationLat = Number(latLngObj.lat);
+					const locationLng = Number(latLngObj.lng);
 					const dist = calculateDistance(
 						clientLat,
 						clientLng,

@@ -15,7 +15,7 @@ async function HomePropertyList() {
 	return (
 		<section className="p-8 gap-x-8 gap-y-16 grid md:grid-cols-2 lg:grid-cols-3">
 			{properties.map(item => {
-				const { id, country, image, name, price, tagline } = item;
+				const { id, country, image, name, price, tagline, latLng } = item;
 				const images = JSON.parse(image as string) as string[];
 				return (
 					<Card key={id} className="p-1 mx-auto rounded w-[75%] md:w-full">
@@ -32,7 +32,7 @@ async function HomePropertyList() {
 							<p className="text-muted-foreground truncate">{tagline}</p>
 							<div className="flex justify-between">
 								{/* xxx km away */}
-								<DistanceAway />
+								<DistanceAway latLng={latLng} />
 								<CountryAndFlag country={country as TCountryCode} />
 							</div>
 							<p className="font-medium">{formatCurrency(price)} per night</p>
