@@ -18,7 +18,9 @@ async function HomePropertyList() {
 				const { id, country, image, name, price, tagline, latLng } = item;
 				const images = JSON.parse(image as string) as string[];
 				return (
-					<Card key={id} className="p-1 mx-auto rounded w-[75%] md:w-full">
+					<Card
+						key={id}
+						className="p-1 mx-auto rounded w-[75%] md:w-full hover:bg-muted">
 						{/* carousel */}
 						<CarouselImages images={images} name={name} />
 						<div className="px-2 pb-2">

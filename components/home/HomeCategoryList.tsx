@@ -22,7 +22,7 @@ function HomeCategoryList() {
 								<p
 									className={`${
 										categoryId === cat.id ? "text-primary " : ""
-									}  hover:text-primary font-normal flex gap-2 justify-center items-center flex-shrink-0 flex-col`}>
+									}  hover:text-primary  font-medium flex gap-2 justify-center items-center flex-shrink-0 flex-col`}>
 									{cat.label}
 									<cat.icon
 										className={`${
