@@ -11,7 +11,7 @@ function HomeCategoryList() {
 	const params = new URLSearchParams(searchParams);
 
 	return (
-		<section className="my-4 mx-auto">
+		<section className="mt-4 mb-2 mx-auto">
 			<ScrollArea className="p-8 max-w-[1200px] py-6 mx-auto">
 				<div className="flex gap-x-8 justify-center items-center whitespace-nowrap rounded-md ">
 					{categories.map(cat => {

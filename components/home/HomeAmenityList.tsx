@@ -4,6 +4,7 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 import { useRouter, useSearchParams } from "next/navigation";
 function HomeAmenityList() {
@@ -34,41 +35,56 @@ function HomeAmenityList() {
 		// push the new URL
 		router.push(`/?${params.toString()}`);
 	};
+	const handleBackHome = () => {
+		params.delete("category");
+		router.replace(`/?${params.toString()}`);
+	};
 	return (
 		<div className="w-full mx-auto pb-8">
 			<Button
 				className="block mx-auto"
+				size="sm"
 				variant="outline"
 				onClick={() => {
 					setShowList(prev => !prev);
 				}}>
-				More Options
+				{showList ? "Less" : "More"} Options
 			</Button>
 			{showList && (
-				<div className=" max-w-[900px] mx-auto px-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-16 gap-y-2 mt-8">
-					<input type="hidden" name="amenities" />
-					{amenities.map(item => {
-						const isChecked =
-							ameSearchParams?.split(",").includes(item.id) || false;
-						return (
-							<div
-								key={item.id}
-								className="flex justify-start  sm:justify-start gap-x-2  items-center">
-								<Checkbox
-									id={item.id}
-									checked={isChecked}
-									onCheckedChange={() => handleAmenitiesChange(item.id)}
-								/>
-								<Label
-									className="flex justify-start gap-x-2 items-center"
-									htmlFor={item.id}>
-									{item.name}
-									<item.icon className="w-4 h-4  text-muted-foreground" />
-								</Label>
-							</div>
-						);
-					})}
-				</div>
+				<>
+					<div className=" max-w-[900px] mx-auto px-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-16 gap-y-2 mt-8">
+						<input type="hidden" name="amenities" />
+						{amenities.map(item => {
+							const isChecked =
+								ameSearchParams?.split(",").includes(item.id) || false;
+							return (
+								<div
+									key={item.id}
+									className="flex justify-start  sm:justify-start gap-x-2  items-center">
+									<Checkbox
+										id={item.id}
+										checked={isChecked}
+										onCheckedChange={() => handleAmenitiesChange(item.id)}
+									/>
+									<Label
+										className="flex justify-start gap-x-2 items-center"
+										htmlFor={item.id}>
+										{item.name}
+										<item.icon className="w-4 h-4  text-muted-foreground" />
+									</Label>
+								</div>
+							);
+						})}
+					</div>
+					<div className=" mt-8 flex justify-center gap-x-4">
+						<Button onClick={handleBackHome} size="sm" variant="destructive">
+							Clear Category Filter
+						</Button>
+						<Button size="sm" variant="secondary">
+							<Link href="/">Reset</Link>
+						</Button>
+					</div>
+				</>
 			)}
 		</div>
 	);
