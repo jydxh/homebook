@@ -4,9 +4,36 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { useState } from "react";
 import { Button } from "../ui/button";
+
+import { useRouter, useSearchParams } from "next/navigation";
 function HomeAmenityList() {
 	const [showList, setShowList] = useState(false);
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const params = new URLSearchParams(searchParams);
+	const ameSearchParams = params.get("amenities");
+	const handleAmenitiesChange = (id: string) => {
+		console.log(id);
+		let selectedAmeArray = ameSearchParams?.split(",") || [];
+		const indexOfId = selectedAmeArray.indexOf(id);
+		if (indexOfId > -1) {
+			// if the id existed in the list, delete this id
+			selectedAmeArray.splice(indexOfId, 1);
+		} else {
+			// if not exist push into the list
+			selectedAmeArray = [...selectedAmeArray, id];
+		}
+		console.log(selectedAmeArray);
+		// update the searchParams, if any one selected, update them into url, if none of them selected, just delete the amenities at url
+		if (selectedAmeArray.length > 0) {
+			params.set("amenities", selectedAmeArray.join(","));
+		} else {
+			params.delete("amenities");
+		}
 
+		// push the new URL
+		router.push(`/?${params.toString()}`);
+	};
 	return (
 		<div className="w-full mx-auto pb-8">
 			<Button
@@ -21,14 +48,20 @@ function HomeAmenityList() {
 				<div className=" max-w-[900px] mx-auto px-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-16 gap-y-2 mt-8">
 					<input type="hidden" name="amenities" />
 					{amenities.map(item => {
+						const isChecked =
+							ameSearchParams?.split(",").includes(item.id) || false;
 						return (
 							<div
-								key={item.name}
+								key={item.id}
 								className="flex justify-start  sm:justify-start gap-x-2  items-center">
-								<Checkbox id={item.name} />
+								<Checkbox
+									id={item.id}
+									checked={isChecked}
+									onCheckedChange={() => handleAmenitiesChange(item.id)}
+								/>
 								<Label
 									className="flex justify-start gap-x-2 items-center"
-									htmlFor={item.name}>
+									htmlFor={item.id}>
 									{item.name}
 									<item.icon className="w-4 h-4  text-muted-foreground" />
 								</Label>
