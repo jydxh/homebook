@@ -8,10 +8,17 @@ import { TCountryCode } from "countries-list";
 import { formatCurrency } from "@/utils/formatCurrency";
 import CarouselImages from "./CarouselImages";
 
-async function HomePropertyList() {
+async function HomePropertyList({
+	searchParams,
+	params,
+}: {
+	searchParams: unknown;
+	params: unknown;
+}) {
+	console.log(searchParams);
+	console.log(params);
 	const properties = await fetchProperties();
-	//const properties = [];
-	//console.log(properties);
+
 	if (properties.length === 0) return <EmptyResult />;
 	return (
 		<section className="p-8 gap-x-8 gap-y-16 grid md:grid-cols-2 lg:grid-cols-3">
@@ -26,7 +33,7 @@ async function HomePropertyList() {
 						<CarouselImages images={images} name={name} />
 						<div className="px-2 pb-2">
 							<div className="flex justify-between mt-2">
-								<p className="font-medium">{name}</p>
+								<p className="font-medium capitalize">{name}</p>
 								<div className="flex items-center gap-x-2">
 									<FaStar className="w-4 h-4" />
 									<span>5.0 </span>

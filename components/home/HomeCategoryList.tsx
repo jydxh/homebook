@@ -19,17 +19,13 @@ function HomeCategoryList() {
 						const href = `/?${params.toString()}`;
 						return (
 							<Link href={href} key={cat.id}>
-								<p
+								<article
 									className={`${
 										categoryId === cat.id ? "text-primary " : ""
-									}  hover:text-primary  font-medium flex gap-2 justify-center items-center flex-shrink-0 flex-col`}>
-									{cat.label}
-									<cat.icon
-										className={`${
-											categoryId === cat.id ? "text-primary " : ""
-										} hover:text-primary   w-8 h-8 text-muted-foreground`}
-									/>
-								</p>
+									}  hover:text-primary  font-medium flex gap-2 justify-center items-center flex-shrink-0 flex-col text-muted-foreground`}>
+									<p className="capitalize">{cat.label}</p>
+									<cat.icon className=" w-8 h-8 hover:text-primary " />
+								</article>
 							</Link>
 						);
 					})}
