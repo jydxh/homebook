@@ -10,7 +10,8 @@ import CarouselImages from "./CarouselImages";
 
 async function HomePropertyList() {
 	const properties = await fetchProperties();
-	console.log(properties);
+	//const properties = [];
+	//console.log(properties);
 	if (properties.length === 0) return <EmptyResult />;
 	return (
 		<section className="p-8 gap-x-8 gap-y-16 grid md:grid-cols-2 lg:grid-cols-3">
