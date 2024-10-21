@@ -7,18 +7,15 @@ import CountryAndFlag from "./CountryAndFlag";
 import { TCountryCode } from "countries-list";
 import { formatCurrency } from "@/utils/formatCurrency";
 import CarouselImages from "./CarouselImages";
+import { HomePageSearchParam } from "@/app/page";
 
 async function HomePropertyList({
 	searchParams,
-	params,
 }: {
-	searchParams: unknown;
-	params: unknown;
+	searchParams: HomePageSearchParam;
 }) {
-	console.log(searchParams);
-	console.log(params);
-	const properties = await fetchProperties();
-
+	const properties = await fetchProperties({ searchParams });
+	console.log(properties);
 	if (properties.length === 0) return <EmptyResult />;
 	return (
 		<section className="p-8 gap-x-8 gap-y-16 grid md:grid-cols-2 lg:grid-cols-3">

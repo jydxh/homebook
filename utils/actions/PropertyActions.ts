@@ -11,6 +11,8 @@ import {
 	ImageSchema,
 	validateZodSchema,
 } from "../zodSchema";
+import { HomePageSearchParam } from "@/app/page";
+import { amenitiesId } from "../amenities";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -43,16 +45,19 @@ export const createProperty = async (
 		const rawData = Object.fromEntries(formData);
 
 		const validatedFields = validateZodSchema(CreatePropertySchema, rawData);
-		console.log(validatedFields);
+
 		/* use promises all to prevent waterfall */
 		const imageUrls = await Promise.all(
 			validatedImage.map(image => cloudinaryUpload(image.image))
 		);
 
 		const imageUrlsJson = JSON.stringify(imageUrls);
-		const amenitiesArray = validatedFields.amenities
+		/* later add more validation and sanitize */
+		const amenitiesArray = (rawData.amenities as string)
 			.split(",")
 			.map(name => name.trim());
+
+		// get amenities from DB
 		const amenities = await db.amenities.findMany({
 			where: {
 				name: {
@@ -61,27 +66,63 @@ export const createProperty = async (
 			},
 		});
 
-		await db.property.create({
+		const newProperty = await db.property.create({
 			data: {
 				...validatedFields,
 				userId: user.id,
 				image: imageUrlsJson,
-				amenities: {
-					connect: amenities.map(ame => ({ id: ame.id })),
-				},
+			},
+			select: {
+				id: true,
 			},
 		});
+		/* add connection for each propertyAmenities */
+		await db.propertyAmenities.createMany({
+			data: amenities.map(ame => {
+				return {
+					propertyId: newProperty.id,
+					amenitiesId: ame.id,
+				};
+			}),
+		});
+
+		//	return { message: "success!" };
 	} catch (error) {
 		console.log(error);
 		return renderError(error);
 	}
-	redirect("/");
+	return redirect("/");
 };
 
-export const fetchProperties = async () => {
+export const fetchProperties = async ({
+	searchParams,
+}: {
+	searchParams: HomePageSearchParam;
+}) => {
+	console.log(searchParams);
+	const search = searchParams.search?.toLowerCase() || "";
+	const categoryId = searchParams.category;
+	/* if user does not select any amenities, default will be any amenities, meaning DB will not do any filter amenities, only if client select and provide a list of amenities will the backend do filtering */
+	const amenities = searchParams.amenities?.split(",") || amenitiesId;
+	console.log(amenities);
+
 	try {
 		const propertyList = await db.property.findMany({
-			where: {},
+			where: {
+				OR: [{ name: { contains: search } }, { tagline: { contains: search } }],
+				AND: [
+					{ categoryId },
+					// {
+					// 	/* looking for property where amenities in the listOfAmenities from client like ('10','20','30') */
+					// 	amenities: {
+					// 		/* some: Returns all records where one or more ("some") related records match filtering criteria.  */
+					// 		some: {
+					// 			id: { in: amenities },
+					// 		},
+					// 	},
+					// },
+				],
+			},
 			select: {
 				id: true,
 				name: true,

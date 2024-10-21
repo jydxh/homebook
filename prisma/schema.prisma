@@ -18,29 +18,29 @@ datasource db {
 }
 
 model Property {
-  id                String              @id @default(uuid())
-  name              String
-  tagline           String
-  category          Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  categoryId        String
-  image             Json
-  country           String
-  description       String            @db.VarChar(500)
-  price             Int
-  guests            Int
-  bedrooms          Int
-  baths             Int
-  address           String
-  latLng            String
-  amenities         Amenities[]         @relation("PropertyAmenities")
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  user              User                @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
-  userId            String
-  favorites         Favorite[]
-  orders            Order[]
-  reviews           Review[]
-  PropertyAmenities PropertyAmenities[]
+  id          String              @id @default(uuid())
+  name        String
+  tagline     String
+  category    Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  categoryId  String
+  image       Json
+  country     String
+  description String              @db.VarChar(500)
+  price       Int
+  guests      Int
+  bedrooms    Int
+  baths       Int
+  address     String
+  latLng      String
+  amenities   PropertyAmenities[] // Optional when creating the property
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  user        User                @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+  userId      String
+  favorites   Favorite[]
+  orders      Order[]
+  reviews     Review[]
+  //  PropertyAmenities PropertyAmenities[]
 }
 
 model PropertyAmenities {
@@ -48,7 +48,6 @@ model PropertyAmenities {
   amenitiesId String
   property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   amenities   Amenities @relation(fields: [amenitiesId], references: [id], onDelete: Cascade)
-
   @@id([propertyId, amenitiesId])
 }
 
@@ -106,10 +105,10 @@ model Category {
 }
 
 model Amenities {
-  id                String              @id @default(uuid())
-  name              String
-  properties        Property[]          @relation("PropertyAmenities") // many to many
-  PropertyAmenities PropertyAmenities[]
+  id         String              @id @default(uuid())
+  name       String
+  properties PropertyAmenities[] // many to many
+  //  PropertyAmenities PropertyAmenities[]
 }
 
 model Favorite {

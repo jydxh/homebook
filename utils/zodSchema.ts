@@ -97,7 +97,4 @@ export const CreatePropertySchema = z.object({
 	baths: z.coerce.number().nonnegative("baths cannot be less than 0"),
 	address: z.string().max(200, { message: "address cannot be over 200 chars" }),
 	latLng: z.string().max(400, { message: "latLng cannot over 400 chars" }),
-	amenities: z
-		.string()
-		.max(500, { message: "amenities cannot over 500 chars" }),
 });
