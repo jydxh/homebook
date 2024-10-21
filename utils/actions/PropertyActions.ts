@@ -144,16 +144,3 @@ export const fetchProperties = async ({
 		return [];
 	}
 };
-
-// select * from property join property_amenities ON pr where (name like '%search%' or tagline like '%search%') and (categoryId = categoryId and amenities in (amenities))
-/* 
-select: {
-	id: true,
-	name: true,
-	tagline: true,
-	price: true,
-	country: true,
-	image: true,
-	latLng: true,
-},
- */
