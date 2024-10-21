@@ -102,8 +102,8 @@ export const fetchProperties = async ({
 	console.log(searchParams);
 	const search = searchParams.search?.toLowerCase() || "";
 	const categoryId = searchParams.category;
-	/* if user does not select any amenities, default will be any amenities, meaning DB will not do any filter amenities, only if client select and provide a list of amenities will the backend do filtering */
-	const amenities = searchParams.amenities?.split(",") || amenitiesIds;
+	/* if user does not select any amenities, default will be [], meaning DB will not do any filter amenities, only if client select and provide a list of amenities will the backend do filtering */
+	const amenities = searchParams.amenities?.split(",") || [];
 	console.log(amenities);
 
 	try {
@@ -112,7 +112,10 @@ export const fetchProperties = async ({
 				OR: [{ name: { contains: search } }, { tagline: { contains: search } }],
 				AND: [
 					{ categoryId },
-					{ amenities: { some: { amenitiesId: { in: amenities } } } },
+					// if amenities is empty, will not filter the amenities
+					amenities.length > 0
+						? { amenities: { some: { amenitiesId: { in: amenities } } } }
+						: {},
 				],
 			},
 			select: {
@@ -128,7 +131,7 @@ export const fetchProperties = async ({
 		});
 		//console.log(propertyList);
 
-		if (amenities.length === amenitiesIds.length) return propertyList;
+		if (amenities.length === 0) return propertyList;
 
 		// user:[1,2] amenities:[1,2,3,4,5] => true;
 		// user: [1,2] amenities: [3,4,5] => false;
