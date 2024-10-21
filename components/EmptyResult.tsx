@@ -11,7 +11,7 @@ function EmptyResult({
 	buttonText?: string;
 }) {
 	return (
-		<section className="mx-auto">
+		<section className="mx-auto p-8">
 			<h3 className="font-semibold text-2xl p-8 text-center">{text}</h3>
 			<Button
 				className="block mx-auto w-[7rem] text-center"

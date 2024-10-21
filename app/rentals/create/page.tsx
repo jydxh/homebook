@@ -12,8 +12,16 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { createProperty } from "@/utils/actions/PropertyActions";
+import { currentUser } from "@clerk/nextjs/server";
+import { getVendorUser } from "@/utils/actions/PropertyActions";
+import { redirect } from "next/navigation";
 
-function CreateRentalPage() {
+async function CreateRentalPage() {
+	const user = await currentUser();
+	const isVendor = await getVendorUser(user?.id || "");
+	if (!isVendor) {
+		return redirect("/");
+	}
 	return (
 		<section className="p-8">
 			<h2 className="font-medium mx-auto w-full text-center text-2xl mb-4">

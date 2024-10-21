@@ -12,7 +12,7 @@ import {
 	validateZodSchema,
 } from "../zodSchema";
 import { HomePageSearchParam } from "@/app/page";
-import { amenitiesId } from "../amenities";
+import { amenitiesIds } from "../amenities";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -103,7 +103,7 @@ export const fetchProperties = async ({
 	const search = searchParams.search?.toLowerCase() || "";
 	const categoryId = searchParams.category;
 	/* if user does not select any amenities, default will be any amenities, meaning DB will not do any filter amenities, only if client select and provide a list of amenities will the backend do filtering */
-	const amenities = searchParams.amenities?.split(",") || amenitiesId;
+	const amenities = searchParams.amenities?.split(",") || amenitiesIds;
 	console.log(amenities);
 
 	try {
@@ -112,15 +112,7 @@ export const fetchProperties = async ({
 				OR: [{ name: { contains: search } }, { tagline: { contains: search } }],
 				AND: [
 					{ categoryId },
-					// {
-					// 	/* looking for property where amenities in the listOfAmenities from client like ('10','20','30') */
-					// 	amenities: {
-					// 		/* some: Returns all records where one or more ("some") related records match filtering criteria.  */
-					// 		some: {
-					// 			id: { in: amenities },
-					// 		},
-					// 	},
-					// },
+					{ amenities: { some: { amenitiesId: { in: amenities } } } },
 				],
 			},
 			select: {
@@ -131,11 +123,37 @@ export const fetchProperties = async ({
 				country: true,
 				image: true,
 				latLng: true,
+				amenities: true,
 			},
 		});
-		return propertyList;
+		//console.log(propertyList);
+
+		if (amenities.length === amenitiesIds.length) return propertyList;
+
+		// user:[1,2] amenities:[1,2,3,4,5] => true;
+		// user: [1,2] amenities: [3,4,5] => false;
+		// user: [1,2] amenities: [1,3,4,5] => false;
+		/* logic: filter the propertyList, in the filter cb: get an array of amenityIds from the db, and then compare the user selected amenities, only if every value are included in the array of amenityIds will return true */
+		const filteredPropertyList = propertyList.filter(property => {
+			const amenityIds = property.amenities.map(ame => ame.amenitiesId);
+			return amenities.every(ameId => amenityIds.includes(ameId));
+		});
+		return filteredPropertyList;
 	} catch (error) {
 		console.log(error);
 		return [];
 	}
 };
+
+// select * from property join property_amenities ON pr where (name like '%search%' or tagline like '%search%') and (categoryId = categoryId and amenities in (amenities))
+/* 
+select: {
+	id: true,
+	name: true,
+	tagline: true,
+	price: true,
+	country: true,
+	image: true,
+	latLng: true,
+},
+ */

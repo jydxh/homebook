@@ -47,4 +47,4 @@ export const amenities = [
 	{ name: "Playground", icon: FaChild, id: "105" },
 ];
 
-export const amenitiesId = amenities.map(item => item.id);
+export const amenitiesIds = amenities.map(item => item.id);
