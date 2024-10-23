@@ -76,6 +76,7 @@ function HomeAmenityList() {
 							);
 						})}
 					</div>
+
 					<div className=" mt-8 flex justify-center gap-x-4">
 						<Button onClick={handleBackHome} size="sm" variant="destructive">
 							Clear Category Filter

@@ -93,6 +93,11 @@ export const createProperty = async (
 	return redirect("/");
 };
 
+enum SortOrder {
+	ASC = "asc",
+	DESC = "desc",
+}
+
 export const fetchProperties = async ({
 	searchParams,
 }: {
@@ -101,6 +106,8 @@ export const fetchProperties = async ({
 	console.log(searchParams);
 	const search = searchParams.search?.toLowerCase() || "";
 	const categoryId = searchParams.category;
+	const priceSort = (searchParams.price || "desc") as SortOrder;
+	const ratingSort = (searchParams.rating || "desc") as SortOrder;
 	/* if user does not select any amenities, default will be [], meaning DB will not do any filter amenities, only if client select and provide a list of amenities will the backend do filtering */
 	const amenities = searchParams.amenities?.split(",") || [];
 	const page = searchParams.page || 1;
@@ -130,6 +137,11 @@ export const fetchProperties = async ({
 				latLng: true,
 				amenities: true,
 			},
+			orderBy: [
+				{ price: priceSort },
+				/* later after adding review model add logic here for sorting by raring here */
+				/* 	{ rating: ratingSort } */
+			],
 		});
 		// total count of items
 		const totalCount = await db.property.count({
