@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/utils/db";
-import { revalidatePath } from "next/cache";
+
 import { getAuthUser } from "./actions";
 import { redirect } from "next/navigation";
 import cloudinaryUpload from "../cloudinaryUpload";
@@ -12,7 +12,6 @@ import {
 	validateZodSchema,
 } from "../zodSchema";
 import { HomePageSearchParam } from "@/app/page";
-import { amenitiesIds } from "../amenities";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -132,9 +131,23 @@ export const fetchProperties = async ({
 				amenities: true,
 			},
 		});
-		//console.log(propertyList);
+		// total count of items
+		const totalCount = await db.property.count({
+			where: {
+				OR: [{ name: { contains: search } }, { tagline: { contains: search } }],
+				AND: [
+					{ categoryId },
+					// if amenities is empty, will not filter the amenities
+					amenities.length > 0
+						? { amenities: { some: { amenitiesId: { in: amenities } } } }
+						: {},
+				],
+			},
+		});
+		const totalPage = Math.ceil(totalCount / take);
 
-		if (amenities.length === 0) return propertyList;
+		if (amenities.length === 0)
+			return { totalPage, currentPage: page, totalCount, data: propertyList };
 
 		// user:[1,2] amenities:[1,2,3,4,5] => true;
 		// user: [1,2] amenities: [3,4,5] => false;
@@ -144,9 +157,10 @@ export const fetchProperties = async ({
 			const amenityIds = property.amenities.map(ame => ame.amenitiesId);
 			return amenities.every(ameId => amenityIds.includes(ameId));
 		});
-		return filteredPropertyList;
+
+		return { data: filteredPropertyList, totalPage, currentPage: page };
 	} catch (error) {
 		console.log(error);
-		return [];
+		return { totalPage: 0, currentPage: 1, totalCount: 0, data: [] };
 	}
 };

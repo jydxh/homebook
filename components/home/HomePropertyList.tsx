@@ -16,10 +16,10 @@ async function HomePropertyList({
 }) {
 	const properties = await fetchProperties({ searchParams });
 	console.log(properties);
-	if (properties.length === 0) return <EmptyResult />;
+	if (properties.totalPage === 0) return <EmptyResult />;
 	return (
 		<section className="p-8 gap-x-8 gap-y-16 grid md:grid-cols-2 lg:grid-cols-3">
-			{properties.map(item => {
+			{properties.data.map(item => {
 				const { id, country, image, name, price, tagline, latLng } = item;
 				const images = JSON.parse(image as string) as string[];
 				return (
