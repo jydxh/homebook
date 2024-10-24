@@ -19,15 +19,19 @@ for (let i = 0; i < shuttledUrls.length; i++) {
 	/* a range between 1 to 3 */
 	const arrayLength = Math.floor(Math.random() * 3) + 1;
 
+	/* push the first unique element into innerArray */
 	const innerArray = [firstElement];
 
 	for (let j = 0; j < arrayLength; j++) {
+		/* get a random url from the list */
 		const randomUrl =
 			shuttledUrls[Math.floor(Math.random() * shuttledUrls.length)];
+		/* if the url not inside of the innerArray, just push it in */
 		if (!innerArray.includes(randomUrl)) {
 			innerArray.push(randomUrl);
 		}
 	}
+	/* push the inner array into the outerArray */
 	result.push(innerArray);
 }
 
