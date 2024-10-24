@@ -8,6 +8,7 @@ import {
 	PaginationLink,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
+import generatePageArray from "@/utils/generatePageArray";
 import { useSearchParams, useRouter } from "next/navigation";
 
 type paginationPropsType = {
@@ -21,10 +22,12 @@ function HomePagination({ totalPage, currentPage }: paginationPropsType) {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const params = new URLSearchParams(searchParams);
-	const pageArray = Array.from(
-		{ length: totalPage > pageSpan ? pageSpan : totalPage },
-		(_, i) => i + 1
-	);
+
+	const pageArray = generatePageArray({
+		currentPage: Number(currentPage),
+		totalPage,
+		pageSpan,
+	});
 	const urlPage = params.get("page");
 
 	const handlePrevPage = () => {
