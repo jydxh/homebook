@@ -29,7 +29,7 @@ function HomeSort() {
 	return (
 		<>
 			<div className="flex items-center justify-center gap-x-4">
-				<h4 className="font-semibold  text-center">Sort by</h4>
+				<h4 className="font-semibold cursor-default  text-center">Sort by</h4>
 				<SortButton label="Price" onClick={handlePriceSort} />
 				<SortButton label="Rating" onClick={handleRatingSort} />
 			</div>

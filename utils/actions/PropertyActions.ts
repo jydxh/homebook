@@ -108,6 +108,10 @@ export const fetchProperties = async ({
 	const categoryId = searchParams.category;
 	const priceSort = (searchParams.price || "desc") as SortOrder;
 	const ratingSort = (searchParams.rating || "desc") as SortOrder;
+	if (priceSort !== "asc" && priceSort !== "desc")
+		throw new Error("invalid price sort order");
+	if (ratingSort !== "asc" && ratingSort !== "desc")
+		throw new Error("invalid rating sort order");
 	/* if user does not select any amenities, default will be [], meaning DB will not do any filter amenities, only if client select and provide a list of amenities will the backend do filtering */
 	const amenities = searchParams.amenities?.split(",") || [];
 	const page = searchParams.page || 1;
