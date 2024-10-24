@@ -115,7 +115,7 @@ export const fetchProperties = async ({
 	/* if user does not select any amenities, default will be [], meaning DB will not do any filter amenities, only if client select and provide a list of amenities will the backend do filtering */
 	const amenities = searchParams.amenities?.split(",") || [];
 	const page = searchParams.page || 1;
-	const take = 10;
+	const take = 20;
 
 	try {
 		const propertyList = await db.property.findMany({
