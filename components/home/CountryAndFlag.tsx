@@ -6,7 +6,13 @@ function CountryAndFlag({ country }: { country: TCountryCode }) {
 	return (
 		<div className="flex gap-x-2 items-center">
 			<p>{countryName}</p>
-			<Image src={flagUrl} width={30} height={18} alt={countryName} />
+			<Image
+				src={flagUrl}
+				className="w-[30px] h-[18px] object-cover"
+				width={30}
+				height={18}
+				alt={countryName}
+			/>
 		</div>
 	);
 }

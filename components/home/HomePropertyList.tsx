@@ -27,7 +27,7 @@ async function HomePropertyList({
 					return (
 						<Card
 							key={id}
-							className="p-1 mx-auto rounded w-[75%] md:w-full bg-stone-50 hover:bg-muted ">
+							className=" mx-auto rounded w-[75%] md:w-full bg-stone-50 hover:bg-muted ">
 							{/* carousel */}
 							<CarouselImages images={images} name={name} />
 							<div className="px-2 pb-2">

@@ -16,15 +16,15 @@ function CarouselImages({ images, name }: { images: string[]; name: string }) {
 					{images.map(image => {
 						return (
 							<CarouselItem key={image}>
-								<div className="p-1">
+								<div>
 									<Card>
-										<CardContent className="w-full relative h-[250px] rounded">
+										<CardContent className="w-full relative h-[250px] rounded-t">
 											<Image
 												fill
 												sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 												src={image}
 												alt={name}
-												className="object-cover rounded"
+												className="object-cover rounded-t"
 											/>
 										</CardContent>
 										{/* <CardContent className="flex aspect-square items-center justify-center p-6">
