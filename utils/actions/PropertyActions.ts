@@ -93,11 +93,6 @@ export const createProperty = async (
 	return redirect("/");
 };
 
-enum SortOrder {
-	ASC = "asc",
-	DESC = "desc",
-}
-
 export const fetchProperties = async ({
 	searchParams,
 }: {
@@ -106,11 +101,11 @@ export const fetchProperties = async ({
 	console.log(searchParams);
 	const search = searchParams.search?.toLowerCase() || "";
 	const categoryId = searchParams.category;
-	const priceSort = (searchParams.price || "desc") as SortOrder;
-	const ratingSort = (searchParams.rating || "desc") as SortOrder;
-	if (priceSort !== "asc" && priceSort !== "desc")
+	const priceSort = searchParams.price;
+	const ratingSort = searchParams.rating;
+	if (priceSort !== "asc" && priceSort !== "desc" && priceSort !== undefined)
 		throw new Error("invalid price sort order");
-	if (ratingSort !== "asc" && ratingSort !== "desc")
+	if (ratingSort !== "asc" && ratingSort !== "desc" && ratingSort !== undefined)
 		throw new Error("invalid rating sort order");
 	/* if user does not select any amenities, default will be [], meaning DB will not do any filter amenities, only if client select and provide a list of amenities will the backend do filtering */
 	const amenities = searchParams.amenities?.split(",") || [];
@@ -142,7 +137,7 @@ export const fetchProperties = async ({
 				amenities: true,
 			},
 			orderBy: [
-				{ price: priceSort },
+				priceSort ? { price: priceSort } : { createdAt: "desc" },
 				/* later after adding review model add logic here for sorting by raring here */
 				/* 	{ rating: ratingSort } */
 			],
