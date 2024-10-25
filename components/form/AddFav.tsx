@@ -4,11 +4,24 @@ import FormContainer from "./FormContainer";
 import { addFavAction } from "@/utils/actions/PropertyActions";
 import { usePathname } from "next/navigation";
 import { AddFavButton } from "./Buttons";
-
+import { SignInButton, useAuth } from "@clerk/nextjs";
+import { Button } from "../ui/button";
+import { IoIosHeartEmpty } from "react-icons/io";
 function AddFav({ isFav, propertyId }: { isFav: boolean; propertyId: string }) {
 	const path = usePathname();
 
 	const addFav = addFavAction.bind(null, {}, { path, propertyId }); // null for "this", the {} empty object for prevState, {path, propertyId} for the second argue
+
+	/* if user not login, render the login button */
+	const { userId } = useAuth();
+	if (!userId)
+		return (
+			<SignInButton mode="modal">
+				<Button type="button" size="icon" variant="outline">
+					<IoIosHeartEmpty className="w-5 h-5" />
+				</Button>
+			</SignInButton>
+		);
 
 	return (
 		<FormContainer action={addFav}>

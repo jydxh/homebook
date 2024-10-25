@@ -9,7 +9,7 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import CarouselImages from "./CarouselImages";
 import { HomePageSearchParam } from "@/app/page";
 import HomePagination from "./HomePagination";
-import AddFavBtn from "../form/AddFav";
+import AddFav from "../form/AddFav";
 
 async function HomePropertyList({
 	searchParams,
@@ -50,7 +50,7 @@ async function HomePropertyList({
 								<p className="font-medium">{formatCurrency(price)} per night</p>
 							</div>
 							<div className="absolute top-1 right-1">
-								<AddFavBtn propertyId={id} isFav={isFav} />
+								<AddFav propertyId={id} isFav={isFav} />
 							</div>
 						</Card>
 					);

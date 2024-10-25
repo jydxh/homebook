@@ -232,3 +232,32 @@ export const addFavAction = async (
 	revalidatePath(path);
 	return { message };
 };
+
+export const fetchFavProperties = async () => {
+	try {
+		const user = await getAuthUser();
+
+		const properties = await db.favorite.findMany({
+			where: {
+				userId: user.id,
+			},
+			select: {
+				property: {
+					select: {
+						id: true,
+						name: true,
+						tagline: true,
+						price: true,
+						country: true,
+						image: true,
+						latLng: true,
+					},
+				},
+			},
+		});
+		return properties.map(item => item.property);
+	} catch (error) {
+		console.log(error);
+		return [];
+	}
+};
