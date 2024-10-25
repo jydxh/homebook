@@ -1,4 +1,4 @@
-import { fetchProperties } from "@/utils/actions/PropertyActions";
+import { fetchFavList, fetchProperties } from "@/utils/actions/PropertyActions";
 import { Card } from "../ui/card";
 import EmptyResult from "../EmptyResult";
 import { FaStar } from "react-icons/fa6";
@@ -9,6 +9,7 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import CarouselImages from "./CarouselImages";
 import { HomePageSearchParam } from "@/app/page";
 import HomePagination from "./HomePagination";
+import AddFavBtn from "../form/AddFav";
 
 async function HomePropertyList({
 	searchParams,
@@ -16,7 +17,8 @@ async function HomePropertyList({
 	searchParams: HomePageSearchParam;
 }) {
 	const properties = await fetchProperties({ searchParams });
-	console.log(properties);
+	const favList = await fetchFavList();
+	//console.log(properties);
 	if (properties.totalPage === 0) return <EmptyResult />;
 	return (
 		<>
@@ -24,10 +26,11 @@ async function HomePropertyList({
 				{properties.data.map(item => {
 					const { id, country, image, name, price, tagline, latLng } = item;
 					const images = JSON.parse(image as string) as string[];
+					const isFav = favList.includes(id);
 					return (
 						<Card
 							key={id}
-							className=" mx-auto rounded w-[75%] md:w-full bg-stone-50 hover:bg-muted ">
+							className="relative mx-auto rounded w-[75%] md:w-full bg-stone-50 hover:bg-muted ">
 							{/* carousel */}
 							<CarouselImages images={images} name={name} />
 							<div className="px-2 pb-2">
@@ -45,6 +48,9 @@ async function HomePropertyList({
 									<CountryAndFlag country={country as TCountryCode} />
 								</div>
 								<p className="font-medium">{formatCurrency(price)} per night</p>
+							</div>
+							<div className="absolute top-1 right-1">
+								<AddFavBtn propertyId={id} isFav={isFav} />
 							</div>
 						</Card>
 					);

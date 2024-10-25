@@ -27,7 +27,7 @@ async function ProfilePage() {
 			userProfile.vendorProfile[0].applicationStatus === "CANCELLED");
 	const shouldShowCancelApplication =
 		userProfile.role === "USER" &&
-		userProfile.vendorProfile[0].applicationStatus === "PENDING";
+		userProfile.vendorProfile[0]?.applicationStatus === "PENDING";
 	return (
 		<section className="p-8">
 			<h2 className="font-medium mx-auto w-full text-center text-2xl mb-4">

@@ -12,6 +12,7 @@ import {
 	validateZodSchema,
 } from "../zodSchema";
 import { HomePageSearchParam } from "@/app/page";
+import { revalidatePath } from "next/cache";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -98,7 +99,7 @@ export const fetchProperties = async ({
 }: {
 	searchParams: HomePageSearchParam;
 }) => {
-	console.log(searchParams);
+	//console.log(searchParams);
 	const search = searchParams.search?.toLowerCase() || "";
 	const categoryId = searchParams.category;
 	const priceSort = searchParams.price;
@@ -174,4 +175,60 @@ export const fetchProperties = async ({
 		console.log(error);
 		return { totalPage: 0, currentPage: 1, totalCount: 0, data: [] };
 	}
+};
+
+export const fetchFavList = async () => {
+	try {
+		const user = await getAuthUser();
+		const userFavList = await db.favorite.findMany({
+			where: {
+				userId: user.id,
+			},
+			select: {
+				propertyId: true,
+			},
+		});
+		return userFavList.map(list => list.propertyId);
+	} catch (error) {
+		console.log(error);
+		return [];
+	}
+};
+
+export const addFavAction = async (
+	prevState: unknown,
+	{ propertyId, path }: { propertyId: string; path: string }
+) => {
+	let message = "";
+	try {
+		const user = await getAuthUser();
+
+		const existFav = await db.favorite.findFirst({
+			where: {
+				propertyId,
+				userId: user.id,
+			},
+		});
+		if (existFav) {
+			await db.favorite.delete({
+				where: {
+					id: existFav.id,
+				},
+			});
+			message = "Removed from my favorite list";
+		} else {
+			await db.favorite.create({
+				data: {
+					propertyId,
+					userId: user.id,
+				},
+			});
+			message = "Added to my favorite list";
+		}
+	} catch (error) {
+		console.log(error);
+		return renderError(error);
+	}
+	revalidatePath(path);
+	return { message };
 };
