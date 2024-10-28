@@ -43,8 +43,8 @@ function CarouselImages({ images, name }: { images: string[]; name: string }) {
 						);
 					})}
 				</CarouselContent>
-				<CarouselPrevious className="absolute left-2" />
-				<CarouselNext className="absolute right-2" />
+				<CarouselPrevious className="absolute left-2 z-50" />
+				<CarouselNext className="absolute right-2 z-50" />
 			</div>
 		</Carousel>
 	);

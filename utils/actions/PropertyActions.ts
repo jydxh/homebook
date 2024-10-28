@@ -261,3 +261,17 @@ export const fetchFavProperties = async () => {
 		return [];
 	}
 };
+
+export const fetchPropertyById = async (id: string) => {
+	try {
+		const property = await db.property.findUnique({
+			where: {
+				id,
+			},
+		});
+		return property;
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};
