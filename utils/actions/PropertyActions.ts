@@ -281,6 +281,7 @@ export const fetchPropertyById = async (id: string) => {
 			},
 			include: {
 				reviews: true,
+				user: true,
 			},
 		});
 		return property;

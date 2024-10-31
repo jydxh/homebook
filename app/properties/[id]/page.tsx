@@ -6,7 +6,13 @@ import {
 } from "@/utils/actions/PropertyActions";
 import { redirect } from "next/navigation";
 import PropertyGallery from "@/components/property/PropertyGallery";
-
+import CountryAndFlag from "@/components/home/CountryAndFlag";
+import { TCountryCode } from "countries-list";
+import RoomDetail from "@/components/property/RoomDetail";
+import Image from "next/image";
+import calculateYearDiff from "@/utils/calculateYearDiff";
+import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
 async function page({ params }: { params: { id: string } }) {
 	const property = await fetchPropertyById(params.id);
 	console.log(property);
@@ -25,6 +31,7 @@ async function page({ params }: { params: { id: string } }) {
 		baths,
 		guests,
 		reviews,
+		user,
 	} = property;
 	const isFav = favList.includes(id);
 	const images = JSON.parse(image as string) as string[];
@@ -45,6 +52,44 @@ async function page({ params }: { params: { id: string } }) {
 				</div>
 			</div>
 			<PropertyGallery images={images} />
+			<div className="grid grid-cols-1 md:grid-cols-3">
+				<div className="md:col-span-2">
+					<div className="mt-8">
+						<CountryAndFlag country={country as TCountryCode} detailPage />
+						<RoomDetail bedrooms={bedrooms} baths={baths} guests={guests} />
+					</div>
+					{/* vendor info */}
+					<div className="flex gap-x-4 items-center mt-8">
+						<Image
+							src={
+								user.profileImage ||
+								"https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3467.jpg?w=1380"
+							}
+							alt="vendor avatar"
+							width={50}
+							height={50}
+							className="w-[50px] h-[50px] rounded-full"
+						/>
+						<div>
+							<p className="font-medium">
+								Hosted by <span className="capitalize">{user.firstName}</span>
+							</p>
+							<p className="text-muted-foreground">
+								SuperHost &middot; {calculateYearDiff(user.createAt)} hosting
+							</p>
+						</div>
+					</div>
+					<Separator className="mt-4" />
+					{/* description */}
+					{/* will be outsource in the next step! */}
+					<div className="mt-4">
+						<h3 className="font-semibold text-lg">Description:</h3>
+						<article className="">{description}</article>
+					</div>
+				</div>
+				{/* reservation and picking date here */}
+				<div className="md:col-span-1">make reservation otions here,</div>
+			</div>
 		</section>
 	);
 }

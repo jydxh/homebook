@@ -14,12 +14,12 @@ function PropertyGallery({ images }: { images: string[] }) {
 				{images.map(image => (
 					<CarouselItem key={image} className="md:basis-1/2 lg:basis-1/3">
 						<div className="p-1">
-							<Card className="relative w-full h-[400px]">
+							<Card className="relative w-full h-[400px] rounded">
 								<Image
 									src={image}
 									fill
 									alt="propertyImage"
-									className="object-cover"
+									className="object-cover rounded"
 								/>
 							</Card>
 						</div>
