@@ -14,7 +14,7 @@ function HomeAmenityList() {
 	const params = new URLSearchParams(searchParams);
 	const ameSearchParams = params.get("amenities");
 	const handleAmenitiesChange = (id: string) => {
-		console.log(id);
+		// console.log(id);
 		let selectedAmeArray = ameSearchParams?.split(",") || [];
 		const indexOfId = selectedAmeArray.indexOf(id);
 		if (indexOfId > -1) {
@@ -24,14 +24,14 @@ function HomeAmenityList() {
 			// if not exist push into the list
 			selectedAmeArray = [...selectedAmeArray, id];
 		}
-		console.log(selectedAmeArray);
+		//console.log(selectedAmeArray);
 		// update the searchParams, if any one selected, update them into url, if none of them selected, just delete the amenities at url
 		if (selectedAmeArray.length > 0) {
 			params.set("amenities", selectedAmeArray.join(","));
 		} else {
 			params.delete("amenities");
 		}
-
+		params.delete("page");
 		// push the new URL
 		router.push(`/?${params.toString()}`);
 	};

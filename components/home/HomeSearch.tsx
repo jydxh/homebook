@@ -20,7 +20,8 @@ function HomeSearch() {
 	const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
 		const value = evt.target.value;
 		setSearchContent(value);
-		/* the above logic is important, if the input value is empty, just delete the search in the SearchParams*/
+		newSearchParams.delete("page");
+		/* the below logic is important, if the input value is empty, just delete the search in the SearchParams*/
 		if (value) {
 			newSearchParams.set("search", value);
 		} else {

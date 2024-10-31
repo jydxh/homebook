@@ -15,6 +15,7 @@ function HomeCategoryList() {
 			<ScrollArea className="p-8 max-w-[1200px] py-6 mx-auto">
 				<div className="flex gap-x-8 justify-center items-center whitespace-nowrap rounded-md ">
 					{categories.map(cat => {
+						params.delete("page");
 						params.set("category", cat.id);
 						const href = `/?${params.toString()}`;
 						return (

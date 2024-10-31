@@ -19,7 +19,7 @@ async function HomePropertyList({
 }) {
 	const properties = await fetchProperties({ searchParams });
 	const favList = await fetchFavList();
-	//console.log(properties);
+	console.log(properties);
 	if (properties.totalPage === 0) return <EmptyResult />;
 	return (
 		<>
@@ -31,7 +31,7 @@ async function HomePropertyList({
 					return (
 						<Card
 							key={id}
-							className="relative mx-auto rounded w-[75%] md:w-full bg-stone-50 hover:bg-muted ">
+							className="relative mx-auto rounded w-[75%] md:w-full hover:bg-muted ">
 							<Link href={`/properties/${id}`}>
 								{/* carousel */}
 								<CarouselImages images={images} name={name} />
@@ -63,11 +63,13 @@ async function HomePropertyList({
 				})}
 			</section>
 			{/* pagination */}
-			<HomePagination
-				currentPage={properties.currentPage}
-				totalPage={properties.totalPage}
-				totalCount={properties.totalCount || 0}
-			/>
+			{properties.totalPage > 1 && (
+				<HomePagination
+					currentPage={properties.currentPage}
+					totalPage={properties.totalPage}
+					totalCount={properties.totalCount || 0}
+				/>
+			)}
 		</>
 	);
 }

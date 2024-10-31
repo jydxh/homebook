@@ -5,6 +5,7 @@ import {
 	fetchPropertyById,
 } from "@/utils/actions/PropertyActions";
 import { redirect } from "next/navigation";
+import PropertyGallery from "@/components/property/PropertyGallery";
 
 async function page({ params }: { params: { id: string } }) {
 	const property = await fetchPropertyById(params.id);
@@ -43,6 +44,7 @@ async function page({ params }: { params: { id: string } }) {
 					<AddFav propertyId={id} isFav={isFav} withTxt={true} />
 				</div>
 			</div>
+			<PropertyGallery images={images} />
 		</section>
 	);
 }

@@ -144,7 +144,7 @@ export const fetchProperties = async ({
 			],
 		});
 		// total count of items
-		const totalCount = await db.property.count({
+		let totalCount = await db.property.count({
 			where: {
 				OR: [{ name: { contains: search } }, { tagline: { contains: search } }],
 				AND: [
@@ -156,10 +156,15 @@ export const fetchProperties = async ({
 				],
 			},
 		});
-		const totalPage = Math.ceil(totalCount / take);
-
+		let totalPage = Math.ceil(totalCount / take);
+		/* if user does not provide amenities filtering */
 		if (amenities.length === 0)
-			return { totalPage, currentPage: page, totalCount, data: propertyList };
+			return {
+				totalPage,
+				currentPage: page,
+				totalCount,
+				data: propertyList,
+			};
 
 		// user:[1,2] amenities:[1,2,3,4,5] => true;
 		// user: [1,2] amenities: [3,4,5] => false;
@@ -169,8 +174,14 @@ export const fetchProperties = async ({
 			const amenityIds = property.amenities.map(ame => ame.amenitiesId);
 			return amenities.every(ameId => amenityIds.includes(ameId));
 		});
+		totalCount = filteredPropertyList.length;
 
-		return { data: filteredPropertyList, totalPage, currentPage: page };
+		return {
+			data: filteredPropertyList,
+			totalPage: Math.ceil(totalCount / take),
+			totalCount,
+			currentPage: page,
+		};
 	} catch (error) {
 		console.log(error);
 		return { totalPage: 0, currentPage: 1, totalCount: 0, data: [] };

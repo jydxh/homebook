@@ -41,7 +41,7 @@ async function FavoritesPage() {
 						return (
 							<Card
 								key={id}
-								className="relative mx-auto rounded w-[75%] md:w-full bg-stone-50 hover:bg-muted ">
+								className="relative mx-auto rounded w-[75%] md:w-full  hover:bg-muted ">
 								<Link href={`/properties/${id}`} className="z-0">
 									{/* carousel */}
 									<CarouselImages images={images} name={name} />

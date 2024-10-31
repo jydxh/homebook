@@ -11,6 +11,7 @@ function HomeSort() {
 	const priceSort = params.get("price") || "desc";
 	const ratingSort = params.get("rating") || "desc";
 	const handlePriceSort = () => {
+		params.delete("page");
 		if (priceSort === "asc") {
 			params.set("price", "desc");
 		} else {
@@ -19,6 +20,7 @@ function HomeSort() {
 		router.push(`/?${params.toString()}`);
 	};
 	const handleRatingSort = () => {
+		params.delete("page");
 		if (ratingSort === "asc") {
 			params.set("rating", "desc");
 		} else {
