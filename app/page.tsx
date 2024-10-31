@@ -4,6 +4,8 @@ import HomeSearch from "@/components/home/HomeSearch";
 import { Separator } from "@/components/ui/separator";
 import HomePropertyList from "@/components/home/HomePropertyList";
 import HomeSort from "@/components/home/HomeSort";
+import { Suspense } from "react";
+import PropertyListFallBack from "@/components/fallback/PropertyListFallBack";
 export type HomePageSearchParam = {
 	category?: string;
 	amenities?: string;
@@ -32,7 +34,9 @@ export default async function HomePage({
 			<Separator />
 
 			{/* list of property */}
-			<HomePropertyList searchParams={searchParams} />
+			<Suspense fallback={<PropertyListFallBack />}>
+				<HomePropertyList searchParams={searchParams} />
+			</Suspense>
 		</section>
 	);
 }
