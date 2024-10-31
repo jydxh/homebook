@@ -268,6 +268,9 @@ export const fetchPropertyById = async (id: string) => {
 			where: {
 				id,
 			},
+			include: {
+				reviews: true,
+			},
 		});
 		return property;
 	} catch (error) {

@@ -27,7 +27,13 @@ export const SubmitButton = ({
 	);
 };
 
-export const AddFavButton = ({ isFav }: { isFav: boolean }) => {
+export const AddFavButton = ({
+	isFav,
+	withTxt = false,
+}: {
+	isFav: boolean;
+	withTxt?: boolean;
+}) => {
 	const { pending } = useFormStatus(); // the useFormStatus has to be used in the button component, not in the parent form component!!! important!! ref:  https://react.dev/reference/react-dom/hooks/useFormStatus
 	//  call useFormStatus from inside a component that is located inside <form>.
 
@@ -35,15 +41,30 @@ export const AddFavButton = ({ isFav }: { isFav: boolean }) => {
 		<Button
 			type="submit"
 			disabled={pending}
-			size="icon"
-			variant="outline"
+			size={withTxt ? "sm" : "icon"}
+			variant={withTxt ? "ghost" : "outline"}
 			className="hover:scale-110 transition duration-300 ease-in-out">
 			{pending ? (
-				<CgSpinner className="animate-spin w-5 h-5" />
+				<>
+					<CgSpinner className="animate-spin w-5 h-5" />
+				</>
 			) : isFav ? (
-				<IoMdHeart className="text-red-400 w-5 h-5" />
+				<div className="flex justify-center items-center gap-2">
+					<IoMdHeart
+						className={`text-red-400 w-5 h-5 ${
+							withTxt ? " relative top-[2px] " : " "
+						}`}
+					/>
+					{withTxt && <p className="underline text-base ">Remove </p>}
+				</div>
 			) : (
-				<IoIosHeartEmpty className="w-5 h-5" />
+				<div className="flex justify-center items-center gap-2">
+					{" "}
+					<IoIosHeartEmpty
+						className={` w-5 h-5 ${withTxt ? " relative top-[2px] " : " "}`}
+					/>
+					{withTxt && <p className="underline text-base ">Save </p>}
+				</div>
 			)}
 		</Button>
 	);

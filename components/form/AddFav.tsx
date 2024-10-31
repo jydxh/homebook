@@ -7,7 +7,15 @@ import { AddFavButton } from "./Buttons";
 import { SignInButton, useAuth } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { IoIosHeartEmpty } from "react-icons/io";
-function AddFav({ isFav, propertyId }: { isFav: boolean; propertyId: string }) {
+function AddFav({
+	isFav,
+	propertyId,
+	withTxt = false,
+}: {
+	isFav: boolean;
+	propertyId: string;
+	withTxt?: boolean;
+}) {
 	const path = usePathname();
 
 	const addFav = addFavAction.bind(null, {}, { path, propertyId }); // null for "this", the {} empty object for prevState, {path, propertyId} for the second argue
@@ -25,7 +33,7 @@ function AddFav({ isFav, propertyId }: { isFav: boolean; propertyId: string }) {
 
 	return (
 		<FormContainer action={addFav}>
-			<AddFavButton isFav={isFav} />
+			<AddFavButton isFav={isFav} withTxt={withTxt} />
 		</FormContainer>
 	);
 }
