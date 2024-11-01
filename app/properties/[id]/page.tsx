@@ -15,10 +15,18 @@ import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
 import PropertyDescription from "@/components/property/PropertyDescription";
 import PropertyAmenities from "@/components/property/PropertyAmenities";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import dynamic from "next/dynamic";
+const PropertyLeaflet = dynamic(
+	() => import("@/components/property/PropertyLeaflet"),
+	{ ssr: false, loading: () => <Skeleton className="mt-12 w-full h-[50vh]" /> }
+);
 
 async function page({ params }: { params: { id: string } }) {
 	const property = await fetchPropertyById(params.id);
-	console.log(property);
+	//	console.log(property);
 	const favList = await fetchFavList();
 	if (!property) {
 		return redirect("/");
@@ -36,6 +44,8 @@ async function page({ params }: { params: { id: string } }) {
 		reviews,
 		user,
 		amenities,
+		address,
+		latLng,
 	} = property;
 	const isFav = favList.includes(id);
 	const images = JSON.parse(image as string) as string[];
@@ -91,6 +101,11 @@ async function page({ params }: { params: { id: string } }) {
 
 					{/* amenities */}
 					<PropertyAmenities amenitiesList={amenities} />
+
+					{/* leaflet map  */}
+					<Suspense fallback={<Skeleton className="w-[50vw] h-[50vh]" />}>
+						<PropertyLeaflet address={address} latLngString={latLng} />
+					</Suspense>
 				</div>
 				{/* reservation and picking date here */}
 				<div className="md:col-span-1">make reservation otions here,</div>
