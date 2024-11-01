@@ -14,6 +14,8 @@ import calculateYearDiff from "@/utils/calculateYearDiff";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
 import PropertyDescription from "@/components/property/PropertyDescription";
+import PropertyAmenities from "@/components/property/PropertyAmenities";
+
 async function page({ params }: { params: { id: string } }) {
 	const property = await fetchPropertyById(params.id);
 	console.log(property);
@@ -33,6 +35,7 @@ async function page({ params }: { params: { id: string } }) {
 		guests,
 		reviews,
 		user,
+		amenities,
 	} = property;
 	const isFav = favList.includes(id);
 	const images = JSON.parse(image as string) as string[];
@@ -61,6 +64,7 @@ async function page({ params }: { params: { id: string } }) {
 					</div>
 					{/* vendor info */}
 					<div className="flex gap-x-4 items-center mt-8">
+						{/* this image should be wrapped by link href to the user page */}
 						<Image
 							src={
 								user.profileImage ||
@@ -75,15 +79,18 @@ async function page({ params }: { params: { id: string } }) {
 							<p className="font-medium">
 								Hosted by <span className="capitalize">{user.firstName}</span>
 							</p>
-							<p className="text-muted-foreground">
+							<p className="text-muted-foreground capitalize">
 								SuperHost &middot; {calculateYearDiff(user.createAt)} hosting
 							</p>
 						</div>
 					</div>
 					<Separator className="mt-4" />
 					{/* description */}
-					{/* will be outsource in the next step! */}
+
 					<PropertyDescription description={description} />
+
+					{/* amenities */}
+					<PropertyAmenities amenitiesList={amenities} />
 				</div>
 				{/* reservation and picking date here */}
 				<div className="md:col-span-1">make reservation otions here,</div>

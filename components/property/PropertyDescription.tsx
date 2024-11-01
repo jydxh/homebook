@@ -14,7 +14,7 @@ function PropertyDescription({ description }: { description: string }) {
 	return (
 		<div className="mt-4">
 			<h3 className="font-semibold text-lg">Description:</h3>
-			<article className="mt-4">
+			<article className="mt-4 text-muted-foreground leading-8 tracking-wide">
 				{isMoreChars && !isShowMore
 					? description.substring(0, wordLimit) + "..."
 					: description}

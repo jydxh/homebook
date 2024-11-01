@@ -279,9 +279,11 @@ export const fetchPropertyById = async (id: string) => {
 			where: {
 				id,
 			},
+
 			include: {
 				reviews: true,
 				user: true,
+				amenities: true,
 			},
 		});
 		return property;
