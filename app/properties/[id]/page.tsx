@@ -13,6 +13,7 @@ import Image from "next/image";
 import calculateYearDiff from "@/utils/calculateYearDiff";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
+import PropertyDescription from "@/components/property/PropertyDescription";
 async function page({ params }: { params: { id: string } }) {
 	const property = await fetchPropertyById(params.id);
 	console.log(property);
@@ -82,10 +83,7 @@ async function page({ params }: { params: { id: string } }) {
 					<Separator className="mt-4" />
 					{/* description */}
 					{/* will be outsource in the next step! */}
-					<div className="mt-4">
-						<h3 className="font-semibold text-lg">Description:</h3>
-						<article className="">{description}</article>
-					</div>
+					<PropertyDescription description={description} />
 				</div>
 				{/* reservation and picking date here */}
 				<div className="md:col-span-1">make reservation otions here,</div>
