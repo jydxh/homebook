@@ -20,6 +20,7 @@ async function CreateProfilePage() {
 	});
 	/* if the user has in the db just redirect to home page */
 	if (existingUserInDb) redirect("/");
+
 	const formDefault = {
 		userName: user.username,
 		firstName: user.firstName,
@@ -50,6 +51,8 @@ async function CreateProfilePage() {
 							type="text"
 							defaultValue={formDefault.lastName || ""}
 						/>
+						<FormInput label="Country" name="country" type="text" />
+						<FormInput label="City" name="city" type="text" />
 						{!user.imageUrl && (
 							<FormInput
 								required={false}

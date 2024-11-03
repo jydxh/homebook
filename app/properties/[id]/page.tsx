@@ -19,6 +19,7 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import dynamic from "next/dynamic";
+import PropertyReviews from "@/components/property/PropertyReviews";
 const PropertyLeaflet = dynamic(
 	() => import("@/components/property/PropertyLeaflet"),
 	{ ssr: false, loading: () => <Skeleton className="mt-12 w-full h-[50vh]" /> }
@@ -109,6 +110,8 @@ async function page({ params }: { params: { id: string } }) {
 				</div>
 				{/* reservation and picking date here */}
 				<div className="md:col-span-1">make reservation otions here,</div>
+				{/* reviews */}
+				<PropertyReviews propertyId={id} />
 			</div>
 		</section>
 	);

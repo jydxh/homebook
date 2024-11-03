@@ -57,6 +57,8 @@ export const createUserProfile = async (
 			userName: formData.get("userName"),
 			lastName: formData.get("lastName"),
 			firstName: formData.get("firstName"),
+			country: formData.get("country"),
+			city: formData.get("city"),
 		};
 		const image = (formData.get("image") as File) || null;
 		const validatedFields = validateZodSchema(UserProfileSchema, rawData);
@@ -96,6 +98,8 @@ export const fetchUserProfile = async () => {
 				firstName: true,
 				lastName: true,
 				userName: true,
+				country: true,
+				city: true,
 				profileImage: true,
 				role: true,
 				vendorProfile: {

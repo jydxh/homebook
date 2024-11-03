@@ -7,6 +7,8 @@ export const UserProfileSchema = z.object({
 		.max(20, { message: "userName cannot over 20 characters" }),
 	firstName: z.string().max(50, { message: "firstName cannot over 50 chars" }),
 	lastName: z.string().max(50, { message: "lastName cannot over 50 chars" }),
+	country: z.string().max(50, { message: "country cannot over 50 chars" }),
+	city: z.string().max(50, { message: "city cannot over 50 chars" }),
 });
 
 export function validateZodSchema<T>(
@@ -97,4 +99,16 @@ export const CreatePropertySchema = z.object({
 	baths: z.coerce.number().nonnegative("baths cannot be less than 0"),
 	address: z.string().max(200, { message: "address cannot be over 200 chars" }),
 	latLng: z.string().max(400, { message: "latLng cannot over 400 chars" }),
+});
+
+export const reviewZodSchema = z.object({
+	rating: z.coerce
+		.number()
+		.max(5, { message: "max rating is 5" })
+		.min(1, { message: "min rating is 1" }),
+	comment: z
+		.string()
+		.min(10, { message: "min chars of comment is 10" })
+		.max(1000, { message: "max chars of comment  is 1000" }),
+	propertyId: z.string(),
 });

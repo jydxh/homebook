@@ -9,7 +9,7 @@ import {
 import Image from "next/image";
 function PropertyGallery({ images }: { images: string[] }) {
 	return (
-		<Carousel className="w-[95%] mx-auto">
+		<Carousel className="w-[90%] mx-auto">
 			<CarouselContent>
 				{images.map(image => (
 					<CarouselItem key={image} className="md:basis-1/2 lg:basis-1/3">

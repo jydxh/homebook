@@ -14,7 +14,7 @@ function PropertyAmenities({
 	return (
 		<div className="mt-8">
 			<h3 className="font-semibold text-lg">Amenities:</h3>
-			<div className="flex items-center gap-x-8 gap-y-4 mt-4">
+			<div className="flex flex-wrap items-center gap-x-8 gap-y-4 mt-4">
 				{existedAmenitiesList.map(item => {
 					return (
 						<div

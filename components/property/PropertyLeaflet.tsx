@@ -27,9 +27,12 @@ function PropertyLeaflet({
 	const latLngArr = [latLngObj.lat, latLngObj.lng] as LatLngExpression;
 	return (
 		<div className="mt-8">
-			<h3 className="font-semibold text-lg">Location: {address}</h3>
+			<h3 className="font-semibold text-lg flex items-center gap-x-4">
+				Location:
+				<span className="text-muted-foreground font-normal">{address}</span>
+			</h3>
 			<MapContainer
-				className="mt-4 w-full h-[50vh]"
+				className="mt-4 w-full h-[50vh] min-h-[300px]"
 				center={latLngArr}
 				zoom={13}
 				scrollWheelZoom={false}>

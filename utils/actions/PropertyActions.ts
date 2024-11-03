@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/utils/db";
+import sanitizeHtml from "sanitize-html";
 
 import { getAuthUser } from "./actions";
 import { redirect } from "next/navigation";
@@ -9,6 +10,7 @@ import { renderError } from "./actions";
 import {
 	CreatePropertySchema,
 	ImageSchema,
+	reviewZodSchema,
 	validateZodSchema,
 } from "../zodSchema";
 import { HomePageSearchParam } from "@/app/page";
@@ -156,7 +158,7 @@ export const fetchProperties = async ({
 				],
 			},
 		});
-		let totalPage = Math.ceil(totalCount / take);
+		const totalPage = Math.ceil(totalCount / take);
 		/* if user does not provide amenities filtering */
 		if (amenities.length === 0)
 			return {
@@ -290,5 +292,60 @@ export const fetchPropertyById = async (id: string) => {
 	} catch (error) {
 		console.log(error);
 		return null;
+	}
+};
+
+export const createPropertyReview = async (
+	prevState: unknown,
+	formData: FormData
+) => {
+	try {
+		const user = await getAuthUser();
+		console.log(formData);
+		const rawData = Object.fromEntries(formData);
+		const validatedFields = validateZodSchema(reviewZodSchema, rawData);
+		/* sanitize textArea content */
+		const comment = sanitizeHtml(validatedFields.comment);
+
+		await db.review.create({
+			data: {
+				...validatedFields,
+				comment,
+				userId: user.id,
+			},
+		});
+		return { message: "Successfully created a review" };
+	} catch (error) {
+		console.log(error);
+		return renderError(error);
+	}
+};
+
+export const fetchPropertyReviews = async (id: string) => {
+	try {
+		const reviews = await db.review.findMany({
+			where: {
+				propertyId: id,
+			},
+			select: {
+				comment: true,
+				id: true,
+				createAt: true,
+				rating: true,
+				user: {
+					select: {
+						firstName: true,
+						createAt: true,
+						profileImage: true,
+						city: true,
+						country: true,
+					},
+				},
+			},
+		});
+		return reviews;
+	} catch (error) {
+		console.log(error);
+		return [];
 	}
 };

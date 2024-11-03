@@ -32,6 +32,19 @@ async function UserInfo() {
 						type="text"
 						defaultValue={profile?.lastName || ""}
 					/>
+
+					<FormInput
+						label="City"
+						name="city"
+						type="text"
+						defaultValue={profile?.city || ""}
+					/>
+					<FormInput
+						label="Country"
+						name="country"
+						type="text"
+						defaultValue={profile?.country || ""}
+					/>
 				</div>
 
 				<div className="w-full mt-8 flex gap-x-8  justify-center">

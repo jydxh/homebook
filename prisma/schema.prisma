@@ -66,6 +66,8 @@ model User {
   lastName      String
   userName      String
   email         String
+  country       String?
+  city          String?
   profileImage  String?
   createAt      DateTime        @default(now())
   updateAt      DateTime        @updatedAt
