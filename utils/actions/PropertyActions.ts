@@ -299,6 +299,8 @@ export const createPropertyReview = async (
 	prevState: unknown,
 	formData: FormData
 ) => {
+	let message = "";
+	const propertyId = formData.get("propertyId");
 	try {
 		const user = await getAuthUser();
 		console.log(formData);
@@ -314,11 +316,13 @@ export const createPropertyReview = async (
 				userId: user.id,
 			},
 		});
-		return { message: "Successfully created a review" };
+		message = "Successfully created the review";
 	} catch (error) {
 		console.log(error);
 		return renderError(error);
 	}
+	revalidatePath(`/properties/${propertyId}`);
+	return { message };
 };
 
 export const fetchPropertyReviews = async (id: string) => {
@@ -341,6 +345,9 @@ export const fetchPropertyReviews = async (id: string) => {
 						country: true,
 					},
 				},
+			},
+			orderBy: {
+				createAt: "desc",
 			},
 		});
 		return reviews;

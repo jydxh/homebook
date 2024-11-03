@@ -109,6 +109,6 @@ export const reviewZodSchema = z.object({
 	comment: z
 		.string()
 		.min(10, { message: "min chars of comment is 10" })
-		.max(1000, { message: "max chars of comment  is 1000" }),
+		.max(400, { message: "max chars of comment  is 400" }),
 	propertyId: z.string(),
 });

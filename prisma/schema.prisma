@@ -140,8 +140,8 @@ model Order {
 
 model Review {
   id         String   @id @default(uuid())
-  rating     Int
-  comment    String
+  rating     Int      
+  comment    String   @db.VarChar(400)
   createAt   DateTime @default(now())
   updateAt   DateTime @updatedAt
   user       User     @relation(fields: [userId], references: [clerkId], onDelete: Cascade) // it tells the relation between user and review, the fields point to the review->userId, and the reference point to User->clerkId, so the review.userId will be connected a relation to the User->clerkId, the onDelete Cascade: if user is deleted, all associate reviews will also be deleted

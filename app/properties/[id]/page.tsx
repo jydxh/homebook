@@ -34,7 +34,6 @@ async function page({ params }: { params: { id: string } }) {
 	}
 	const {
 		name,
-		tagline,
 		image,
 		country,
 		description,
@@ -42,7 +41,6 @@ async function page({ params }: { params: { id: string } }) {
 		bedrooms,
 		baths,
 		guests,
-		reviews,
 		user,
 		amenities,
 		address,
@@ -109,7 +107,9 @@ async function page({ params }: { params: { id: string } }) {
 					</Suspense>
 				</div>
 				{/* reservation and picking date here */}
-				<div className="md:col-span-1">make reservation otions here,</div>
+				<div className="col-span-3 md:col-span-1">
+					make reservation otions here,
+				</div>
 				{/* reviews */}
 				<PropertyReviews propertyId={id} />
 			</div>

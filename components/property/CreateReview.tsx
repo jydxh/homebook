@@ -40,7 +40,7 @@ function CreateReview({ propertyId }: { propertyId: string }) {
 								id="comment"
 								rows={5}
 								cols={33}
-								maxLength={1000}
+								maxLength={400}
 								minLength={10}
 							/>
 							<div className="mt-4 flex items-center gap-x-4 justify-center ">
