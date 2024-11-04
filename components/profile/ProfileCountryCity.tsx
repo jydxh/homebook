@@ -1,5 +1,11 @@
 "use client";
-import { useEffect, useState, CSSProperties, useRef } from "react";
+import {
+	useEffect,
+	useState,
+	CSSProperties,
+	useRef,
+	useLayoutEffect,
+} from "react";
 import { Label } from "../ui/label";
 import {
 	Select,
@@ -26,10 +32,10 @@ function ProfileCountryCity({
 	const [selectCity, setSelectCity] = useState(city);
 	const [loading, setLoading] = useState(false);
 	const [isInitial, setIsInitial] = useState(true);
+	const listRef = useRef<any>(null);
 
 	/* update the city list when the country changed */
 	useEffect(() => {
-		console.log("called");
 		const fetchCites = async () => {
 			setLoading(true);
 			const fetchedCities = City.getCitiesOfCountry(selectCountry);
@@ -46,17 +52,34 @@ function ProfileCountryCity({
 		setIsInitial(false);
 	}, [selectCountry]);
 
+	/* useEffect for to move the list to the selected item */
+	useLayoutEffect(() => {
+		if (listRef.current && selectCity && cityLists && cityLists.length > 0) {
+			const index = cityLists.findIndex(
+				city => `${city.name}-${city.stateCode}` === selectCity
+			);
+
+			if (index !== -1) {
+				requestAnimationFrame(() => {
+					listRef.current.scrollToItem(index, "center");
+				});
+			}
+		}
+	}, [selectCity, cityLists]);
+
 	/*  use the react-window to render thousands of city at dom, to improve performance */
 	const Row = ({ index, style }: { index: number; style: CSSProperties }) =>
 		cityLists ? (
 			<div style={style}>
 				<SelectItem
-					key={index}
+					key={`${cityLists[index].name}-${cityLists[index].stateCode}`}
 					value={`${cityLists[index].name}-${cityLists[index].stateCode}`}>
 					{`${cityLists[index].name}-${cityLists[index].stateCode}`}
 				</SelectItem>
 			</div>
-		) : null;
+		) : (
+			"unavailable"
+		);
 
 	return (
 		<>
@@ -109,6 +132,7 @@ function ProfileCountryCity({
 						</SelectTrigger>
 						<SelectContent>
 							<List
+								ref={listRef}
 								height={300}
 								itemCount={cityLists?.length || 0}
 								itemSize={35}
