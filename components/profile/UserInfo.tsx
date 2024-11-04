@@ -6,6 +6,14 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { updateUserProfile } from "@/utils/actions/ProfileActions";
 
+import dynamic from "next/dynamic";
+import { Skeleton } from "../ui/skeleton";
+
+const ProfileCountryCity = dynamic(() => import("./ProfileCountryCity"), {
+	ssr: false,
+	loading: () => <Skeleton className="w-full h-20 " />,
+});
+
 async function UserInfo() {
 	const profile = await fetchUserProfile();
 
@@ -33,6 +41,11 @@ async function UserInfo() {
 						defaultValue={profile?.lastName || ""}
 					/>
 
+					<ProfileCountryCity
+						country={profile?.country || "USA"}
+						city={profile?.city || "Chicago"}
+					/>
+					{/* 
 					<FormInput
 						label="City"
 						name="city"
@@ -44,7 +57,7 @@ async function UserInfo() {
 						name="country"
 						type="text"
 						defaultValue={profile?.country || ""}
-					/>
+					/> */}
 				</div>
 
 				<div className="w-full mt-8 flex gap-x-8  justify-center">

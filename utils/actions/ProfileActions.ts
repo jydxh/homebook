@@ -128,7 +128,9 @@ export const updateUserProfile = async (prev: unknown, formData: FormData) => {
 		if (
 			validatedFields.firstName === prevUserProfile?.firstName &&
 			validatedFields.lastName === prevUserProfile.lastName &&
-			validatedFields.userName === prevUserProfile.userName
+			validatedFields.userName === prevUserProfile.userName &&
+			validatedFields.city === prevUserProfile.city &&
+			validatedFields.country === prevUserProfile.country
 		) {
 			return {
 				message: "update failed, please update user info before submit",
