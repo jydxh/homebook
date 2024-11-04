@@ -9,7 +9,14 @@ import { createUserProfile } from "@/utils/actions/ProfileActions";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "@/components/form/Buttons";
 import { Button } from "@/components/ui/button";
-import ProfileCountryCity from "@/components/profile/ProfileCountryCity";
+
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const ProfileCountryCity = dynamic(
+	() => import("@/components/profile/ProfileCountryCity"),
+	{ ssr: false, loading: () => <Skeleton className="w-full h-20" /> }
+);
 async function CreateProfilePage() {
 	const user = await currentUser();
 	/* if user has not login yet, but trying to access this page just redirect back to home */
