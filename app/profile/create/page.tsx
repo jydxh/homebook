@@ -9,6 +9,7 @@ import { createUserProfile } from "@/utils/actions/ProfileActions";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "@/components/form/Buttons";
 import { Button } from "@/components/ui/button";
+import ProfileCountryCity from "@/components/profile/ProfileCountryCity";
 async function CreateProfilePage() {
 	const user = await currentUser();
 	/* if user has not login yet, but trying to access this page just redirect back to home */
@@ -51,8 +52,9 @@ async function CreateProfilePage() {
 							type="text"
 							defaultValue={formDefault.lastName || ""}
 						/>
-						<FormInput label="Country" name="country" type="text" />
-						<FormInput label="City" name="city" type="text" />
+						<ProfileCountryCity country="" city="" />
+						{/* <FormInput label="Country" name="country" type="text" />
+						<FormInput label="City" name="city" type="text" /> */}
 						{!user.imageUrl && (
 							<FormInput
 								required={false}
