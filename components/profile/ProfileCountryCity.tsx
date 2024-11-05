@@ -25,6 +25,7 @@ import {
 } from "country-state-city";
 
 import { FixedSizeList as List } from "react-window";
+import { Input } from "../ui/input";
 
 function ProfileCountryCity({
 	country = "USA",
@@ -158,7 +159,6 @@ function ProfileCountryCity({
 				<Select
 					required
 					disabled={!selectedState || !selectCountry}
-					name="city"
 					value={selectCity}
 					defaultValue={city}
 					onValueChange={value => {
@@ -179,6 +179,8 @@ function ProfileCountryCity({
 					</SelectContent>
 				</Select>
 			</div>
+			{/* since the cityList will be small chunks, there is no way select tag get the selected options, so use this hidden input to store the city value*/}
+			<Input type="hidden" name="city" value={selectCity} required />
 		</>
 	);
 }

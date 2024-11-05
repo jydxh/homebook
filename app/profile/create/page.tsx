@@ -11,11 +11,11 @@ import { SubmitButton } from "@/components/form/Buttons";
 import { Button } from "@/components/ui/button";
 
 import dynamic from "next/dynamic";
-import { Skeleton } from "@/components/ui/skeleton";
+import LoadingSkeleton from "@/components/profile/LoadingSkeleton";
 
 const ProfileCountryCity = dynamic(
 	() => import("@/components/profile/ProfileCountryCity"),
-	{ ssr: false, loading: () => <Skeleton className="w-full h-20" /> }
+	{ ssr: false, loading: () => <LoadingSkeleton /> }
 );
 async function CreateProfilePage() {
 	const user = await currentUser();
@@ -59,7 +59,7 @@ async function CreateProfilePage() {
 							type="text"
 							defaultValue={formDefault.lastName || ""}
 						/>
-						<ProfileCountryCity country="" city="" />
+						<ProfileCountryCity country="" city="" state="" />
 						{/* <FormInput label="Country" name="country" type="text" />
 						<FormInput label="City" name="city" type="text" /> */}
 						{!user.imageUrl && (
