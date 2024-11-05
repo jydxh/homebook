@@ -6,6 +6,8 @@ import { IoMdStar } from "react-icons/io"; // full
 import { IoMdStarOutline } from "react-icons/io"; // outline star
 import { formatDate } from "@/utils/formatDate";
 import ReviewComment from "./ReviewComment";
+import { countryList } from "@/utils/country";
+import { TCountryCode } from "countries-list";
 async function ReviewLists({ propertyId }: { propertyId: string }) {
 	const reviews = await fetchPropertyReviews(propertyId);
 	if (reviews.length === 0) {
@@ -45,7 +47,10 @@ async function ReviewLists({ propertyId }: { propertyId: string }) {
 							<div className="flex flex-col gap-0">
 								<p className="font-medium">{firstName}</p>
 								<p className="text-muted-foreground">
-									{city}, {country}
+									{city || "unknown"},{" "}
+									{countryList.find(
+										item => item.code === (country as TCountryCode)
+									)?.name || "unknown"}
 								</p>
 							</div>
 						</div>
@@ -75,7 +80,6 @@ async function ReviewLists({ propertyId }: { propertyId: string }) {
 					</Card>
 				);
 			})}
-			<Card></Card>
 		</div>
 	);
 }
