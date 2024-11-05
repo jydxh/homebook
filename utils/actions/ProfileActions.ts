@@ -15,6 +15,28 @@ import { renderError } from "./actions";
 
 import { City, State, Country } from "country-state-city";
 
+const validateCountryStateCity = (props: {
+	city: string;
+	state: string;
+	country: string;
+}) => {
+	const { country, city, state } = props;
+	const isCountryPassed =
+		Country.getAllCountries().findIndex(item => item.isoCode === country) !==
+		-1;
+	const isStatePassed =
+		State.getStatesOfCountry(country).findIndex(
+			item => item.isoCode === state
+		) !== -1;
+	const isCityPassed =
+		City.getCitiesOfState(country, state).findIndex(
+			item => item.name === city
+		) !== -1;
+	if (!isCountryPassed || !isStatePassed || !isCityPassed) {
+		throw new Error("illegal input!");
+	}
+};
+
 export const updateAvatar = async (prevState: unknown, formData: FormData) => {
 	const image = formData.get("image") as File;
 
@@ -61,17 +83,20 @@ export const createUserProfile = async (
 			firstName: formData.get("firstName"),
 			country: formData.get("country"),
 			city: formData.get("city"),
+			state: formData.get("state"),
 		};
 		const image = (formData.get("image") as File) || null;
 		const validatedFields = validateZodSchema(UserProfileSchema, rawData);
-		console.log("image:", image);
+		const { city, country, state } = validatedFields;
+		//console.log("image:", image);
 
 		let imageURL: string | undefined;
 		if (image && image.size > 0 && image.name !== "undefined") {
 			const validatedImage = validateZodSchema(ImageSchema, image);
-
 			imageURL = await cloudinaryUpload(validatedImage.image);
 		}
+		/* validate if the input legal */
+		validateCountryStateCity({ city, state, country });
 
 		await db.user.create({
 			data: {
@@ -140,23 +165,10 @@ export const updateUserProfile = async (prev: unknown, formData: FormData) => {
 				message: "update failed, please update user info before submit",
 			};
 		}
-		/* check for the city, country, and state are validated string, this logic can be reused at create user profile action */
-
+		/* check for the city, country, and state are validated string, */
 		const { country, city, state } = validatedFields;
-		const isCountryPassed =
-			Country.getAllCountries().findIndex(item => item.isoCode === country) !==
-			-1;
-		const isStatePassed =
-			State.getStatesOfCountry(country).findIndex(
-				item => item.isoCode === state
-			) !== -1;
-		const isCityPassed =
-			City.getCitiesOfState(country, state).findIndex(
-				item => item.name === city
-			) !== -1;
-		if (!isCountryPassed || !isStatePassed || !isCityPassed) {
-			throw new Error("illegal input!");
-		}
+		validateCountryStateCity({ city, state, country });
+
 		/* push into db */
 		await db.user.update({
 			where: {

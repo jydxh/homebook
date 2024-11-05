@@ -14,7 +14,6 @@ import CancelApplication from "@/components/profile/CancelApplication";
 async function ProfilePage() {
 	const user = await currentUser();
 	const userProfile = await fetchUserProfile();
-	console.log(userProfile);
 
 	if (!user) redirect("/");
 	if (!userProfile) redirect("/profile/create");
