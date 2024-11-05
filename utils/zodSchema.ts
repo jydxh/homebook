@@ -9,6 +9,7 @@ export const UserProfileSchema = z.object({
 	lastName: z.string().max(50, { message: "lastName cannot over 50 chars" }),
 	country: z.string().max(50, { message: "country cannot over 50 chars" }),
 	city: z.string().max(100, { message: "city cannot over 100 chars" }),
+	state: z.string().max(50, { message: "state cannot over 50 chars" }),
 });
 
 export function validateZodSchema<T>(

@@ -7,11 +7,12 @@ import { Card } from "../ui/card";
 import { updateUserProfile } from "@/utils/actions/ProfileActions";
 
 import dynamic from "next/dynamic";
-import { Skeleton } from "../ui/skeleton";
+
+import LoadingSkeleton from "./LoadingSkeleton";
 
 const ProfileCountryCity = dynamic(() => import("./ProfileCountryCity"), {
 	ssr: false,
-	loading: () => <Skeleton className="w-full h-20 " />,
+	loading: () => <LoadingSkeleton />,
 });
 
 async function UserInfo() {
@@ -44,6 +45,7 @@ async function UserInfo() {
 					<ProfileCountryCity
 						country={profile?.country || "USA"}
 						city={profile?.city || "Chicago"}
+						state={profile?.state || "IL"}
 					/>
 					{/* 
 					<FormInput

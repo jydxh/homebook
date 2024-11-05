@@ -15,42 +15,59 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { countryList } from "@/utils/country";
-import { City, ICity } from "country-state-city";
-import { Skeleton } from "../ui/skeleton";
+import {
+	City,
+	ICity,
+	State,
+	IState,
+	Country,
+	ICountry,
+} from "country-state-city";
+
 import { FixedSizeList as List } from "react-window";
 
 function ProfileCountryCity({
 	country = "USA",
 	city = "Chicago-IL",
+	state = "IL",
 }: {
 	country?: string;
 	city?: string;
+	state?: string;
 }) {
 	const [selectCountry, setSelectedCountry] = useState<string>(country);
 	//const cities = City.getCitiesOfCountry(country);
+	const states = State.getStatesOfCountry(country);
+	const [stateLists, setStateLists] = useState<IState[] | undefined>(states);
+	const [selectedState, setSelectedState] = useState(state);
 	const [cityLists, setCityLists] = useState<ICity[] | undefined>();
 	const [selectCity, setSelectCity] = useState(city);
-	const [loading, setLoading] = useState(false);
 	const [isInitial, setIsInitial] = useState(true);
 	const listRef = useRef<any>(null);
 
+	/* update the state list when country changed */
+	useEffect(() => {
+		if (selectCountry) {
+			const updateStates = State.getStatesOfCountry(selectCountry);
+			setStateLists(updateStates);
+			if (!isInitial) {
+				setSelectedState("");
+			}
+		}
+		setIsInitial(false);
+	}, [selectCountry]);
+
 	/* update the city list when the country changed */
 	useEffect(() => {
-		const fetchCites = async () => {
-			setLoading(true);
-			const fetchedCities = City.getCitiesOfCountry(selectCountry);
+		if (selectCountry && selectedState) {
+			const fetchedCities = City.getCitiesOfState(selectCountry, selectedState);
 			setCityLists(fetchedCities);
-			setLoading(false);
-		};
-
-		if (selectCountry) {
-			fetchCites();
 			if (!isInitial) {
 				setSelectCity("");
 			}
 		}
 		setIsInitial(false);
-	}, [selectCountry]);
+	}, [selectCountry, selectedState]);
 
 	/* useEffect for to move the list to the selected item */
 	useLayoutEffect(() => {
@@ -73,8 +90,8 @@ function ProfileCountryCity({
 			<div style={style}>
 				<SelectItem
 					key={`${cityLists[index].name}-${cityLists[index].stateCode}`}
-					value={`${cityLists[index].name}-${cityLists[index].stateCode}`}>
-					{`${cityLists[index].name}-${cityLists[index].stateCode}`}
+					value={`${cityLists[index].name}`}>
+					{`${cityLists[index].name}`}
 				</SelectItem>
 			</div>
 		) : (
@@ -84,10 +101,9 @@ function ProfileCountryCity({
 	return (
 		<>
 			<div className="mb-2">
-				<Label className="mb-2 block text-base" htmlFor="country">
-					Country
-				</Label>
+				<Label className="mb-2 block text-base">Country</Label>
 				<Select
+					required
 					name="country"
 					value={selectCountry}
 					defaultValue={country}
@@ -100,9 +116,9 @@ function ProfileCountryCity({
 						</SelectValue>
 					</SelectTrigger>
 					<SelectContent>
-						{countryList.map(country => {
+						{Country.getAllCountries().map(country => {
 							return (
-								<SelectItem key={country.code} value={country.code}>
+								<SelectItem key={country.isoCode} value={country.isoCode}>
 									{country.name}
 								</SelectItem>
 							);
@@ -112,36 +128,56 @@ function ProfileCountryCity({
 			</div>
 
 			<div className="mb-2">
-				<Label className="mb-2 block text-base" htmlFor="city">
-					City
-				</Label>
-				{loading ? (
-					<Skeleton />
-				) : (
-					<Select
-						name="city"
-						value={selectCity}
-						defaultValue={city}
-						onValueChange={value => {
-							setSelectCity(value);
-						}}>
-						<SelectTrigger>
-							<SelectValue placeholder="Select a City">
-								{selectCity}
-							</SelectValue>
-						</SelectTrigger>
-						<SelectContent>
-							<List
-								ref={listRef}
-								height={300}
-								itemCount={cityLists?.length || 0}
-								itemSize={35}
-								width="100%">
-								{Row}
-							</List>
-						</SelectContent>
-					</Select>
-				)}
+				<Label className="mb-2 block text-base">State/Province</Label>
+				<Select
+					required
+					name="state"
+					value={selectedState}
+					defaultValue={state}
+					onValueChange={value => {
+						setSelectedState(value);
+					}}>
+					<SelectTrigger>
+						<SelectValue placeholder="Select a State/Province" />
+					</SelectTrigger>
+					<SelectContent>
+						{stateLists &&
+							stateLists.map(item => {
+								return (
+									<SelectItem key={item.isoCode} value={item.isoCode}>
+										{item.name}
+									</SelectItem>
+								);
+							})}
+					</SelectContent>
+				</Select>
+			</div>
+
+			<div className="mb-2">
+				<Label className="mb-2 block text-base">City</Label>
+				<Select
+					required
+					disabled={!selectedState || !selectCountry}
+					name="city"
+					value={selectCity}
+					defaultValue={city}
+					onValueChange={value => {
+						setSelectCity(value);
+					}}>
+					<SelectTrigger>
+						<SelectValue placeholder="Select a City">{selectCity}</SelectValue>
+					</SelectTrigger>
+					<SelectContent>
+						<List
+							ref={listRef}
+							height={300}
+							itemCount={cityLists?.length || 0}
+							itemSize={35}
+							width="100%">
+							{Row}
+						</List>
+					</SelectContent>
+				</Select>
 			</div>
 		</>
 	);

@@ -13,6 +13,8 @@ import { redirect } from "next/navigation";
 import cloudinaryUpload from "../cloudinaryUpload";
 import { renderError } from "./actions";
 
+import { City, State, Country } from "country-state-city";
+
 export const updateAvatar = async (prevState: unknown, formData: FormData) => {
 	const image = formData.get("image") as File;
 
@@ -99,6 +101,7 @@ export const fetchUserProfile = async () => {
 				lastName: true,
 				userName: true,
 				country: true,
+				state: true,
 				city: true,
 				profileImage: true,
 				role: true,
@@ -130,11 +133,29 @@ export const updateUserProfile = async (prev: unknown, formData: FormData) => {
 			validatedFields.lastName === prevUserProfile.lastName &&
 			validatedFields.userName === prevUserProfile.userName &&
 			validatedFields.city === prevUserProfile.city &&
-			validatedFields.country === prevUserProfile.country
+			validatedFields.country === prevUserProfile.country &&
+			validatedFields.state === prevUserProfile.state
 		) {
 			return {
 				message: "update failed, please update user info before submit",
 			};
+		}
+		/* check for the city, country, and state are validated string, this logic can be reused at create user profile action */
+
+		const { country, city, state } = validatedFields;
+		const isCountryPassed =
+			Country.getAllCountries().findIndex(item => item.isoCode === country) !==
+			-1;
+		const isStatePassed =
+			State.getStatesOfCountry(country).findIndex(
+				item => item.isoCode === state
+			) !== -1;
+		const isCityPassed =
+			City.getCitiesOfState(country, state).findIndex(
+				item => item.name === city
+			) !== -1;
+		if (!isCountryPassed || !isStatePassed || !isCityPassed) {
+			throw new Error("illegal input!");
 		}
 		/* push into db */
 		await db.user.update({
