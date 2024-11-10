@@ -15,33 +15,49 @@ function PropertyReserve({ price }: { price: number }) {
 	const [showFixedCard, setShowFixedCard] = useState(false);
 
 	const handleScroll = useDebouncedCallback(() => {
-		const scrollPosition = window.scrollY;
-
 		const viewWidth = window.innerWidth;
 		if (divRef.current) {
 			const divRefBounding = divRef.current.getBoundingClientRect();
-
+			const scrollPosition = window.scrollY;
 			if (viewWidth <= 1024) {
+				setShowFirstCard(true);
 				setShowFixedCard(false);
-			} else if (scrollPosition > 550) {
+			} else if (scrollPosition > 565 && divRefBounding.top >= -700) {
 				setShowFirstCard(false);
 				setShowFixedCard(true);
 			} else {
 				setShowFirstCard(true);
 				setShowFixedCard(false);
 			}
-
-			if (divRefBounding.top < -700) {
-				setShowFixedCard(false);
-			}
 		}
 	}, 5);
 	const handleResize = useDebouncedCallback(() => {
 		const viewWidth = window.innerWidth;
-		if (viewWidth < 1024) {
-			setShowFixedCard(false);
+		const scrollPosition = window.scrollY;
+		if (divRef.current) {
+			const divRefBounding = divRef.current.getBoundingClientRect();
+			if (viewWidth <= 1024) {
+				setShowFirstCard(true);
+				setShowFixedCard(false);
+			} else {
+				/* if viewPort to the divTop is over 700px */
+				/* 	if (divRefBounding.top < -700) {
+					setShowFirstCard(true);
+					setShowFixedCard(false);
+				} else {
+					setShowFirstCard(false);
+					setShowFixedCard(true);
+				} */
+				if (scrollPosition > 565 && divRefBounding.top >= -700) {
+					setShowFirstCard(false);
+					setShowFixedCard(true);
+				} else {
+					setShowFirstCard(true);
+					setShowFixedCard(false);
+				}
+			}
 		}
-	}, 400);
+	}, 5);
 
 	useEffect(() => {
 		window.addEventListener("scroll", handleScroll);
@@ -82,7 +98,7 @@ function ReserverCard({
 			<h4 className="font-bold text-3xl text-primary animate-scale flex items-center gap-x-4">
 				<SiFireship /> <span>Booking now</span>
 			</h4>
-			<p className="font-semibold text-2xl">
+			<p className="mt-4 font-semibold text-2xl">
 				{formatCurrency(price)} per night
 			</p>
 			<p className="mt-4">Pick up a date range</p>
