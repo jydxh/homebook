@@ -32,7 +32,7 @@ function PropertyLeaflet({
 				<span className="text-muted-foreground font-normal">{address}</span>
 			</h3>
 			<MapContainer
-				className="mt-4 w-full h-[50vh] min-h-[300px]"
+				className="mt-4 w-full h-[50vh] min-h-[300px] z-0"
 				center={latLngArr}
 				zoom={13}
 				scrollWheelZoom={false}>

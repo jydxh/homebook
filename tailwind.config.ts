@@ -1,3 +1,4 @@
+import { transform } from "next/dist/build/swc";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -56,6 +57,15 @@ const config: Config = {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",
+			},
+			keyframes: {
+				scale: {
+					"0%, 100%": { transform: "scale(1)" },
+					"50%": { transform: "scale(1.05)" },
+				},
+			},
+			animation: {
+				scale: "scale 4s infinite",
 			},
 		},
 	},

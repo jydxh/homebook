@@ -12,7 +12,7 @@ import RoomDetail from "@/components/property/RoomDetail";
 import Image from "next/image";
 import calculateYearDiff from "@/utils/calculateYearDiff";
 import { Separator } from "@/components/ui/separator";
-import { Card } from "@/components/ui/card";
+
 import PropertyDescription from "@/components/property/PropertyDescription";
 import PropertyAmenities from "@/components/property/PropertyAmenities";
 import { Suspense } from "react";
@@ -20,6 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import dynamic from "next/dynamic";
 import PropertyReviews from "@/components/property/PropertyReviews";
+import PropertyReserve from "@/components/property/PropertyReserve";
 const PropertyLeaflet = dynamic(
 	() => import("@/components/property/PropertyLeaflet"),
 	{ ssr: false, loading: () => <Skeleton className="mt-12 w-full h-[50vh]" /> }
@@ -45,7 +46,9 @@ async function page({ params }: { params: { id: string } }) {
 		amenities,
 		address,
 		latLng,
+		price,
 	} = property;
+
 	const isFav = favList.includes(id);
 	const images = JSON.parse(image as string) as string[];
 	return (
@@ -65,8 +68,9 @@ async function page({ params }: { params: { id: string } }) {
 				</div>
 			</div>
 			<PropertyGallery images={images} />
-			<div className="grid grid-cols-1 md:grid-cols-3">
-				<div className="md:col-span-2">
+			<Separator className="my-4" />
+			<div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8">
+				<div className="col-span-3 lg:col-span-2">
 					<div className="mt-8">
 						<CountryAndFlag country={country as TCountryCode} detailPage />
 						<RoomDetail bedrooms={bedrooms} baths={baths} guests={guests} />
@@ -107,8 +111,8 @@ async function page({ params }: { params: { id: string } }) {
 					</Suspense>
 				</div>
 				{/* reservation and picking date here */}
-				<div className="col-span-3 md:col-span-1">
-					make reservation otions here,
+				<div className="col-span-3 lg:col-span-1">
+					<PropertyReserve price={price} />
 				</div>
 				{/* reviews */}
 				<PropertyReviews propertyId={id} />
