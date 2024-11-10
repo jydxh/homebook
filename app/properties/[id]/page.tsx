@@ -111,9 +111,9 @@ async function page({ params }: { params: { id: string } }) {
 					</Suspense>
 				</div>
 				{/* reservation and picking date here */}
-				<div className="col-span-3 lg:col-span-1">
-					<PropertyReserve price={price} />
-				</div>
+
+				<PropertyReserve price={price} />
+
 				{/* reviews */}
 				<PropertyReviews propertyId={id} />
 			</div>
