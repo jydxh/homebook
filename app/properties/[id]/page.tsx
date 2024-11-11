@@ -112,7 +112,14 @@ async function page({ params }: { params: { id: string } }) {
 				</div>
 				{/* reservation and picking date here */}
 
-				<PropertyReserve price={price} />
+				{/* total review is hard coded here, later will fetch from db */}
+				<PropertyReserve
+					totalReview={10}
+					price={price}
+					rating={5}
+					name={name}
+					image={images[0]}
+				/>
 
 				{/* reviews */}
 				<PropertyReviews propertyId={id} />

@@ -10,6 +10,7 @@ import ReviewRating from "./ReviewRating";
 import { Card } from "../ui/card";
 import { SubmitButton } from "../form/Buttons";
 
+/* later after user submit the review this form wont be render at dom, since only the user who booked this property and never submit any review can see the form */
 function CreateReview({ propertyId }: { propertyId: string }) {
 	const [isShowing, setIsShowing] = useState(false);
 

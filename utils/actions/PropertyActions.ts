@@ -303,7 +303,7 @@ export const createPropertyReview = async (
 	const propertyId = formData.get("propertyId");
 	try {
 		const user = await getAuthUser();
-		console.log(formData);
+		//console.log(formData);
 		const rawData = Object.fromEntries(formData);
 		const validatedFields = validateZodSchema(reviewZodSchema, rawData);
 		/* sanitize textArea content */
@@ -355,4 +355,11 @@ export const fetchPropertyReviews = async (id: string) => {
 		console.log(error);
 		return [];
 	}
+};
+
+export const makeReservation = async (
+	prevState: unknown,
+	formData: FormData
+) => {
+	return { message: "booking the room" };
 };

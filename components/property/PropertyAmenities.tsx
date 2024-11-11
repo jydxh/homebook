@@ -17,7 +17,9 @@ function PropertyAmenities({
 			<div className="flex flex-wrap items-center gap-x-8 gap-y-4 mt-4">
 				{existedAmenitiesList.map(item => {
 					return (
-						<div key={item.name} className="flex justify-start items-center">
+						<div
+							key={item.name}
+							className="flex justify-start items-center flex-wrap">
 							<p className="flex justify-start gap-x-1 items-center cursor-default">
 								{item.name}
 								<item.icon className="w-4 h-4  text-muted-foreground" />
