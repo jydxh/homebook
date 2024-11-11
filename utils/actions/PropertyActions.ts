@@ -386,3 +386,28 @@ export const fetchPropertyRating = async (propertyId: string) => {
 		return { rating: "N/A", count: 0 };
 	}
 };
+
+export const fetchReviewsByUser = async () => {
+	try {
+		const user = await getAuthUser();
+		const reviews = await db.review.findMany({
+			where: {
+				userId: user.id,
+			},
+			include: {
+				property: {
+					select: {
+						name: true,
+						image: true,
+						country: true,
+						id: true,
+					},
+				},
+			},
+		});
+		return reviews;
+	} catch (error) {
+		console.log(error);
+		return [];
+	}
+};
