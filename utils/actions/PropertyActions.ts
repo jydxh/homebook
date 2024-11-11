@@ -404,6 +404,9 @@ export const fetchReviewsByUser = async () => {
 					},
 				},
 			},
+			orderBy: {
+				createAt: "desc",
+			},
 		});
 		return reviews;
 	} catch (error) {
