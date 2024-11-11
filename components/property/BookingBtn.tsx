@@ -27,7 +27,7 @@ function BookingBtn({
 	numberOfNights,
 }: {
 	price: number;
-	rating: number;
+	rating: string;
 	name: string;
 	image: string;
 	totalReview: number;
@@ -59,7 +59,7 @@ function BookingBtn({
 							<p className="flex items-center gap-x-2">
 								<FaStar className="w-4 h-4" />
 								<span>
-									{rating.toFixed(1)}({totalReview})
+									{rating}&nbsp;({totalReview})
 								</span>
 							</p>
 						</div>
@@ -101,14 +101,13 @@ function BookingBtn({
 					</div>
 				</div>
 				<DialogFooter>
+					<DialogClose asChild>
+						<Button variant={"ghost"}>Cancel</Button>
+					</DialogClose>
 					{/* later there will be more logic about the backend and payment api */}
 					<FormContainer action={makeReservation}>
 						<Button type="submit">Confirm the Reservation</Button>
 					</FormContainer>
-
-					<DialogClose asChild>
-						<Button variant={"ghost"}>Cancel</Button>
-					</DialogClose>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

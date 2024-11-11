@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { LuShare } from "react-icons/lu";
-import { FaStar } from "react-icons/fa6";
 
 import {
 	Dialog,
@@ -15,8 +14,7 @@ import { countryList } from "@/utils/country";
 import Image from "next/image";
 
 import ShareButtons from "./ShareButtons";
-
-const rating = 5;
+import PropertyRating from "./PropertyRating";
 
 function ShareBtn({
 	image,
@@ -25,6 +23,7 @@ function ShareBtn({
 	bedrooms,
 	baths,
 	guests,
+	propertyId,
 }: {
 	image: string;
 	name: string;
@@ -32,6 +31,7 @@ function ShareBtn({
 	bedrooms: number;
 	baths: number;
 	guests: number;
+	propertyId: string;
 }) {
 	const countryName =
 		countryList.find(country => country.code === countryCode)?.name ||
@@ -68,7 +68,7 @@ function ShareBtn({
 						<span className="font-medium">{name}</span>
 						<span>&nbsp; in {countryName} &middot; &nbsp; </span>
 						<span className="flex items-center gap-x-1">
-							{rating.toFixed(1)} <FaStar className="w-4 h-4" /> &middot; &nbsp;
+							<PropertyRating propertyId={propertyId} /> &middot; &nbsp;
 						</span>
 						{bedrooms} bedrooms &middot; {guests} guests &middot; {baths} baths
 					</div>

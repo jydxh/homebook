@@ -1,7 +1,7 @@
 import { fetchFavList, fetchProperties } from "@/utils/actions/PropertyActions";
 import { Card } from "../ui/card";
 import EmptyResult from "../EmptyResult";
-import { FaStar } from "react-icons/fa6";
+
 import DistanceAway from "./DistanceAway";
 import CountryAndFlag from "./CountryAndFlag";
 import { TCountryCode } from "countries-list";
@@ -11,6 +11,7 @@ import { HomePageSearchParam } from "@/app/page";
 import HomePagination from "./HomePagination";
 import AddFav from "../form/AddFav";
 import Link from "next/link";
+import PropertyRating from "../property/PropertyRating";
 
 async function HomePropertyList({
 	searchParams,
@@ -38,10 +39,11 @@ async function HomePropertyList({
 								<div className="px-2 pb-2">
 									<div className="flex justify-between mt-2">
 										<p className="font-medium capitalize">{name}</p>
-										<div className="flex items-center gap-x-2">
+										{/* <div className="flex items-center gap-x-2">
 											<FaStar className="w-4 h-4" />
 											<span>5.0 </span>
-										</div>
+										</div> */}
+										<PropertyRating propertyId={id} />
 									</div>
 									<p className="text-muted-foreground truncate">{tagline}</p>
 									<div className="flex justify-between">

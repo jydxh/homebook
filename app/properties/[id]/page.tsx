@@ -3,6 +3,7 @@ import ShareBtn from "@/components/property/ShareBtn";
 import {
 	fetchFavList,
 	fetchPropertyById,
+	fetchPropertyRating,
 } from "@/utils/actions/PropertyActions";
 import { redirect } from "next/navigation";
 import PropertyGallery from "@/components/property/PropertyGallery";
@@ -51,6 +52,7 @@ async function page({ params }: { params: { id: string } }) {
 
 	const isFav = favList.includes(id);
 	const images = JSON.parse(image as string) as string[];
+	const { count, rating } = await fetchPropertyRating(id);
 	return (
 		<section className="mx-auto max-w-[1280px] px-8">
 			<div className="flex justify-between items-center">
@@ -63,6 +65,7 @@ async function page({ params }: { params: { id: string } }) {
 						bedrooms={bedrooms}
 						baths={baths}
 						guests={guests}
+						propertyId={id}
 					/>
 					<AddFav propertyId={id} isFav={isFav} withTxt={true} />
 				</div>
@@ -73,7 +76,12 @@ async function page({ params }: { params: { id: string } }) {
 				<div className="col-span-3 lg:col-span-2">
 					<div className="mt-8">
 						<CountryAndFlag country={country as TCountryCode} detailPage />
-						<RoomDetail bedrooms={bedrooms} baths={baths} guests={guests} />
+						<RoomDetail
+							bedrooms={bedrooms}
+							baths={baths}
+							guests={guests}
+							propertyId={id}
+						/>
 					</div>
 					{/* vendor info */}
 					<div className="flex gap-x-4 items-center mt-8">
@@ -114,9 +122,9 @@ async function page({ params }: { params: { id: string } }) {
 
 				{/* total review is hard coded here, later will fetch from db */}
 				<PropertyReserve
-					totalReview={10}
+					totalReview={count}
 					price={price}
-					rating={5}
+					rating={rating}
 					name={name}
 					image={images[0]}
 				/>

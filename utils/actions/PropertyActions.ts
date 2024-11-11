@@ -363,3 +363,26 @@ export const makeReservation = async (
 ) => {
 	return { message: "booking the room" };
 };
+
+export const fetchPropertyRating = async (propertyId: string) => {
+	try {
+		const result = await db.review.groupBy({
+			by: ["propertyId"],
+			_avg: {
+				rating: true,
+			},
+			_count: {
+				rating: true,
+			},
+			where: {
+				propertyId,
+			},
+		});
+		return {
+			rating: result[0]?._avg.rating?.toFixed(1) ?? "N/A",
+			count: result[0]?._count.rating ?? 0,
+		};
+	} catch (error) {
+		return { rating: "N/A", count: 0 };
+	}
+};

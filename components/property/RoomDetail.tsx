@@ -1,13 +1,15 @@
-import { FaStar } from "react-icons/fa6";
+import PropertyRating from "./PropertyRating";
 
 function RoomDetail({
 	bedrooms,
 	baths,
 	guests,
+	propertyId,
 }: {
 	bedrooms: number;
 	baths: number;
 	guests: number;
+	propertyId: string;
 }) {
 	return (
 		<article>
@@ -16,7 +18,7 @@ function RoomDetail({
 			{baths > 1 ? "baths" : "bath"}
 			{/* modify the rating later */}
 			<p className="flex items-center gap-2">
-				Rating: 5.0 / 3 <FaStar className="w-5 h-5" />
+				Rating: <PropertyRating propertyId={propertyId} />
 			</p>
 		</article>
 	);

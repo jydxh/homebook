@@ -19,7 +19,7 @@ function PropertyReserve({
 	totalReview,
 }: {
 	price: number;
-	rating: number;
+	rating: string;
 	name: string;
 	image: string;
 	totalReview: number;
@@ -143,7 +143,7 @@ function ReserverCard({
 	totalReview,
 }: {
 	price: number;
-	rating: number;
+	rating: string;
 	name: string;
 	image: string;
 	totalReview: number;
