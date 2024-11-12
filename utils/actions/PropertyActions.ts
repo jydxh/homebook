@@ -414,3 +414,71 @@ export const fetchReviewsByUser = async () => {
 		return [];
 	}
 };
+
+export const fetchPropertyByUser = async (page: string = "1") => {
+	const currentPage = Number(page);
+	const pageSpan = 20;
+	const offset = (currentPage - 1) * pageSpan;
+	try {
+		const user = await getAuthUser();
+
+		// verify if user is vendor
+		const userDb = await db.user.findUnique({
+			where: {
+				clerkId: user.id,
+			},
+			select: {
+				role: true,
+			},
+		});
+		if (userDb?.role !== "VENDOR") {
+			throw new Error("Unauthorized");
+		}
+
+		const totalRental = await db.property.count({
+			where: {
+				userId: user.id,
+			},
+		});
+
+		const totalPage = Math.ceil(totalRental / pageSpan);
+
+		// fetch the property belongs to the vendor , using raw query for better performance
+		const rentalsAggregate = (await db.$queryRaw`
+		SELECT 
+			p.id,
+			p.name,
+			p.price,
+			COALESCE(SUM(o.totalNight), 0) AS totalNightSum,
+			COALESCE(SUM(o.orderTotal), 0) AS orderTotalSum
+		FROM 
+		Property p
+		LEFT JOIN 
+		\`Order\` o ON p.id = o.propertyId AND o.paymentStatus = true
+		WHERE 
+			p.userId = ${user.id}
+		GROUP BY 
+			p.id, p.name, p.price
+		ORDER BY
+			p.createdAt DESC
+		LIMIT ${pageSpan}
+		OFFSET ${offset};
+	`) as {
+			id: string;
+			name: string;
+			price: number;
+			totalNightSum: number;
+			orderTotalSum: number;
+		}[];
+
+		return {
+			results: rentalsAggregate,
+			page: currentPage,
+			totalPage,
+			totalRental,
+		};
+	} catch (error) {
+		console.log(error);
+		return { results: [], page: currentPage, totalPage: 0, totalRental: 0 };
+	}
+};
