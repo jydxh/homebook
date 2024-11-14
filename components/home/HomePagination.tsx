@@ -12,12 +12,13 @@ import generatePageArray from "@/utils/generatePageArray";
 import { useSearchParams, useRouter } from "next/navigation";
 
 type paginationPropsType = {
+	href?: string;
 	totalPage: number;
 	currentPage: string | number;
 	totalCount: number;
 };
 
-function HomePagination({ totalPage, currentPage }: paginationPropsType) {
+function HomePagination({ totalPage, currentPage, href }: paginationPropsType) {
 	const pageSpan = 10;
 	const searchParams = useSearchParams();
 	const router = useRouter();
@@ -33,12 +34,12 @@ function HomePagination({ totalPage, currentPage }: paginationPropsType) {
 	const handlePrevPage = () => {
 		const prevPage = Number(currentPage) - 1;
 		params.set("page", prevPage.toString());
-		router.push(`/?${params.toString()}`);
+		router.push(`/${href ?? ""}?${params.toString()}`);
 	};
 	const handleNextPage = () => {
 		const prevPage = Number(currentPage) + 1;
 		params.set("page", prevPage.toString());
-		router.push(`/?${params.toString()}`);
+		router.push(`/${href ?? ""}?${params.toString()}`);
 	};
 
 	return (
@@ -56,7 +57,7 @@ function HomePagination({ totalPage, currentPage }: paginationPropsType) {
 						return (
 							<PaginationItem key={page}>
 								<PaginationLink
-									href={`/?${params.toString()}`}
+									href={`/${href ?? ""}?${params.toString()}`}
 									isActive={page === Number(urlPage)}>
 									{page}
 								</PaginationLink>

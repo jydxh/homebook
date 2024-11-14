@@ -177,7 +177,9 @@ export const fetchProperties = async ({
 			return amenities.every(ameId => amenityIds.includes(ameId));
 		});
 		totalCount = filteredPropertyList.length;
+		/* add a delay to test ui */
 
+		//await new Promise(res => setTimeout(res, 2000));
 		return {
 			data: filteredPropertyList,
 			totalPage: Math.ceil(totalCount / take),
@@ -415,7 +417,10 @@ export const fetchReviewsByUser = async () => {
 	}
 };
 
-export const fetchPropertyByUser = async (page: string = "1") => {
+export const fetchPropertyByUser = async (
+	page: string = "1",
+	query: string = ""
+) => {
 	const currentPage = Number(page);
 	const pageSpan = 20;
 	const offset = (currentPage - 1) * pageSpan;
@@ -435,12 +440,14 @@ export const fetchPropertyByUser = async (page: string = "1") => {
 			throw new Error("Unauthorized");
 		}
 
-		const totalRental = await db.property.count({
-			where: {
-				userId: user.id,
-			},
-		});
+		const totalRentalRaw = (await db.$queryRaw`
+		SELECT COUNT(*) as count
+		FROM Property p
+		WHERE p.userId = ${user.id} AND p.name LIKE ${"%" + query + "%"};
+	`) as { count: string }[];
 
+		const totalRental = Number(totalRentalRaw[0].count);
+		console.log("totalRental", totalRental);
 		const totalPage = Math.ceil(totalRental / pageSpan);
 
 		// fetch the property belongs to the vendor , using raw query for better performance
@@ -449,6 +456,7 @@ export const fetchPropertyByUser = async (page: string = "1") => {
 			p.id,
 			p.name,
 			p.price,
+			p.address,
 			COALESCE(SUM(o.totalNight), 0) AS totalNightSum,
 			COALESCE(SUM(o.orderTotal), 0) AS orderTotalSum
 		FROM 
@@ -456,9 +464,9 @@ export const fetchPropertyByUser = async (page: string = "1") => {
 		LEFT JOIN 
 		\`Order\` o ON p.id = o.propertyId AND o.paymentStatus = true
 		WHERE 
-			p.userId = ${user.id}
+			p.userId = ${user.id}  AND p.name LIKE ${"%" + query + "%"}
 		GROUP BY 
-			p.id, p.name, p.price
+			p.id, p.name, p.price, p.address
 		ORDER BY
 			p.createdAt DESC
 		LIMIT ${pageSpan}
@@ -470,6 +478,10 @@ export const fetchPropertyByUser = async (page: string = "1") => {
 			totalNightSum: number;
 			orderTotalSum: number;
 		}[];
+
+		//	await new Promise(resolve => setTimeout(resolve, 2000));
+		console.log(totalPage);
+		console.log(rentalsAggregate);
 
 		return {
 			results: rentalsAggregate,

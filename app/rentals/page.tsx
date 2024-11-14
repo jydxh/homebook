@@ -1,10 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { fetchPropertyByUser } from "@/utils/actions/PropertyActions";
-import Link from "next/link";
-import HomePagination from "@/components/home/HomePagination";
+import RentalsLists from "@/components/rentals/RentalsLists";
+import RentalsListsFallback from "@/components/rentals/RentalsListsFallback";
+import { Suspense } from "react";
 
-async function RentalsPage() {
-	const rentals = await fetchPropertyByUser();
+function RentalsPage({
+	searchParams,
+}: {
+	searchParams: { page?: string; query?: string };
+}) {
+	/* const urlPage = searchParams.page || "1";
+	const rentals = await fetchPropertyByUser(urlPage);
 	if (rentals.results.length === 0) {
 		return (
 			<div className="mt-8 mx-auto w-full text-center">
@@ -21,15 +25,25 @@ async function RentalsPage() {
 	return (
 		<div>
 			later the resuslt be here: <p>{JSON.stringify(rentals)}</p>{" "}
-			{/* pagination */}
+			
 			{rentals.totalPage > 1 && (
 				<HomePagination
-					currentPage={rentals.page}
+					href="rentals"
+					currentPage={urlPage}
 					totalPage={rentals.totalPage}
 					totalCount={rentals.totalRental || 0}
 				/>
 			)}
 		</div>
+	); */
+
+	return (
+		<Suspense fallback={<RentalsListsFallback />}>
+			<RentalsLists
+				currentPage={searchParams.page}
+				query={searchParams.query}
+			/>
+		</Suspense>
 	);
 }
 export default RentalsPage;
