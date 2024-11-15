@@ -59,10 +59,7 @@ async function RentalsLists({
 					{rentals.results.map(item => (
 						<TableRow key={item.id}>
 							<TableCell className="font-medium">
-								<Link href={`/properties/${item.id}`}>
-									{item.name}
-									{item.name}
-								</Link>
+								<Link href={`/properties/${item.id}`}>{item.name}</Link>
 							</TableCell>
 							<TableCell>
 								<a
@@ -75,7 +72,7 @@ async function RentalsLists({
 								</a>
 							</TableCell>
 							<TableCell>{formatCurrency(item.price)}</TableCell>
-							<TableCell>{item.totalNightSum}</TableCell>
+							<TableCell>{item.totalNightSum.toFixed()}</TableCell>
 							<TableCell>{formatCurrency(item.orderTotalSum)} </TableCell>
 							<TableCell className="flex gap-x-2">
 								<UpdateBtn id={item.id} />
