@@ -30,11 +30,10 @@ function RentalsSearch() {
 	};
 
 	useEffect(() => {
-		if (!searchParams.get("query")) {
-			searchParams.delete("query");
+		if (!params.get("query")) {
 			setInput("");
 		}
-	}, [searchParams]);
+	}, [params]);
 
 	return (
 		<div className="w-full mt-8 flex items-center justify-center px-4">
