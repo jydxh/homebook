@@ -417,10 +417,9 @@ export const fetchReviewsByUser = async () => {
 	}
 };
 
-export const fetchPropertyByUser = async (
-	page: string = "1",
-	query: string = ""
-) => {
+export const fetchPropertyByUser = async (searchParams: URLSearchParams) => {
+	const page = searchParams.get("page") || "1";
+	const query = searchParams.get("query") || "";
 	const currentPage = Number(page);
 	const pageSpan = 20;
 	const offset = (currentPage - 1) * pageSpan;
@@ -474,14 +473,13 @@ export const fetchPropertyByUser = async (
 	`) as {
 			id: string;
 			name: string;
+			address: string;
 			price: number;
 			totalNightSum: number;
 			orderTotalSum: number;
 		}[];
 
 		//	await new Promise(resolve => setTimeout(resolve, 2000));
-		console.log(totalPage);
-		console.log(rentalsAggregate);
 
 		return {
 			results: rentalsAggregate,
@@ -493,4 +491,41 @@ export const fetchPropertyByUser = async (
 		console.log(error);
 		return { results: [], page: currentPage, totalPage: 0, totalRental: 0 };
 	}
+};
+
+export const deleteRentalAction = async (
+	prevState: unknown,
+	{ id, searchParams }: { id: string; searchParams: URLSearchParams }
+) => {
+	let message = "";
+
+	try {
+		const user = await getAuthUser();
+		// check if the property belongs to the user
+		const existsRental = await db.property.findFirst({
+			where: {
+				userId: user.id,
+				id,
+			},
+			select: {
+				id: true,
+			},
+		});
+		if (existsRental) {
+			await db.property.delete({
+				where: {
+					id,
+					userId: user.id,
+				},
+			});
+			message = "Deleted!";
+		}
+	} catch (error) {
+		console.log(error);
+		message = "failed";
+		return { message };
+	}
+
+	revalidatePath(`/rentals?${searchParams.toString()}`);
+	return { message };
 };
