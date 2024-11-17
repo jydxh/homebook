@@ -9,7 +9,6 @@ import {
 	TableCaption,
 	TableCell,
 	TableFooter,
-	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
@@ -18,13 +17,30 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import UpdateBtn from "./UpdateBtn";
 import DeleteBtn from "./DeleteBtn";
 
+import RentalsTableHeader from "./RentalsTableHeader";
+
 async function RentalsLists({
 	searchParams,
 }: {
 	searchParams: URLSearchParams;
 }) {
 	const rentals = await fetchPropertyByUser(searchParams);
+	const query = searchParams.get("query");
 	if (rentals.results.length === 0) {
+		if (query) {
+			return (
+				<div className="mt-8 mx-auto w-full text-center">
+					<p className="font-semibold text-3xl">
+						Cannot find the property with name
+						<span className="underline text-muted-foreground">{query}</span>
+					</p>
+					<Link href="/rentals">
+						<Button className="mt-8">Go back</Button>
+					</Link>
+				</div>
+			);
+		}
+
 		return (
 			<div className="mt-8 mx-auto w-full text-center">
 				<p className="font-semibold text-3xl">
@@ -39,21 +55,14 @@ async function RentalsLists({
 	return (
 		<section className="mt-8 px-4">
 			<h2 className="w-full mx-auto my-8 text-center text-3xl font-semibold">
-				My Rentals
+				My Rental Lists
 			</h2>
 
 			{/* table */}
 			<Table>
 				<TableCaption>A list of your rentals.</TableCaption>
 				<TableHeader>
-					<TableRow>
-						<TableHead>Property Name</TableHead>
-						<TableHead>Address</TableHead>
-						<TableHead>Price</TableHead>
-						<TableHead>Total Nights</TableHead>
-						<TableHead>Total Earning</TableHead>
-						<TableHead>Actions</TableHead>
-					</TableRow>
+					<RentalsTableHeader />
 				</TableHeader>
 				<TableBody>
 					{rentals.results.map(item => (
