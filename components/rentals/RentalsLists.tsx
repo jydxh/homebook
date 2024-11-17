@@ -31,7 +31,7 @@ async function RentalsLists({
 			return (
 				<div className="mt-8 mx-auto w-full text-center">
 					<p className="font-semibold text-3xl">
-						Cannot find the property with name
+						Cannot find the property with name{" "}
 						<span className="underline text-muted-foreground">{query}</span>
 					</p>
 					<Link href="/rentals">

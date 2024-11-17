@@ -20,7 +20,7 @@ function RentalsSearch() {
 		/* each time search a new item, start from the first page, so delete the page key */
 		searchParams.delete("page");
 		if (evt.target.value) {
-			console.log(evt.target.value);
+			//console.log(evt.target.value);
 			searchParams.set("query", evt.target.value);
 		} else {
 			searchParams.delete("query");
