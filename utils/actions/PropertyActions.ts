@@ -15,6 +15,7 @@ import {
 } from "../zodSchema";
 import { HomePageSearchParam } from "@/app/page";
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -419,7 +420,9 @@ export const fetchReviewsByUser = async () => {
 
 export const fetchPropertyByUser = async (searchParams: URLSearchParams) => {
 	const page = searchParams.get("page") || "1";
-	const query = searchParams.get("query") || "";
+	const query = searchParams.get("query");
+	const orderByPrice = searchParams.get("price");
+	const orderByName = searchParams.get("name");
 	const currentPage = Number(page);
 	const pageSpan = 20;
 	const offset = (currentPage - 1) * pageSpan;
@@ -438,51 +441,72 @@ export const fetchPropertyByUser = async (searchParams: URLSearchParams) => {
 		if (userDb?.role !== "VENDOR") {
 			throw new Error("Unauthorized");
 		}
+		const queryCondition = query ? `%${query}%` : "%";
 
-		const totalRentalRaw = (await db.$queryRaw`
+		const totalRentalRaw = await db.$queryRaw<{ count: string }[]>`
 		SELECT COUNT(*) as count
 		FROM Property p
-		WHERE p.userId = ${user.id} AND p.name LIKE ${"%" + query + "%"};
-	`) as { count: string }[];
+		WHERE p.userId = ${user.id} AND p.name LIKE ${queryCondition};
+	`;
 
 		const totalRental = Number(totalRentalRaw[0].count);
 		console.log("totalRental", totalRental);
 		const totalPage = Math.ceil(totalRental / pageSpan);
 
+		const orderByClause = `${
+			orderByPrice?.toLowerCase() === "desc"
+				? `p.price DESC`
+				: orderByPrice?.toLowerCase() === "asc"
+				? `p.price ASC`
+				: orderByName?.toLowerCase() === "desc"
+				? `p.name DESC`
+				: orderByName?.toLowerCase() === "asc"
+				? `p.name ASC`
+				: `p.createdAt DESC`
+		}`;
 		// fetch the property belongs to the vendor , using raw query for better performance
-		const rentalsAggregate = (await db.$queryRaw`
-		SELECT 
-			p.id,
-			p.name,
-			p.price,
-			p.address,
-			COALESCE(SUM(o.totalNight), 0) AS totalNightSum,
-			COALESCE(SUM(o.orderTotal), 0) AS orderTotalSum
-		FROM 
-		Property p
-		LEFT JOIN 
-		\`Order\` o ON p.id = o.propertyId AND o.paymentStatus = true
-		WHERE 
-			p.userId = ${user.id}  AND p.name LIKE ${"%" + query + "%"}
-		GROUP BY 
-			p.id, p.name, p.price, p.address
-		ORDER BY
-			p.createdAt DESC
-		LIMIT ${pageSpan}
-		OFFSET ${offset};
-	`) as {
-			id: string;
-			name: string;
-			address: string;
-			price: number;
-			totalNightSum: number;
-			orderTotalSum: number;
-		}[];
+
+		const rentalsAggregate = await db.$queryRaw<
+			{
+				id: string;
+				name: string;
+				address: string;
+				price: number;
+				totalNightSum: number;
+				orderTotalSum: number;
+			}[]
+		>`
+		SELECT
+				p.id,
+				p.name,
+				p.price,
+				p.address,
+				COALESCE(SUM(o.totalNight), 0) AS totalNightSum,
+				COALESCE(SUM(o.orderTotal), 0) AS orderTotalSum
+			FROM
+			Property p
+			LEFT JOIN
+			\`Order\` o ON p.id = o.propertyId AND o.paymentStatus = true
+			WHERE
+				p.userId = ${user.id}  AND p.name LIKE ${queryCondition}
+			GROUP BY
+				p.id, p.name, p.price, p.address
+			ORDER BY ${Prisma.raw(orderByClause)}
+			LIMIT ${pageSpan}
+			OFFSET ${offset};
+			`;
 
 		//	await new Promise(resolve => setTimeout(resolve, 2000));
 
+		// Convert Decimal objects to plain JavaScript numbers
+		const results = rentalsAggregate.map(item => ({
+			...item,
+			price: Number(item.price),
+			totalNightSum: Number(item.totalNightSum),
+			orderTotalSum: Number(item.orderTotalSum),
+		}));
 		return {
-			results: rentalsAggregate,
+			results,
 			page: currentPage,
 			totalPage,
 			totalRental,

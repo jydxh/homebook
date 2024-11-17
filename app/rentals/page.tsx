@@ -12,7 +12,7 @@ function RentalsPage({
 	return (
 		<>
 			{/* searchInput */}
-			<RentalsSearch searchParams={newSearchParams} />
+			<RentalsSearch />
 
 			<Suspense fallback={<RentalsListsFallback />}>
 				<RentalsLists searchParams={newSearchParams} />

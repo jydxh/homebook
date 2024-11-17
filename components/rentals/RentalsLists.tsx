@@ -41,7 +41,7 @@ async function RentalsLists({
 			<h2 className="w-full mx-auto my-8 text-center text-3xl font-semibold">
 				My Rentals
 			</h2>
-			{/* search area */}
+
 			{/* table */}
 			<Table>
 				<TableCaption>A list of your rentals.</TableCaption>
