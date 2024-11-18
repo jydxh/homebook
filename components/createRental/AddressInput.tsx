@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { Library } from "@googlemaps/js-api-loader";
 import { debounce } from "@/utils/debounce";
+import { Skeleton } from "../ui/skeleton";
 
 type LatLng = google.maps.LatLng;
 // Define libraries to include the Places API
@@ -150,7 +151,7 @@ export default function AddressInput({
 	}, [autoComplete, drawMarkerCallback, marker]);
 
 	if (loadError) return <p>Error loading Google Maps</p>;
-	if (!isLoaded) return <p>Loading...</p>;
+	if (!isLoaded) return <Skeleton className="w-full h-[500px]" />;
 
 	return (
 		<div className="mb-4 flex flex-col space-y-4 justify-center">
@@ -165,7 +166,6 @@ export default function AddressInput({
 					}}
 				/>
 				<Input
-					defaultValue={defaultAddress}
 					required
 					type="hidden"
 					readOnly
