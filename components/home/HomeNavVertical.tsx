@@ -1,5 +1,4 @@
 "use client";
-
 import { FiMenu } from "react-icons/fi";
 import {
 	DropdownMenu,
@@ -7,19 +6,23 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { customerNavList } from "@/utils/navList";
+import { customerNavList, vendorNavList, adminNavList } from "@/utils/navList";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-function HomeNavVertical() {
+function HomeNavVertical({ role }: { role: "USER" | "VENDOR" | "ADMIN" }) {
 	const pathname = usePathname();
+	let renderList = customerNavList;
+
+	if (role === "VENDOR") renderList = [...customerNavList, ...vendorNavList];
+	if (role === "ADMIN") renderList = [...adminNavList];
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="block md:hidden">
 				<FiMenu className="w-8 h-8" />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
-				{customerNavList.map(list => {
+				{renderList.map(list => {
 					const { href, title } = list;
 					const active = pathname === href;
 					return (

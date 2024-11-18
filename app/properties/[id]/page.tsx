@@ -51,7 +51,7 @@ async function page({ params }: { params: { id: string } }) {
 	} = property;
 
 	const isFav = favList.includes(id);
-	const images = JSON.parse(image as string) as string[];
+	const images = image.map(img => img.imageUrl) as string[];
 	const { count, rating } = await fetchPropertyRating(id);
 	return (
 		<section className="mx-auto max-w-[1280px] px-8">

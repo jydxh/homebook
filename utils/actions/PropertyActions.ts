@@ -286,6 +286,7 @@ export const fetchPropertyById = async (id: string) => {
 			},
 
 			include: {
+				image: { select: { imageUrl: true } },
 				reviews: true,
 				user: true,
 				amenities: true,
