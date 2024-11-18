@@ -1,13 +1,14 @@
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-function Description() {
+function Description({ defaultValue }: { defaultValue?: string }) {
 	return (
 		<div className="mb-2">
 			<Label className="mb-2 block text-base" htmlFor="description">
 				Description
 			</Label>
 			<Textarea
+				defaultValue={defaultValue}
 				required
 				minLength={20}
 				maxLength={500}

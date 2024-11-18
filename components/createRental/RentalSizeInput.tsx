@@ -39,7 +39,6 @@ function RentalSizeInput({
 				{label}
 			</Label>
 			<Input
-				defaultValue={defaultValue}
 				placeholder={placeholder}
 				onChange={evt => setCount(Number(evt.currentTarget.value))}
 				type="number"

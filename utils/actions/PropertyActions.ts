@@ -549,7 +549,12 @@ export const deleteRentalAction = async (
 		message = "failed";
 		return { message };
 	}
-
 	revalidatePath(`/rentals?${searchParams.toString()}`);
 	return { message };
+};
+
+export const updateRental = async (prev: unknown, formData: FormData) => {
+	const rawData = Object.fromEntries(formData);
+	console.log(rawData);
+	return { message: "update rental" };
 };

@@ -107,9 +107,9 @@ export default function AddressInput({
 
 			setAutoComplete(gAutoComplete);
 			setMap(gMap);
-			//	drawMarkerCallback(defaultLatLng || initialLocation);
+			//drawMarkerCallback(defaultLatLng || initialLocation);
 		}
-	}, [isLoaded]);
+	}, [isLoaded, defaultLatLng, mode]);
 
 	useEffect(() => {
 		if (autoComplete) {
@@ -175,7 +175,6 @@ export default function AddressInput({
 			</div>
 
 			<Input
-				defaultValue={JSON.stringify(latLng)}
 				required
 				type="hidden"
 				name="latLng"

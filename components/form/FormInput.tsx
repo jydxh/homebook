@@ -15,7 +15,7 @@ function FormInput({
 	type: string;
 	name: string;
 	required?: boolean;
-	defaultValue?: string;
+	defaultValue?: string | number;
 	accept?: string;
 	placeholder?: string;
 	maxLength?: number;
