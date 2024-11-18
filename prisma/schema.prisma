@@ -23,7 +23,7 @@ model Property {
   tagline     String
   category    Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   categoryId  String
-  image       Json
+  image       PropertyImages[]
   country     String
   description String              @db.VarChar(500)
   price       Int
@@ -48,7 +48,15 @@ model PropertyAmenities {
   amenitiesId String
   property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   amenities   Amenities @relation(fields: [amenitiesId], references: [id], onDelete: Cascade)
+
   @@id([propertyId, amenitiesId])
+}
+
+model PropertyImages {
+  id         String   @id @default(uuid())
+  propertyId String
+  imageUrl   String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
@@ -141,7 +149,7 @@ model Order {
 
 model Review {
   id         String   @id @default(uuid())
-  rating     Int      
+  rating     Int
   comment    String   @db.VarChar(400)
   createAt   DateTime @default(now())
   updateAt   DateTime @updatedAt

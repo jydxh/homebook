@@ -136,9 +136,9 @@ export const fetchProperties = async ({
 				tagline: true,
 				price: true,
 				country: true,
-				image: true,
 				latLng: true,
 				amenities: true,
+				image: true,
 			},
 			orderBy: [
 				priceSort ? { price: priceSort } : { createdAt: "desc" },

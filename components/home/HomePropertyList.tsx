@@ -20,14 +20,14 @@ async function HomePropertyList({
 }) {
 	const properties = await fetchProperties({ searchParams });
 	const favList = await fetchFavList();
-	console.log(properties);
+	//console.log(properties);
 	if (properties.totalPage === 0) return <EmptyResult />;
 	return (
 		<>
 			<section className="p-8 gap-x-8 gap-y-16 grid  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 				{properties.data.map(item => {
 					const { id, country, image, name, price, tagline, latLng } = item;
-					const images = JSON.parse(image as string) as string[];
+					const images = image.map(img => img.imageUrl);
 					const isFav = favList.includes(id);
 					return (
 						<Card

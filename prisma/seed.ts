@@ -138,7 +138,13 @@ async function createProperties() {
 		const categoryIndex = i % 9;
 		const category = categories[categoryIndex];
 
-		const randomImage = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+		const randomImages = imageUrls[
+			Math.floor(Math.random() * imageUrls.length)
+		].map(img => {
+			return {
+				imageUrl: img,
+			};
+		});
 
 		const randomAmenities = [...amenities]
 			.sort(() => 0.5 - Math.random())
@@ -150,7 +156,9 @@ async function createProperties() {
 				name: propertyName[Math.floor(Math.random() * 20)],
 				tagline: `Beautiful ${propertyName[Math.floor(Math.random() * 20)]}`,
 				categoryId: category.id,
-				image: JSON.stringify(randomImage),
+				image: {
+					create: [...randomImages],
+				},
 				country: countryList[Math.floor(Math.random() * countryList.length)],
 				description: `A wonderful ${category.label} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
 				price: Number(Math.floor(Math.random() * 1000).toFixed(0)),
@@ -164,7 +172,7 @@ async function createProperties() {
 				updatedAt: new Date(),
 			},
 		});
-
+		/* amenity table */
 		for (const amenity of randomAmenities) {
 			await db.propertyAmenities.create({
 				data: {
