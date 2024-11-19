@@ -14,6 +14,7 @@ import cloudinaryUpload from "../cloudinaryUpload";
 import { renderError } from "./actions";
 
 import { City, State, Country } from "country-state-city";
+import { currentUser } from "@clerk/nextjs/server";
 
 const validateCountryStateCity = (props: {
 	city: string;
@@ -289,5 +290,24 @@ export const cancelApplicationAction = async (
 	} catch (error) {
 		console.log(error);
 		return renderError(error);
+	}
+};
+
+export const fetchUserRole = async () => {
+	try {
+		const user = await currentUser();
+		if (!user) return { role: "USER" };
+		const role = await db.user.findFirst({
+			where: {
+				clerkId: user.id,
+			},
+			select: {
+				role: true,
+			},
+		});
+		return role;
+	} catch (error) {
+		console.log(error);
+		return null;
 	}
 };

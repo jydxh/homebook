@@ -34,9 +34,10 @@ async function FavoritesPage() {
 			<Separator className="mt-8" />
 			<Suspense fallback={<PropertyListFallBack />}>
 				<section className="p-8 gap-x-8 gap-y-16 grid  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-					{properties.map(item => {
-						const { id, country, image, name, price, tagline, latLng } = item;
-						const images = JSON.parse(image as string) as string[];
+					{properties.map(property => {
+						const { id, country, image, name, price, tagline, latLng } =
+							property;
+						const images = image.map(item => item.imageUrl);
 						const isFav = favList.includes(id);
 						return (
 							<Card

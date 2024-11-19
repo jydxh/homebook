@@ -9,12 +9,54 @@ import {
 import { customerNavList, vendorNavList, adminNavList } from "@/utils/navList";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-function HomeNavVertical({ role }: { role: "USER" | "VENDOR" | "ADMIN" }) {
+import { useState, useEffect } from "react";
+import { fetchUserRole } from "@/utils/actions/ProfileActions";
+import { Skeleton } from "../ui/skeleton";
+function HomeNavVertical() {
 	const pathname = usePathname();
-	let renderList = customerNavList;
+	const [renderList, setRenderList] = useState(customerNavList);
 
-	if (role === "VENDOR") renderList = [...customerNavList, ...vendorNavList];
-	if (role === "ADMIN") renderList = [...adminNavList];
+	const [role, setRole] = useState<"USER" | "VENDOR" | "ADMIN" | null>(null);
+
+	useEffect(() => {
+		async function getRole() {
+			try {
+				const userRole = await fetchUserRole();
+				if (userRole?.role) {
+					setRole(userRole.role as "USER" | "VENDOR" | "ADMIN");
+				} else {
+					setRole("USER");
+				}
+			} catch (error) {
+				console.error(error);
+				setRole("USER");
+			}
+		}
+		getRole();
+	}, []);
+
+	useEffect(() => {
+		if (role === "VENDOR")
+			setRenderList([...customerNavList, ...vendorNavList]);
+		else if (role === "ADMIN") setRenderList(adminNavList);
+		else {
+			setRenderList(customerNavList);
+		}
+	}, [role]);
+
+	if (role === null)
+		return (
+			<DropdownMenu>
+				<DropdownMenuTrigger className="block md:hidden">
+					<FiMenu className="w-8 h-8" />
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="end">
+					<Skeleton className="w-[4rem] h-[2rem]" />
+					<Skeleton className="w-[4rem] h-[2rem]" />
+					<Skeleton className="w-[4rem] h-[2rem]" />
+				</DropdownMenuContent>
+			</DropdownMenu>
+		);
 
 	return (
 		<DropdownMenu>

@@ -16,6 +16,7 @@ import {
 import { HomePageSearchParam } from "@/app/page";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -195,7 +196,8 @@ export const fetchProperties = async ({
 
 export const fetchFavList = async () => {
 	try {
-		const user = await getAuthUser();
+		const user = await currentUser();
+		if (!user) return [];
 		const userFavList = await db.favorite.findMany({
 			where: {
 				userId: user.id,

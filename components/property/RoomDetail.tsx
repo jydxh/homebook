@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import PropertyRating from "./PropertyRating";
 
 function RoomDetail({
@@ -17,9 +18,12 @@ function RoomDetail({
 			{guests > 1 ? "guests" : "guest"} &middot; {baths}{" "}
 			{baths > 1 ? "baths" : "bath"}
 			{/* modify the rating later */}
-			<p className="flex items-center gap-2">
-				Rating: <PropertyRating propertyId={propertyId} />
-			</p>
+			<div className="flex items-center gap-2">
+				Rating:
+				<Suspense fallback="...loading">
+					<PropertyRating propertyId={propertyId} />
+				</Suspense>
+			</div>
 		</article>
 	);
 }
