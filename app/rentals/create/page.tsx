@@ -62,7 +62,9 @@ async function CreateRentalPage() {
 						<UploadPropertyImage />
 					</div>
 					{/* address Input with google map and google input search */}
-					<AddressInput />
+					<div className="mt-4">
+						<AddressInput />
+					</div>
 
 					<h3 className="text-lg font-medium mt-8 mb-4">
 						Accommodation Details
@@ -77,7 +79,7 @@ async function CreateRentalPage() {
 					</div>
 					<h3 className="text-lg font-medium mt-8 mb-4">Amenities</h3>
 					<Separator />
-					<Amenities />
+					<Amenities ameIds={[]} />
 					<Separator className="my-8" />
 					<div className="flex justify-start gap-x-8">
 						<SubmitButton text="Create Rental" />
