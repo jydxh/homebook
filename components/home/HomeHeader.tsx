@@ -4,8 +4,10 @@ import ToggleTheme from "./ToggleTheme";
 import HomeAvatar from "./HomeAvatar";
 import HomeNav from "./HomeNav";
 import HomeNavVertical from "./HomeNavVertical";
+import { fetchUserProfile } from "@/utils/actions/ProfileActions";
 
-function HomeHeader() {
+async function HomeHeader() {
+	const userInfo = await fetchUserProfile();
 	return (
 		<>
 			<div className="max-w-[1280px] mx-auto flex items-center justify-between  py-8 px-4">
@@ -14,13 +16,14 @@ function HomeHeader() {
 					<HomeNav role={userInfo?.role || "USER"} />
 				</Suspense>
  */}
-				<HomeNav />
+				{/* <HomeNav /> */}
+				<HomeNav role={userInfo?.role || "USER"} />
 				<div className="flex items-center gap-x-4">
 					{/* <Suspense fallback="loading...">
 						<HomeNavVertical role={userInfo?.role || "USER"} />
 					</Suspense>
  */}
-					<HomeNavVertical />
+					<HomeNavVertical role={userInfo?.role || "USER"} />
 					<ToggleTheme />
 					<HomeAvatar />
 				</div>
