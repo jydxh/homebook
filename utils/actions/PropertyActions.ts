@@ -38,6 +38,7 @@ export const createProperty = async (
 	prevState: unknown,
 	formData: FormData
 ) => {
+	let message = "";
 	try {
 		const user = await getAuthUser(); // test if user login
 		await getVendorUser(user.id); // test if user role is vendor
@@ -55,7 +56,7 @@ export const createProperty = async (
 			validatedImage.map(image => cloudinaryUpload(image.image))
 		);
 
-		const imageUrlsJson = JSON.stringify(imageUrls);
+		const imageToDb = imageUrls.map(img => ({ imageUrl: img }));
 		/* later add more validation and sanitize */
 		const amenitiesArray = (rawData.amenities as string)
 			.split(",")
@@ -74,7 +75,9 @@ export const createProperty = async (
 			data: {
 				...validatedFields,
 				userId: user.id,
-				image: imageUrlsJson,
+				image: {
+					create: imageToDb,
+				},
 			},
 			select: {
 				id: true,
@@ -90,12 +93,12 @@ export const createProperty = async (
 			}),
 		});
 
-		//	return { message: "success!" };
+		message = "Property created!";
 	} catch (error) {
 		console.log(error);
 		return renderError(error);
 	}
-	return redirect("/");
+	return { message };
 };
 
 export const fetchProperties = async ({
