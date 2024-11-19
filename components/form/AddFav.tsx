@@ -38,7 +38,7 @@ function AddFav({
 	}
 	if (!userId)
 		return (
-			<SignInButton mode="modal">
+			<SignInButton mode="modal" fallbackRedirectUrl={path}>
 				<Button type="button" size="icon" variant="outline">
 					<IoIosHeartEmpty className="w-5 h-5" />
 				</Button>
