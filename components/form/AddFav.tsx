@@ -4,10 +4,12 @@ import FormContainer from "./FormContainer";
 import { addFavAction } from "@/utils/actions/PropertyActions";
 import { usePathname } from "next/navigation";
 import { AddFavButton } from "./Buttons";
-import { SignInButton, useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { useEffect, useState } from "react";
+
+import Link from "next/link";
 function AddFav({
 	isFav,
 	propertyId,
@@ -38,12 +40,19 @@ function AddFav({
 	}
 	if (!userId)
 		return (
-			<SignInButton mode="modal" fallbackRedirectUrl={path}>
+			<Link href={`/sign-in?fallbackPath=${path}`}>
 				<Button type="button" size="icon" variant="outline">
 					<IoIosHeartEmpty className="w-5 h-5" />
 				</Button>
-			</SignInButton>
+			</Link>
 		);
+	{
+		/* <SignInButton fallbackRedirectUrl={path}>
+				<Button type="button" size="icon" variant="outline">
+					<IoIosHeartEmpty className="w-5 h-5" />
+				</Button>
+			</SignInButton> */
+	}
 
 	return (
 		<FormContainer action={addFav}>

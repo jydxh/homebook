@@ -4,7 +4,7 @@ import db from "@/utils/db";
 import sanitizeHtml from "sanitize-html";
 
 import { getAuthUser } from "./actions";
-import { redirect } from "next/navigation";
+
 import cloudinaryUpload from "../cloudinaryUpload";
 import { renderError } from "./actions";
 import {
