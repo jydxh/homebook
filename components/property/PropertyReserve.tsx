@@ -12,12 +12,14 @@ import { Skeleton } from "../ui/skeleton";
 import BookingBtn from "./BookingBtn";
 
 function PropertyReserve({
+	hasUserProfile,
 	price,
 	rating,
 	name,
 	image,
 	totalReview,
 }: {
+	hasUserProfile: boolean;
 	price: number;
 	rating: string;
 	name: string;
@@ -99,6 +101,7 @@ function PropertyReserve({
 		<div ref={divRef} className="col-span-3 lg:col-span-1">
 			<div className={`${showFirstCard ? "block" : "hidden"} `}>
 				<ReserverCard
+					hasUserProfile={hasUserProfile}
 					price={price}
 					image={image}
 					rating={rating}
@@ -112,6 +115,7 @@ function PropertyReserve({
 				}`}>
 				<div className="w-full col-span-3 lg:col-span-2" />
 				<ReserverCard
+					hasUserProfile={hasUserProfile}
 					price={price}
 					image={image}
 					rating={rating}
@@ -123,6 +127,7 @@ function PropertyReserve({
 				className={`${showLastCard ? "block" : "hidden"} relative`}
 				style={{ top: `${divHeight.current - 292}px` }}>
 				<ReserverCard
+					hasUserProfile={hasUserProfile}
 					price={price}
 					image={image}
 					rating={rating}
@@ -141,12 +146,14 @@ function ReserverCard({
 	name,
 	image,
 	totalReview,
+	hasUserProfile,
 }: {
 	price: number;
 	rating: string;
 	name: string;
 	image: string;
 	totalReview: number;
+	hasUserProfile: boolean;
 }) {
 	const { isSignedIn, isLoaded } = useUser();
 	return (
@@ -167,6 +174,7 @@ function ReserverCard({
 			) : isSignedIn ? (
 				/* the numberOfNights is hard code so far, later it will get from the date picker, and adding more logic at that component */
 				<BookingBtn
+					hasUserProfile={hasUserProfile}
 					image={image}
 					rating={rating}
 					name={name}

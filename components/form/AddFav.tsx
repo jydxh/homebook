@@ -19,14 +19,18 @@ import {
 import { Button } from "@/components/ui/button";
 import DemoUserBtn from "../home/DemoUserBtn";
 
+import Link from "next/link";
+
 function AddFav({
 	isFav,
 	propertyId,
 	withTxt = false,
+	hasUserProfile,
 }: {
 	isFav: boolean;
 	propertyId: string;
 	withTxt?: boolean;
+	hasUserProfile: boolean;
 }) {
 	const path = usePathname();
 	const [isClient, setIsClient] = useState(false);
@@ -48,6 +52,16 @@ function AddFav({
 		);
 	}
 	if (!userId) return <LoginDialog path={path} />;
+
+	if (userId && !hasUserProfile) {
+		return (
+			<Link href="/profile/create">
+				<Button type="button" size="icon" variant="outline">
+					<IoIosHeartEmpty className="w-5 h-5" />
+				</Button>
+			</Link>
+		);
+	}
 
 	return (
 		<FormContainer action={addFav}>

@@ -14,6 +14,7 @@ import { Separator } from "../ui/separator";
 import { formatCurrency } from "@/utils/formatCurrency";
 import FormContainer from "../form/FormContainer";
 import { makeReservation } from "@/utils/actions/PropertyActions";
+import Link from "next/link";
 
 const serviceFee = 200;
 const cleaningFee = 100;
@@ -25,6 +26,7 @@ function BookingBtn({
 	image,
 	totalReview,
 	numberOfNights,
+	hasUserProfile,
 }: {
 	price: number;
 	rating: string;
@@ -32,8 +34,15 @@ function BookingBtn({
 	image: string;
 	totalReview: number;
 	numberOfNights: number;
+	hasUserProfile: boolean;
 }) {
 	console.log(image);
+	if (!hasUserProfile)
+		return (
+			<Link href="/profile/create">
+				<Button className="mt-4">Book the Date</Button>
+			</Link>
+		);
 	return (
 		<Dialog>
 			<DialogTrigger asChild>

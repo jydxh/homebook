@@ -311,3 +311,20 @@ export const fetchUserRole = async () => {
 		return null;
 	}
 };
+
+export const hasProfile = async (clerkId: string | undefined) => {
+	try {
+		const result = await db.user.findFirst({
+			where: {
+				clerkId,
+			},
+			select: {
+				id: true,
+			},
+		});
+		return result;
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};

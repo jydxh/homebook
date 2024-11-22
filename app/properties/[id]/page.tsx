@@ -22,6 +22,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import dynamic from "next/dynamic";
 import PropertyReviews from "@/components/property/PropertyReviews";
 import PropertyReserve from "@/components/property/PropertyReserve";
+import { currentUser } from "@clerk/nextjs/server";
+import { hasProfile } from "@/utils/actions/ProfileActions";
+
 const PropertyLeaflet = dynamic(
 	() => import("@/components/property/PropertyLeaflet"),
 	{ ssr: false, loading: () => <Skeleton className="mt-12 w-full h-[50vh]" /> }
@@ -53,6 +56,8 @@ async function page({ params }: { params: { id: string } }) {
 	const isFav = favList.includes(id);
 	const images = image.map(img => img.imageUrl) as string[];
 	const { count, rating } = await fetchPropertyRating(id);
+	const loginUser = await currentUser();
+	const hasUserProfile = await hasProfile(loginUser?.id);
 	return (
 		<section className="mx-auto max-w-[1280px] px-8">
 			<div className="flex justify-between items-center">
@@ -67,7 +72,12 @@ async function page({ params }: { params: { id: string } }) {
 						guests={guests}
 						propertyId={id}
 					/>
-					<AddFav propertyId={id} isFav={isFav} withTxt={true} />
+					<AddFav
+						propertyId={id}
+						isFav={isFav}
+						withTxt={true}
+						hasUserProfile={Boolean(hasUserProfile)}
+					/>
 				</div>
 			</div>
 			<PropertyGallery images={images} />
@@ -122,6 +132,7 @@ async function page({ params }: { params: { id: string } }) {
 
 				{/* total review is hard coded here, later will fetch from db */}
 				<PropertyReserve
+					hasUserProfile={Boolean(hasUserProfile)}
 					totalReview={count}
 					price={price}
 					rating={rating}

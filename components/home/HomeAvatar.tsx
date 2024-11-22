@@ -7,14 +7,8 @@ import {
 import UserAvatar from "./UserAvatar";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
-import { SignOutButton, SignInButton, SignIn } from "@clerk/nextjs";
-import {
-	Dialog,
-	DialogContent,
-	DialogTitle,
-	DialogTrigger,
-} from "@radix-ui/react-dialog";
-import { Button } from "../ui/button";
+import { SignOutButton } from "@clerk/nextjs";
+
 import UserLoginBtn from "./UserLoginBtn";
 async function HomeAvatar() {
 	const user = await currentUser();

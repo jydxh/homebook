@@ -12,6 +12,8 @@ import HomePagination from "./HomePagination";
 import AddFav from "../form/AddFav";
 import Link from "next/link";
 import PropertyRating from "../property/PropertyRating";
+import { hasProfile } from "@/utils/actions/ProfileActions";
+import { currentUser } from "@clerk/nextjs/server";
 
 async function HomePropertyList({
 	searchParams,
@@ -21,6 +23,9 @@ async function HomePropertyList({
 	const properties = await fetchProperties({ searchParams });
 	const favList = await fetchFavList();
 	//console.log(properties);
+	const user = await currentUser();
+	const hasUserProfile = await hasProfile(user?.id);
+
 	if (properties.totalPage === 0) return <EmptyResult />;
 	return (
 		<>
@@ -58,7 +63,11 @@ async function HomePropertyList({
 							</Link>
 
 							<div className="absolute top-1 right-1">
-								<AddFav propertyId={id} isFav={isFav} />
+								<AddFav
+									propertyId={id}
+									isFav={isFav}
+									hasUserProfile={Boolean(hasUserProfile)}
+								/>
 							</div>
 						</Card>
 					);
