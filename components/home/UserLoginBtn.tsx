@@ -2,24 +2,22 @@
 
 import { SignIn } from "@clerk/nextjs";
 import {
-	Dialog,
-	DialogContent,
-	DialogTitle,
-	DialogTrigger,
-} from "@radix-ui/react-dialog";
+	AlertDialog,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import DemoUserBtn from "./DemoUserBtn";
-import { useState } from "react";
 
 function UserLoginBtn() {
-	const [showLogin, setShowLogin] = useState(true);
 	return (
 		<>
 			<DropdownMenuItem
 				onSelect={e => {
 					e.preventDefault();
-					setShowLogin(false);
 				}}>
 				{/* <SignInButton
 								//mode="modal"
@@ -31,11 +29,14 @@ function UserLoginBtn() {
 								}>
 								<button className="w-full text-start">Sign in</button>
 							</SignInButton> */}
-				<Dialog>
-					<DialogTrigger>{showLogin && "Login"}</DialogTrigger>
-					<DialogContent className="sm:max-w-[425px]">
-						<DialogTitle hidden>Sign in</DialogTitle>
-
+				<AlertDialog>
+					<AlertDialogTrigger>Login</AlertDialogTrigger>
+					<AlertDialogContent className="sm:max-w-[425px] flex-col items-center justify-center">
+						<div className="flex flex-row-reverse">
+							<AlertDialogCancel className="p-2">
+								<AiOutlineCloseCircle className="w-5 h-5" />
+							</AlertDialogCancel>
+						</div>
 						<SignIn
 							routing="hash"
 							fallbackRedirectUrl={
@@ -47,8 +48,8 @@ function UserLoginBtn() {
 						/>
 
 						<DemoUserBtn />
-					</DialogContent>
-				</Dialog>
+					</AlertDialogContent>
+				</AlertDialog>
 			</DropdownMenuItem>
 		</>
 	);
