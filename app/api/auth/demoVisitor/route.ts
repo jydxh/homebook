@@ -13,7 +13,8 @@ export const POST = async (req: NextRequest) => {
 			expiresInSeconds: 60 * 30,
 		});
 		console.log(sessions);
-		return NextResponse.json({ sessions }, { status: 200 });
+		const loginUrl = sessions.url;
+		return NextResponse.json({ loginUrl }, { status: 200 });
 	} catch (error) {
 		console.log(error);
 		return NextResponse.json(
