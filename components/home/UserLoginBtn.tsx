@@ -19,20 +19,10 @@ function UserLoginBtn() {
 				onSelect={e => {
 					e.preventDefault();
 				}}>
-				{/* <SignInButton
-								//mode="modal"
-								fallbackRedirectUrl={
-									process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
-								}
-								signUpFallbackRedirectUrl={
-									process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
-								}>
-								<button className="w-full text-start">Sign in</button>
-							</SignInButton> */}
 				<AlertDialog>
 					<AlertDialogTrigger>Login</AlertDialogTrigger>
-					<AlertDialogContent className="sm:max-w-[425px] flex-col items-center justify-center">
-						<div className="flex flex-row-reverse">
+					<AlertDialogContent className="flex flex-col items-center justify-center">
+						<div className="flex flex-row-reverse w-full">
 							<AlertDialogCancel className="p-2">
 								<AiOutlineCloseCircle className="w-5 h-5" />
 							</AlertDialogCancel>

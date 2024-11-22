@@ -48,13 +48,6 @@ function AddFav({
 		);
 	}
 	if (!userId) return <LoginDialog path={path} />;
-	{
-		/* 	<Link href={`/sign-in?fallbackPath=${path}`}>
-				<Button type="button" size="icon" variant="outline">
-					<IoIosHeartEmpty className="w-5 h-5" />
-				</Button>
-			</Link> */
-	}
 
 	return (
 		<FormContainer action={addFav}>

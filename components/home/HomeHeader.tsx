@@ -4,10 +4,10 @@ import ToggleTheme from "./ToggleTheme";
 import HomeAvatar from "./HomeAvatar";
 import HomeNav from "./HomeNav";
 import HomeNavVertical from "./HomeNavVertical";
-import { fetchUserProfile } from "@/utils/actions/ProfileActions";
+import { fetchUserRole } from "@/utils/actions/ProfileActions";
 
 async function HomeHeader() {
-	const userInfo = await fetchUserProfile();
+	const userInfo = await fetchUserRole();
 	return (
 		<>
 			<div className="max-w-[1280px] mx-auto flex items-center justify-between  py-8 px-4">

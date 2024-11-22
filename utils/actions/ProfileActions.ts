@@ -296,7 +296,7 @@ export const cancelApplicationAction = async (
 export const fetchUserRole = async () => {
 	try {
 		const user = await currentUser();
-		if (!user) return { role: "USER" };
+		if (!user) return null;
 		const role = await db.user.findFirst({
 			where: {
 				clerkId: user.id,
