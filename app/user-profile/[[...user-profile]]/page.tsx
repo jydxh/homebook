@@ -1,30 +1,20 @@
-"use client";
-import { UserProfile } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs/server";
+import UserProfileComponent from "@/components/profile/UserProfileComponent";
 
-const UserProfilePage = () => {
-	const { theme, systemTheme } = useTheme();
-	const [currentTheme, setCurrentTheme] = useState(theme);
+export default async function UserProfilePage() {
+	const user = await currentUser();
 
-	useEffect(() => {
-		if (theme === "system") {
-			setCurrentTheme(systemTheme);
-		} else {
-			setCurrentTheme(theme);
+	if (user) {
+		// if user login and user.id is the vendor or visitor id redirect to home, since they are not allow to touch the user-profile
+		if (
+			user.id === process.env.DEMO_VISITOR_CLERKID ||
+			user.id === process.env.DEMO_VENDOR_CLERKID
+		) {
+			return redirect("/");
 		}
-	}, [systemTheme, theme]);
-	return (
-		<section className="grid place-content-center pt-16">
-			<UserProfile
-				path="/user-profile"
-				appearance={{
-					baseTheme: currentTheme === "dark" ? dark : undefined,
-				}}
-			/>
-		</section>
-	);
-};
-
-export default UserProfilePage;
+		return <UserProfileComponent />;
+	} else {
+		redirect("/");
+	}
+}

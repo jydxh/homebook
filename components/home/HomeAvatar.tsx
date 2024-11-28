@@ -13,6 +13,10 @@ import UserLoginBtn from "./UserLoginBtn";
 async function HomeAvatar() {
 	const user = await currentUser();
 
+	const showManageAccount =
+		user?.id !== process.env.DEMO_VISITOR_CLERKID &&
+		user?.id !== process.env.DEMO_VENDOR_CLERKID;
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
@@ -26,11 +30,13 @@ async function HomeAvatar() {
 								Profile
 							</Link>
 						</DropdownMenuItem>
-						<DropdownMenuItem>
-							<Link href="/user-profile" className="w-full text-start">
-								Manage Account
-							</Link>
-						</DropdownMenuItem>
+						{showManageAccount && (
+							<DropdownMenuItem>
+								<Link href="/user-profile" className="w-full text-start">
+									Manage Account
+								</Link>
+							</DropdownMenuItem>
+						)}
 						<DropdownMenuItem>
 							<SignOutButton>
 								<button className="w-full text-start">Sign out</button>
@@ -38,40 +44,7 @@ async function HomeAvatar() {
 						</DropdownMenuItem>
 					</>
 				)}
-				{!user && (
-					<UserLoginBtn />
-					// <>
-					// 	<DropdownMenuItem>
-					// 		{/* <SignInButton
-					// 			//mode="modal"
-					// 			fallbackRedirectUrl={
-					// 				process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
-					// 			}
-					// 			signUpFallbackRedirectUrl={
-					// 				process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
-					// 			}>
-					// 			<button className="w-full text-start">Sign in</button>
-					// 		</SignInButton> */}
-					// 		<Dialog>
-					// 			<DialogTrigger>Login</DialogTrigger>
-					// 			<DialogContent className="sm:max-w-[425px]">
-					// 				<DialogTitle>Sign in</DialogTitle>
-					// 				<SignIn
-					// 					routing="hash"
-					// 					fallbackRedirectUrl={
-					// 						process.env
-					// 							.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
-					// 					}
-					// 					signUpFallbackRedirectUrl={
-					// 						process.env
-					// 							.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
-					// 					}
-					// 				/>
-					// 			</DialogContent>
-					// 		</Dialog>
-					// 	</DropdownMenuItem>
-					// </>
-				)}
+				{!user && <UserLoginBtn />}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
