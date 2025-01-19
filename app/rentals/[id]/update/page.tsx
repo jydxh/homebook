@@ -11,13 +11,14 @@ import CategorySelection from "@/components/createRental/CategorySelection";
 import CountrySelect from "@/components/createRental/CountrySelect";
 import Description from "@/components/createRental/Description";
 import RentalSizeInput from "@/components/createRental/RentalSizeInput";
-import UploadPropertyImage from "@/components/createRental/UploadPropertyImage";
+//import UploadPropertyImage from "@/components/createRental/UploadPropertyImage";
 import { SubmitButton } from "@/components/form/Buttons";
 import FormContainer from "@/components/form/FormContainer";
 import FormInput from "@/components/form/FormInput";
 
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import UpdateRentalImages from "@/components/updateRental/UpdateRentalImages";
 
 async function UpdateRentalPage({ params }: { params: { id: string } }) {
 	const user = await currentUser();
@@ -75,8 +76,9 @@ async function UpdateRentalPage({ params }: { params: { id: string } }) {
 					</div>
 
 					{/* UPDATE PROPERTY IMAGES */}
-					<div className="mt-4">
-						<UploadPropertyImage />
+					<div className="my-4">
+						{/* <UploadPropertyImage /> */}
+						<UpdateRentalImages images={property.image} />
 					</div>
 					{/* address Input with google map and google input search */}
 					<AddressInput

@@ -43,7 +43,7 @@ async function ReviewsPage() {
 						rating,
 						property: { country, id: propertyId, image, name },
 					} = review;
-					console.log(review);
+
 					const imageStringOfArr = image;
 
 					return (
