@@ -43,7 +43,8 @@ async function ReviewsPage() {
 						rating,
 						property: { country, id: propertyId, image, name },
 					} = review;
-					const imageStringOfArr = JSON.parse(image as string);
+					console.log(review);
+					const imageStringOfArr = image;
 
 					return (
 						<ReviewCard
@@ -53,7 +54,7 @@ async function ReviewsPage() {
 							createAt={createAt}
 							rating={rating}
 							propertyId={propertyId}
-							image={imageStringOfArr[0]}
+							image={imageStringOfArr[0].imageUrl}
 							name={name}
 						/>
 					);
