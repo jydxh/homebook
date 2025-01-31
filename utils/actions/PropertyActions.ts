@@ -17,6 +17,7 @@ import { HomePageSearchParam } from "@/app/page";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
+import { ReceiptPoundSterling } from "lucide-react";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -289,9 +290,8 @@ export const fetchPropertyById = async (id: string) => {
 			where: {
 				id,
 			},
-
 			include: {
-				image: { select: { imageUrl: true } },
+				image: { select: { imageUrl: true, id: true } },
 				reviews: true,
 				user: true,
 				amenities: true,
@@ -563,4 +563,67 @@ export const updateRental = async (prev: unknown, formData: FormData) => {
 	const rawData = Object.fromEntries(formData);
 	console.log(rawData);
 	return { message: "update rental" };
+};
+
+export const addRentalImg = async (prev: unknown, formData: FormData) => {
+	try {
+		const image = formData.get("image");
+		const rentalId = formData.get("rentalId") as string;
+		if (!rentalId) {
+			throw new Error("rentalId is required!");
+		}
+		console.log(rentalId);
+		//console.log(image);
+		const validatedImage = validateZodSchema(ImageSchema, { image });
+		// upload image to cloudinary
+		const imageUrl = await cloudinaryUpload(validatedImage.image);
+		// add the imageUrl to DB;
+		await db.propertyImages.create({
+			data: {
+				propertyId: rentalId,
+				imageUrl,
+			},
+		});
+		revalidatePath(`/rentals/${rentalId}/update`);
+		return { message: "Add the new image successfully!" };
+	} catch (error) {
+		console.log(error);
+		return renderError(error);
+	}
+};
+
+export const deleteRentalImage = async (imageId: string, pathName: string) => {
+	try {
+		await db.propertyImages.delete({
+			where: {
+				id: imageId,
+			},
+		});
+		revalidatePath(pathName);
+		return { message: "Deleted!" };
+	} catch (error) {
+		console.log(error);
+		return renderError(error);
+	}
+};
+
+export const updateRentalImage = async (
+	imageId: string,
+	pathName: string,
+	formData: FormData
+) => {
+	try {
+		// validate the formData with zod
+
+		//upload the new image and return the url
+
+		// delete the old image at cloudinary by using the old image cloudinary ID from the oldImage url
+
+		// update the  imageUrl at DB by using the imageId
+
+		return { message: "Update the image successfully!" };
+	} catch (error) {
+		console.log(error);
+		return renderError(error);
+	}
 };
