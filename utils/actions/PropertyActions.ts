@@ -565,10 +565,13 @@ export const updateRental = async (prev: unknown, formData: FormData) => {
 	return { message: "update rental" };
 };
 
-export const addRentalImg = async (prev: unknown, formData: FormData) => {
+export const addRentalImg = async (
+	formData: FormData,
+	pathName: string,
+	rentalId: string
+) => {
 	try {
 		const image = formData.get("image");
-		const rentalId = formData.get("rentalId") as string;
 		if (!rentalId) {
 			throw new Error("rentalId is required!");
 		}
@@ -584,7 +587,7 @@ export const addRentalImg = async (prev: unknown, formData: FormData) => {
 				imageUrl,
 			},
 		});
-		revalidatePath(`/rentals/${rentalId}/update`);
+		revalidatePath(pathName);
 		return { message: "Add the new image successfully!" };
 	} catch (error) {
 		console.log(error);

@@ -78,7 +78,10 @@ async function UpdateRentalPage({ params }: { params: { id: string } }) {
 					{/* UPDATE PROPERTY IMAGES */}
 					<div className="my-4">
 						{/* <UploadPropertyImage /> */}
-						<UpdateRentalImages images={property.image} />
+						<UpdateRentalImages
+							images={property.image}
+							propertyId={property.id}
+						/>
 					</div>
 					{/* address Input with google map and google input search */}
 					<AddressInput

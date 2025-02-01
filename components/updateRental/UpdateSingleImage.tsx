@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import useImageValidation from "@/hooks/useImageValidation";
 import { updateRentalImage } from "@/utils/actions/PropertyActions";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -18,27 +19,24 @@ function UpdateSingleImage({ imageId }: { imageId: string }) {
 	const [open, setOpen] = useState(false);
 	const { toast } = useToast();
 	const pathName = usePathname();
+	const { validateImage } = useImageValidation();
 	const handleUpdate = async (evt: React.FormEvent<HTMLFormElement>) => {
 		evt.preventDefault();
 		const formData = new FormData(evt.currentTarget);
 		const image = formData.get("image") as File | null;
 		//console.log(image);
 		// validation will be comment out later
-		/* 	if (!image || image.name === "" || image.size === 0) {
-			return toast({ description: "Image file is required!" });
-		}
-		if (image.size > 1024 * 1024) {
-			return toast({ description: "Size of the Image must less than 1Mb!" });
-		} */
-		try {
-			const result = await updateRentalImage(imageId, pathName, formData);
-			toast({ description: result.message });
-			setOpen(false);
-		} catch (error) {
-			console.log(error);
-			return toast({
-				description: "failed to upload image, please try again!",
-			});
+		if (validateImage(image)) {
+			try {
+				const result = await updateRentalImage(imageId, pathName, formData);
+				toast({ description: result.message });
+				setOpen(false);
+			} catch (error) {
+				console.log(error);
+				return toast({
+					description: "failed to upload image, please try again!",
+				});
+			}
 		}
 	};
 	return (

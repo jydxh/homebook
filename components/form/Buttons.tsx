@@ -8,14 +8,16 @@ import { IoIosHeartEmpty, IoMdHeart } from "react-icons/io";
 export const SubmitButton = ({
 	text = "Submit",
 	disabled,
+	spinning,
 }: {
 	text?: string;
 	disabled?: boolean;
+	spinning?: boolean;
 }) => {
 	const { pending } = useFormStatus();
 	return (
 		<Button className="mb-2 " disabled={disabled || pending}>
-			{pending ? (
+			{pending || spinning ? (
 				<>
 					<CgSpinner className="animate-spin mr-2" />
 					{text}
