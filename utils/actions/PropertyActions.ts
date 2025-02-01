@@ -5,7 +5,7 @@ import sanitizeHtml from "sanitize-html";
 
 import { getAuthUser } from "./actions";
 
-import cloudinaryUpload from "../cloudinaryUpload";
+import cloudinaryUpload, { cloudinaryDelete } from "../cloudinaryUpload";
 import { renderError } from "./actions";
 import {
 	CreatePropertySchema,
@@ -575,7 +575,7 @@ export const addRentalImg = async (
 		if (!rentalId) {
 			throw new Error("rentalId is required!");
 		}
-		console.log(rentalId);
+
 		//console.log(image);
 		const validatedImage = validateZodSchema(ImageSchema, { image });
 		// upload image to cloudinary
@@ -613,17 +613,32 @@ export const deleteRentalImage = async (imageId: string, pathName: string) => {
 export const updateRentalImage = async (
 	imageId: string,
 	pathName: string,
-	formData: FormData
+	formData: FormData,
+	imageUrl: string
 ) => {
 	try {
+		const cloudinaryImageIdWithSuffix = imageUrl.split("/").pop();
+		if (!cloudinaryImageIdWithSuffix) {
+			throw new Error("wrong image url, please try again!");
+		}
+		const cloudinaryImageId = cloudinaryImageIdWithSuffix.split(".")[0];
+		console.log(cloudinaryImageId);
+		const image = formData.get("image");
+
 		// validate the formData with zod
-
+		const validatedImage = validateZodSchema(ImageSchema, { image });
 		//upload the new image and return the url
-
+		const updatedImageUrl = await cloudinaryUpload(validatedImage.image);
 		// delete the old image at cloudinary by using the old image cloudinary ID from the oldImage url
-
+		await cloudinaryDelete(cloudinaryImageId);
 		// update the  imageUrl at DB by using the imageId
-
+		await db.propertyImages.update({
+			where: {
+				id: imageId,
+			},
+			data: { imageUrl: updatedImageUrl },
+		});
+		revalidatePath(pathName);
 		return { message: "Update the image successfully!" };
 	} catch (error) {
 		console.log(error);

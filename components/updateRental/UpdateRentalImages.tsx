@@ -24,7 +24,7 @@ function UpdateRentalImages({
 								key={imageUrl}
 								className="w-[120px] h-[120px] relative group hover:scale-110 duration-150">
 								<div className="z-50 absolute inset-0 bg-gray-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex items-center justify-center space-x-2">
-									<UpdateSingleImage imageId={id} />
+									<UpdateSingleImage imageId={id} imageUrl={imageUrl} />
 									<DeleteImageBtn imageId={id} />
 								</div>
 								<Image

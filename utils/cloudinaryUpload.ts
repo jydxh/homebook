@@ -34,7 +34,7 @@ export async function cloudinaryDelete(public_id: string) {
 	});
 	try {
 		const result = await cloudinary.uploader.destroy(public_id);
-		console.log(result);
+		console.log("result from cloud delete:", result);
 		return { result: "deleted" };
 	} catch (error) {
 		console.log(error);

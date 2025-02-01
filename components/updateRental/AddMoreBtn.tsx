@@ -73,7 +73,7 @@ const AddMoreImgBtn = ({ rentalId }: { rentalId: string }) => {
 							required
 						/>
 					</div>
-					<DialogFooter>
+					<DialogFooter className="gap-y-2">
 						<SubmitButton
 							text="Add the Image"
 							disabled={pending}

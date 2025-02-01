@@ -50,8 +50,10 @@ function DeleteImageBtn({ imageId }: { imageId: string }) {
 						from our server.
 					</DialogDescription>
 				</DialogHeader>
-				<DialogFooter>
-					<form onSubmit={evt => handleDelete(evt, imageId)}>
+				<DialogFooter className="gap-y-2">
+					<form
+						className="flex justify-center"
+						onSubmit={evt => handleDelete(evt, imageId)}>
 						<SubmitButton
 							text="Delete the Image"
 							disabled={pending}

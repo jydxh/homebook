@@ -3,9 +3,11 @@ import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -14,9 +16,17 @@ import { updateRentalImage } from "@/utils/actions/PropertyActions";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { TiEdit } from "react-icons/ti";
+import { SubmitButton } from "../form/Buttons";
 
-function UpdateSingleImage({ imageId }: { imageId: string }) {
+function UpdateSingleImage({
+	imageId,
+	imageUrl,
+}: {
+	imageId: string;
+	imageUrl: string;
+}) {
 	const [open, setOpen] = useState(false);
+	const [pending, setPending] = useState(false);
 	const { toast } = useToast();
 	const pathName = usePathname();
 	const { validateImage } = useImageValidation();
@@ -25,12 +35,19 @@ function UpdateSingleImage({ imageId }: { imageId: string }) {
 		const formData = new FormData(evt.currentTarget);
 		const image = formData.get("image") as File | null;
 		//console.log(image);
-		// validation will be comment out later
+
 		if (validateImage(image)) {
 			try {
-				const result = await updateRentalImage(imageId, pathName, formData);
+				setPending(true);
+				const result = await updateRentalImage(
+					imageId,
+					pathName,
+					formData,
+					imageUrl
+				);
 				toast({ description: result.message });
 				setOpen(false);
+				setPending(false);
 			} catch (error) {
 				console.log(error);
 				return toast({
@@ -55,17 +72,18 @@ function UpdateSingleImage({ imageId }: { imageId: string }) {
 						</DialogDescription>
 					</DialogHeader>
 					<div className="grid gap-4 py-4">
-						<div className="grid grid-cols-4 items-center gap-4">
-							<Input
-								required
-								name="image"
-								type="file"
-								accept="image/*"
-								className="col-span-3"
-							/>
-						</div>
+						<Input required name="image" type="file" accept="image/*" />
 					</div>
-					<Button>Upload the Image</Button>
+					<DialogFooter className="gap-y-2">
+						<SubmitButton
+							text="Update the Image"
+							disabled={pending}
+							spinning={pending}
+						/>
+						<DialogClose asChild>
+							<Button variant={"outline"}>Cancel</Button>
+						</DialogClose>
+					</DialogFooter>
 				</form>
 			</DialogContent>
 		</Dialog>
