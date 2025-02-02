@@ -30,7 +30,7 @@ async function UpdateRentalPage({ params }: { params: { id: string } }) {
 	if (!property) {
 		return redirect("/");
 	}
-
+	const updateRentalAction = updateRental.bind(null, property.id);
 	const { amenities } = property;
 	const ameIds = amenities.map(ame => ame.amenitiesId);
 	return (
@@ -38,7 +38,7 @@ async function UpdateRentalPage({ params }: { params: { id: string } }) {
 			<h2 className="font-medium mx-auto w-full text-center text-2xl mb-4">
 				Edit Rental
 			</h2>
-			<FormContainer action={updateRental}>
+			<FormContainer action={updateRentalAction}>
 				<Card className="p-8">
 					<h3 className="text-lg font-medium my-4">General Information</h3>
 					<Separator className="mb-4" />

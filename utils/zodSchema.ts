@@ -85,6 +85,8 @@ export const ApplyVendorSchema = z.object({
 	proofOfAddress: acceptImgAndPdf(),
 });
 
+export const PropertyIdSchema = z.string().uuid();
+
 export const CreatePropertySchema = z.object({
 	name: z.string().max(20, { message: "name cannot over 20 characters" }),
 	tagline: z.string().max(50, { message: "tagline cannot over 50 characters" }),
@@ -100,6 +102,9 @@ export const CreatePropertySchema = z.object({
 	baths: z.coerce.number().nonnegative("baths cannot be less than 0"),
 	address: z.string().max(200, { message: "address cannot be over 200 chars" }),
 	latLng: z.string().max(400, { message: "latLng cannot over 400 chars" }),
+	amenities: z
+		.string()
+		.max(90, { message: "some thing wrong happened, please try again!" }),
 });
 
 export const reviewZodSchema = z.object({

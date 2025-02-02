@@ -10,6 +10,7 @@ import { renderError } from "./actions";
 import {
 	CreatePropertySchema,
 	ImageSchema,
+	PropertyIdSchema,
 	reviewZodSchema,
 	validateZodSchema,
 } from "../zodSchema";
@@ -17,7 +18,7 @@ import { HomePageSearchParam } from "@/app/page";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
-import { ReceiptPoundSterling } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -30,7 +31,7 @@ export const getVendorUser = async (clerkId: string) => {
 		},
 	});
 	if (!isVendor) {
-		throw new Error("only vendor can create a property");
+		throw new Error("only vendor can create or modify a property");
 	}
 	return true;
 };
@@ -58,12 +59,12 @@ export const createProperty = async (
 		);
 
 		const imageToDb = imageUrls.map(img => ({ imageUrl: img }));
-		/* later add more validation and sanitize */
-		const amenitiesArray = (rawData.amenities as string)
+
+		const amenitiesArray = validatedFields.amenities
 			.split(",")
 			.map(name => name.trim());
 
-		// get amenities from DB
+		// get amenities from DB so make sure the id provided from front-end is correct
 		const amenities = await db.amenities.findMany({
 			where: {
 				name: {
@@ -71,10 +72,32 @@ export const createProperty = async (
 				},
 			},
 		});
-
+		const {
+			name,
+			address,
+			tagline,
+			price,
+			categoryId,
+			description,
+			country,
+			guests,
+			bedrooms,
+			baths,
+			latLng,
+		} = validatedFields;
 		const newProperty = await db.property.create({
 			data: {
-				...validatedFields,
+				name,
+				tagline,
+				price,
+				categoryId,
+				description,
+				country,
+				guests,
+				bedrooms,
+				baths,
+				address,
+				latLng,
 				userId: user.id,
 				image: {
 					create: imageToDb,
@@ -559,10 +582,88 @@ export const deleteRentalAction = async (
 	return { message };
 };
 
-export const updateRental = async (prev: unknown, formData: FormData) => {
-	const rawData = Object.fromEntries(formData);
-	console.log(rawData);
-	return { message: "update rental" };
+export const updateRental = async (
+	propertyId: string,
+	prev: unknown,
+	formData: FormData
+) => {
+	let validatedPropertyId = "";
+	try {
+		const rawData = Object.fromEntries(formData);
+		const user = await getAuthUser();
+		await getVendorUser(user.id);
+
+		// validate propertyId
+		validatedPropertyId = validateZodSchema(PropertyIdSchema, propertyId);
+
+		const validatedFields = validateZodSchema(CreatePropertySchema, rawData);
+		console.log(rawData);
+		console.log(validatedFields);
+
+		const amenitiesArray = validatedFields.amenities
+			.split(",")
+			.map(name => name.trim());
+
+		// get amenities from DB to make sure ID provided from front-end is valid
+		const amenities = await db.amenities.findMany({
+			where: {
+				id: {
+					in: amenitiesArray,
+				},
+			},
+		});
+
+		const {
+			name,
+			address,
+			tagline,
+			price,
+			categoryId,
+			description,
+			country,
+			guests,
+			bedrooms,
+			baths,
+			latLng,
+		} = validatedFields;
+		//update the property
+		await db.property.update({
+			where: {
+				id: validatedPropertyId,
+			},
+			data: {
+				name,
+				address,
+				tagline,
+				price,
+				categoryId,
+				description,
+				country,
+				guests,
+				bedrooms,
+				baths,
+				latLng,
+			},
+		});
+		// delete the old relation at amenity_property joint table
+		await db.propertyAmenities.deleteMany({
+			where: {
+				propertyId: validatedPropertyId,
+			},
+		});
+
+		// create new relation at joint table
+		await db.propertyAmenities.createMany({
+			data: amenities.map(ame => {
+				return { propertyId: validatedPropertyId, amenitiesId: ame.id };
+			}),
+		});
+	} catch (error) {
+		console.log(error);
+		return renderError(error);
+	}
+
+	redirect(`/properties/${validatedPropertyId}`);
 };
 
 export const addRentalImg = async (
@@ -576,7 +677,6 @@ export const addRentalImg = async (
 			throw new Error("rentalId is required!");
 		}
 
-		//console.log(image);
 		const validatedImage = validateZodSchema(ImageSchema, { image });
 		// upload image to cloudinary
 		const imageUrl = await cloudinaryUpload(validatedImage.image);
