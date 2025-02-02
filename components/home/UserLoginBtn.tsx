@@ -1,49 +1,52 @@
 "use client";
-
 import { SignIn } from "@clerk/nextjs";
 import {
 	AlertDialog,
 	AlertDialogCancel,
 	AlertDialogContent,
 	AlertDialogTrigger,
+	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { Button } from "../ui/button";
 
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import DemoUserBtn from "./DemoUserBtn";
+import { usePathname } from "next/navigation";
 
-function UserLoginBtn() {
+function UserLoginBtn({ location }: { location?: "atBooking" }) {
+	const pathName = usePathname();
+	const signUpRedirectUrl =
+		process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL;
+
 	return (
 		<>
-			<DropdownMenuItem
-				onSelect={e => {
-					e.preventDefault();
-				}}>
-				<AlertDialog>
+			<AlertDialog>
+				{location === "atBooking" ? (
+					<AlertDialogTrigger asChild>
+						<Button className="mt-4">Signin to Book</Button>
+					</AlertDialogTrigger>
+				) : (
 					<AlertDialogTrigger>Login</AlertDialogTrigger>
-					<AlertDialogContent className="flex flex-col items-center justify-center">
-						<div className="flex flex-row-reverse w-full">
-							<AlertDialogCancel className="p-2">
-								<AiOutlineCloseCircle className="w-5 h-5" />
-							</AlertDialogCancel>
-						</div>
-						<SignIn
-							routing="hash"
-							signUpForceRedirectUrl={
-								process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
-							}
-							fallbackRedirectUrl={
-								process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
-							}
-							signUpFallbackRedirectUrl={
-								process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
-							}
-						/>
-
-						<DemoUserBtn />
-					</AlertDialogContent>
-				</AlertDialog>
-			</DropdownMenuItem>
+				)}
+				<AlertDialogTitle className="hidden">
+					button to sign in
+				</AlertDialogTitle>
+				<AlertDialogContent className="flex flex-col items-center justify-center">
+					<div className="flex flex-row-reverse w-full">
+						<AlertDialogCancel className="p-2">
+							<AiOutlineCloseCircle className="w-5 h-5" />
+						</AlertDialogCancel>
+					</div>
+					<SignIn
+						routing="hash"
+						signUpForceRedirectUrl={signUpRedirectUrl}
+						fallbackRedirectUrl={pathName}
+						signUpUrl={signUpRedirectUrl}
+						signUpFallbackRedirectUrl={signUpRedirectUrl}
+					/>
+					<DemoUserBtn />
+				</AlertDialogContent>
+			</AlertDialog>
 		</>
 	);
 }

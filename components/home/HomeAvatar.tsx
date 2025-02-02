@@ -9,6 +9,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { SignOutButton } from "@clerk/nextjs";
 
+import UserLoginBtnWrapper from "./UserLoginBtnWrapper";
 import UserLoginBtn from "./UserLoginBtn";
 async function HomeAvatar() {
 	const user = await currentUser();
@@ -44,7 +45,11 @@ async function HomeAvatar() {
 						</DropdownMenuItem>
 					</>
 				)}
-				{!user && <UserLoginBtn />}
+				{!user && (
+					<UserLoginBtnWrapper>
+						<UserLoginBtn />
+					</UserLoginBtnWrapper>
+				)}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

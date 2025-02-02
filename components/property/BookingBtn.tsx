@@ -36,7 +36,6 @@ function BookingBtn({
 	numberOfNights: number;
 	hasUserProfile: boolean;
 }) {
-	console.log(image);
 	if (!hasUserProfile)
 		return (
 			<Link href="/profile/create">

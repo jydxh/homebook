@@ -5,11 +5,11 @@ import { Card } from "../ui/card";
 import { useState, useEffect, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import DatePicker from "./DatePicker";
-import { SignInButton, useUser } from "@clerk/nextjs";
-import { Button } from "../ui/button";
+import { useUser } from "@clerk/nextjs";
 import { SiFireship } from "react-icons/si";
 import { Skeleton } from "../ui/skeleton";
 import BookingBtn from "./BookingBtn";
+import UserLoginBtn from "../home/UserLoginBtn";
 
 function PropertyReserve({
 	hasUserProfile,
@@ -156,6 +156,7 @@ function ReserverCard({
 	hasUserProfile: boolean;
 }) {
 	const { isSignedIn, isLoaded } = useUser();
+
 	return (
 		<Card className="mt-8 py-4 px-8 lg:px-4 ">
 			<h4 className="font-bold text-3xl text-primary animate-scale flex items-center gap-x-4">
@@ -183,9 +184,10 @@ function ReserverCard({
 					numberOfNights={7}
 				/>
 			) : (
-				<SignInButton mode="modal">
+				/* 	<SignInButton mode="modal">
 					<Button className="mt-4">SignIn to Book</Button>
-				</SignInButton>
+				</SignInButton> */
+				<UserLoginBtn location="atBooking" />
 			)}
 		</Card>
 	);
