@@ -133,6 +133,51 @@ const latLngList = [
 	JSON.stringify({ lat: 38.2527, lng: -85.7585 }), // Louisville, KY
 ];
 
+async function createCategories() {
+	for (const category of categories) {
+		await db.category.upsert({
+			where: {
+				id: category.id,
+			},
+			update: {},
+			create: {
+				id: category.id,
+				name: category.label,
+			},
+		});
+	}
+}
+async function createUsers() {
+	await db.user.createMany({
+		data: [
+			{
+				clerkId: "user_2n4wkIqngrnLIIVdcyrvKhKv8cC",
+				firstName: "John",
+				lastName: "Doe",
+				userName: "johndoe",
+				email: "johndoe@example.com",
+				country: "US",
+				city: "New York",
+				state: "NY",
+				profileImage: "https://example.com/profile.jpg",
+			},
+		],
+	});
+}
+
+async function createAmenities() {
+	for (const amenity of amenities) {
+		await db.amenities.upsert({
+			where: { id: amenity.id },
+			update: {},
+			create: {
+				id: amenity.id,
+				name: amenity.name,
+			},
+		});
+	}
+}
+
 async function createProperties() {
 	for (let i = 0; i < 1000; i++) {
 		const categoryIndex = i % 9;
@@ -152,7 +197,6 @@ async function createProperties() {
 
 		const property = await db.property.create({
 			data: {
-				id: `property_${i}`,
 				name: propertyName[Math.floor(Math.random() * 20)],
 				tagline: `Beautiful ${propertyName[Math.floor(Math.random() * 20)]}`,
 				categoryId: category.id,
@@ -184,8 +228,15 @@ async function createProperties() {
 	}
 }
 
-createProperties()
-	.then(() => console.log("Properties created successfully!"))
+async function main() {
+	await createUsers();
+	await createCategories();
+	await createAmenities();
+	await createProperties();
+}
+
+main()
+	.then(() => console.log("seeds created successfully!"))
 	.catch(e => {
 		console.error(e);
 	})

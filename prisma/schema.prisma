@@ -7,14 +7,25 @@
 //  npx prisma migrate dev --name init
 //  npx prisma studio
 
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "mysql"
+//   url      = env("DATABASE_MYSQL_URL")
+//   // directUrl         = env("DIRECT_URL")
+// }
+
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_MYSQL_URL")
-  // directUrl         = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Property {
