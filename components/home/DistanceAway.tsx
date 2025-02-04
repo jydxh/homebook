@@ -31,7 +31,7 @@ function DistanceAway({ latLng }: { latLng: string }) {
 		} else {
 			setError("Geolocation is not supported by this browser");
 		}
-	}, []);
+	}, [latLngObj.lat, latLngObj.lng]);
 	return (
 		<div>
 			{error ? (

@@ -14,7 +14,7 @@ import {
 	LinkedinShareButton,
 	LinkedinIcon,
 } from "react-share";
-import { toast, useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 const domineName = process.env.DOMINE_LOCAL || "http://localhost:3000";
 

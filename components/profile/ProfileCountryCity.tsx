@@ -15,14 +15,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { countryList } from "@/utils/country";
-import {
-	City,
-	ICity,
-	State,
-	IState,
-	Country,
-	ICountry,
-} from "country-state-city";
+import { City, ICity, State, IState, Country } from "country-state-city";
 
 import { FixedSizeList as List } from "react-window";
 import { Input } from "../ui/input";
@@ -44,7 +37,7 @@ function ProfileCountryCity({
 	const [cityLists, setCityLists] = useState<ICity[] | undefined>();
 	const [selectCity, setSelectCity] = useState(city);
 	const [isInitial, setIsInitial] = useState(true);
-	const listRef = useRef<any>(null);
+	const listRef = useRef<List<unknown>>(null);
 
 	/* update the state list when country changed */
 	useEffect(() => {
@@ -56,7 +49,7 @@ function ProfileCountryCity({
 			}
 		}
 		setIsInitial(false);
-	}, [selectCountry]);
+	}, [selectCountry, isInitial]);
 
 	/* update the city list when the country changed */
 	useEffect(() => {
@@ -68,7 +61,7 @@ function ProfileCountryCity({
 			}
 		}
 		setIsInitial(false);
-	}, [selectCountry, selectedState]);
+	}, [selectCountry, selectedState, isInitial]);
 
 	/* useEffect for to move the list to the selected item */
 	useLayoutEffect(() => {
@@ -79,7 +72,7 @@ function ProfileCountryCity({
 
 			if (index !== -1) {
 				requestAnimationFrame(() => {
-					listRef.current.scrollToItem(index, "center");
+					listRef.current?.scrollToItem(index, "center");
 				});
 			}
 		}

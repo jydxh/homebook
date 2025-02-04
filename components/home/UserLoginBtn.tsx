@@ -43,6 +43,7 @@ function UserLoginBtn({ location }: { location?: "atBooking" }) {
 						fallbackRedirectUrl={pathName}
 						signUpUrl={signUpRedirectUrl}
 						signUpFallbackRedirectUrl={signUpRedirectUrl}
+						forceRedirectUrl={signUpRedirectUrl} // need to add more logic later
 					/>
 					<DemoUserBtn />
 				</AlertDialogContent>

@@ -132,6 +132,7 @@ export const fetchProperties = async ({
 }) => {
 	//console.log(searchParams);
 	const search = searchParams.search?.toLowerCase() || "";
+	console.log("search:", search);
 	const categoryId = searchParams.category;
 	const priceSort = searchParams.price;
 	const ratingSort = searchParams.rating;
@@ -149,7 +150,10 @@ export const fetchProperties = async ({
 			take,
 			skip: (Number(page) - 1) * take,
 			where: {
-				OR: [{ name: { contains: search } }, { tagline: { contains: search } }],
+				OR: [
+					{ name: { contains: search, mode: "insensitive" } },
+					{ tagline: { contains: search, mode: "insensitive" } },
+				],
 				AND: [
 					{ categoryId },
 					// if amenities is empty, will not filter the amenities
@@ -281,6 +285,7 @@ export const addFavAction = async (
 export const fetchFavProperties = async () => {
 	try {
 		const user = await getAuthUser();
+		console.log("user:", user);
 
 		const properties = await db.favorite.findMany({
 			where: {

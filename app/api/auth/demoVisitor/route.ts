@@ -1,8 +1,8 @@
 import { clerkClient } from "@clerk/nextjs/server";
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export const POST = async (req: NextRequest) => {
+export const POST = async () => {
 	try {
 		const user = await clerkClient.users.getUser(
 			process.env.DEMO_VISITOR_CLERKID || "1"
