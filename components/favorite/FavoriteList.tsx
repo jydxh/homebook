@@ -7,23 +7,20 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { TCountryCode } from "countries-list";
 import AddFav from "@/components/form/AddFav";
 import Link from "next/link";
-import {
-	fetchFavList,
-	fetchFavProperties,
-} from "@/utils/actions/PropertyActions";
+import { fetchFavProperties } from "@/utils/actions/PropertyActions";
 import EmptyResult from "../EmptyResult";
 import { currentUser } from "@clerk/nextjs/server";
 import { hasProfile } from "@/utils/actions/ProfileActions";
 
 async function FavoriteList() {
-	const properties = await fetchFavProperties();
+	const properties = await fetchFavProperties(); // get the fav properties details
 
 	const user = await currentUser();
 	console.log("user from favList:", user);
 	const hasUserProfile = await hasProfile(user?.id);
 
 	console.log("properties:", properties);
-	const favList = await fetchFavList();
+	//const favList = await fetchFavList(); // get the fav list id
 	if (properties.length === 0)
 		return (
 			<EmptyResult
@@ -36,7 +33,7 @@ async function FavoriteList() {
 			{properties.map(property => {
 				const { id, country, image, name, price, tagline, latLng } = property;
 				const images = image.map(item => item.imageUrl);
-				const isFav = favList.includes(id);
+
 				return (
 					<Card
 						key={id}
@@ -64,7 +61,7 @@ async function FavoriteList() {
 						<div className="absolute top-1 right-1">
 							<AddFav
 								propertyId={id}
-								isFav={isFav}
+								isFav={true}
 								hasUserProfile={Boolean(hasUserProfile)}
 							/>
 						</div>

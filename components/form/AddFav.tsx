@@ -1,5 +1,4 @@
 "use client";
-
 import FormContainer from "./FormContainer";
 import { addFavAction } from "@/utils/actions/PropertyActions";
 import { usePathname } from "next/navigation";
@@ -7,7 +6,7 @@ import { AddFavButton } from "./Buttons";
 import { useAuth, SignIn } from "@clerk/nextjs";
 
 import { IoIosHeartEmpty } from "react-icons/io";
-import { useEffect, useState } from "react";
+//import { useEffect, useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import {
 	AlertDialog,
@@ -33,24 +32,26 @@ function AddFav({
 	hasUserProfile: boolean;
 }) {
 	const path = usePathname();
-	const [isClient, setIsClient] = useState(false);
+	// const [isClient, setIsClient] = useState(false);
 
-	useEffect(() => {
-		setIsClient(true);
-	}, []);
+	// useEffect(() => {
+	// 	setIsClient(true);
+	// }, []);
 
 	const addFav = addFavAction.bind(null, {}, { path, propertyId }); // null for "this", the {} empty object for prevState, {path, propertyId} for the second argue
 
 	/* if user not login, render the login button */
-	const { userId, isLoaded } = useAuth();
+	const { userId } = useAuth();
 
-	if (!isLoaded || !isClient) {
-		return (
-			<Button type="button" size="icon" variant="outline">
-				<IoIosHeartEmpty className="w-5 h-5" />
-			</Button>
-		);
-	}
+	// if (!isLoaded || !isClient) {
+	// if (!isLoaded) {
+	// 	return (
+	// 		<Button type="button" size="icon" variant="outline">
+	// 			<IoIosHeartEmpty className="w-5 h-5" />
+	// 		</Button>
+	// 	);
+	// }
+
 	if (!userId) return <LoginDialog path={path} />;
 
 	if (userId && !hasUserProfile) {

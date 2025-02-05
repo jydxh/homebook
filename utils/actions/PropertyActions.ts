@@ -132,7 +132,7 @@ export const fetchProperties = async ({
 }) => {
 	//console.log(searchParams);
 	const search = searchParams.search?.toLowerCase().trim() || "";
-	console.log("search:", search);
+
 	const categoryId = searchParams.category;
 	const priceSort = searchParams.price;
 	const ratingSort = searchParams.rating;
@@ -178,7 +178,7 @@ export const fetchProperties = async ({
 				/* 	{ rating: ratingSort } */
 			],
 		});
-		console.log(propertyList);
+		//console.log(propertyList);
 		// total count of items
 		let totalCount = await db.property.count({
 			where: {
@@ -290,7 +290,7 @@ export const addFavAction = async (
 export const fetchFavProperties = async () => {
 	try {
 		const user = await getAuthUser();
-		console.log("user:", user);
+		//	console.log("user:", user);
 
 		const properties = await db.favorite.findMany({
 			where: {
@@ -477,21 +477,32 @@ export const fetchPropertyByUser = async (searchParams: URLSearchParams) => {
 				role: true,
 			},
 		});
+
 		if (userDb?.role !== "VENDOR") {
 			throw new Error("Unauthorized");
 		}
 		const queryCondition = query ? `%${query}%` : "%";
 
-		const totalRentalRaw = await db.$queryRaw<{ count: string }[]>`
-		SELECT COUNT(*) as count
-		FROM Property p
-		WHERE p.userId = ${user.id} AND p.name LIKE ${queryCondition};
-	`;
+		// 	const totalRentalRaw = await db.$queryRaw<{ count: string }[]>`
+		// 	SELECT COUNT(*) as count
+		// 	FROM Property p
+		// 	WHERE p.userId = ${user.id} AND p.name LIKE ${queryCondition};
+		// `;
+		// 	console.log("totalRental: ", totalRentalRaw);
 
-		const totalRental = Number(totalRentalRaw[0].count);
-		console.log("totalRental", totalRental);
+		// 	const totalRental = Number(totalRentalRaw[0].count);
+		const totalRental = await db.property.count({
+			where: {
+				userId: user.id,
+				name: {
+					contains: query || undefined,
+				},
+			},
+		});
+
+		//	console.log("totalRental", totalRental);
 		const totalPage = Math.ceil(totalRental / pageSpan);
-
+		console.log("total page:", totalPage);
 		const orderByClause = `${
 			orderByPrice?.toLowerCase() === "desc"
 				? `p.price DESC`
@@ -501,7 +512,7 @@ export const fetchPropertyByUser = async (searchParams: URLSearchParams) => {
 				? `p.name DESC`
 				: orderByName?.toLowerCase() === "asc"
 				? `p.name ASC`
-				: `p.createdAt DESC`
+				: `p."createdAt" DESC`
 		}`;
 		// fetch the property belongs to the vendor , using raw query for better performance
 
@@ -520,20 +531,22 @@ export const fetchPropertyByUser = async (searchParams: URLSearchParams) => {
 				p.name,
 				p.price,
 				p.address,
-				COALESCE(SUM(o.totalNight), 0) AS totalNightSum,
-				COALESCE(SUM(o.orderTotal), 0) AS orderTotalSum
+				COALESCE(SUM(o."totalNight"), 0) AS "totalNightSum",
+				COALESCE(SUM(o."orderTotal"), 0) AS "orderTotalSum"
 			FROM
-			Property p
+			"Property" p
 			LEFT JOIN
-			\`Order\` o ON p.id = o.propertyId AND o.paymentStatus = true
+			"Order" o ON p.id = o."propertyId" AND o."paymentStatus" = true
 			WHERE
-				p.userId = ${user.id}  AND p.name LIKE ${queryCondition}
+				p."userId" = ${user.id}  AND p."name" LIKE ${queryCondition}
 			GROUP BY
-				p.id, p.name, p.price, p.address
+				p."id", p."name", p."price", p."address"
 			ORDER BY ${Prisma.raw(orderByClause)}
 			LIMIT ${pageSpan}
 			OFFSET ${offset};
 			`;
+
+		console.log("rental Agge:", rentalsAggregate);
 
 		//	await new Promise(resolve => setTimeout(resolve, 2000));
 
@@ -607,8 +620,8 @@ export const updateRental = async (
 		validatedPropertyId = validateZodSchema(PropertyIdSchema, propertyId);
 
 		const validatedFields = validateZodSchema(CreatePropertySchema, rawData);
-		console.log(rawData);
-		console.log(validatedFields);
+		//	console.log(rawData);
+		//	console.log(validatedFields);
 
 		const amenitiesArray = validatedFields.amenities
 			.split(",")
@@ -732,7 +745,7 @@ export const updateRentalImage = async (
 			throw new Error("wrong image url, please try again!");
 		}
 		const cloudinaryImageId = cloudinaryImageIdWithSuffix.split(".")[0];
-		console.log(cloudinaryImageId);
+		//	console.log(cloudinaryImageId);
 		const image = formData.get("image");
 
 		// validate the formData with zod

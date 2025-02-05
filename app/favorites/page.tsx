@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // Ensure the page is not statically generated
+
 import { Separator } from "@/components/ui/separator";
 
 import PropertyListFallBack from "@/components/fallback/PropertyListFallBack";
