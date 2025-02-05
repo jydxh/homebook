@@ -131,7 +131,7 @@ export const fetchProperties = async ({
 	searchParams: HomePageSearchParam;
 }) => {
 	//console.log(searchParams);
-	const search = searchParams.search?.toLowerCase() || "";
+	const search = searchParams.search?.toLowerCase().trim() || "";
 	console.log("search:", search);
 	const categoryId = searchParams.category;
 	const priceSort = searchParams.price;
@@ -178,10 +178,14 @@ export const fetchProperties = async ({
 				/* 	{ rating: ratingSort } */
 			],
 		});
+		console.log(propertyList);
 		// total count of items
 		let totalCount = await db.property.count({
 			where: {
-				OR: [{ name: { contains: search } }, { tagline: { contains: search } }],
+				OR: [
+					{ name: { contains: search, mode: "insensitive" } },
+					{ tagline: { contains: search } },
+				],
 				AND: [
 					{ categoryId },
 					// if amenities is empty, will not filter the amenities
@@ -191,6 +195,7 @@ export const fetchProperties = async ({
 				],
 			},
 		});
+
 		const totalPage = Math.ceil(totalCount / take);
 		/* if user does not provide amenities filtering */
 		if (amenities.length === 0)
@@ -201,9 +206,9 @@ export const fetchProperties = async ({
 				data: propertyList,
 			};
 
-		// user:[1,2] amenities:[1,2,3,4,5] => true;
-		// user: [1,2] amenities: [3,4,5] => false;
-		// user: [1,2] amenities: [1,3,4,5] => false;
+		// input:[1,2] amenities:[1,2,3,4,5] => true;
+		// input: [1,2] amenities: [3,4,5] => false;
+		// input: [1,2] amenities: [1,3,4,5] => false;
 		/* logic: filter the propertyList, in the filter cb: get an array of amenityIds from the db, and then compare the user selected amenities, only if every value are included in the array of amenityIds will return true */
 		const filteredPropertyList = propertyList.filter(property => {
 			const amenityIds = property.amenities.map(ame => ame.amenitiesId);
