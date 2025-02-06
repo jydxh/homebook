@@ -4,9 +4,7 @@ function DemoUserBtn() {
 	const handleLoginDemo = async (endPoint: "demoVendor" | "demoVisitor") => {
 		const loginVisitor = async () => {
 			const baseUrl =
-				process.env.NODE_ENV === "production"
-					? process.env.NEXT_PUBLIC_PRODUCTION_URL
-					: "http://localhost:4849";
+				process.env.NEXT_PUBLIC_PRODUCTION_URL || "http://localhost:4849";
 			try {
 				const res = await fetch(`${baseUrl}/api/auth/${endPoint}`, {
 					method: "POST",
