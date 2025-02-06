@@ -3,12 +3,19 @@ import { Button } from "../ui/button";
 function DemoUserBtn() {
 	const handleLoginDemo = async (endPoint: "demoVendor" | "demoVisitor") => {
 		const loginVisitor = async () => {
+			const baseUrl =
+				process.env.NODE_ENV === "production"
+					? process.env.NEXT_PUBLIC_PRODUCTION_URL
+					: "http://localhost:4849";
 			try {
-				const res = await fetch(`/api/auth/${endPoint}`, { method: "POST" });
+				const res = await fetch(`${baseUrl}/api/auth/${endPoint}`, {
+					method: "POST",
+				});
 				const data = await res.json();
 				if (res.ok) {
 					return data.loginUrl;
 				}
+				console.log(data.loginUrl);
 			} catch (error) {
 				console.log(error);
 			}
