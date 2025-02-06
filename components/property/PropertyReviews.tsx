@@ -1,9 +1,12 @@
 import { currentUser } from "@clerk/nextjs/server";
 import CreateReview from "./CreateReview";
 import ReviewLists from "./ReviewLists";
+import { Suspense } from "react";
+import RentalsListsFallback from "../rentals/RentalsListsFallback";
 
 async function PropertyReviews({ propertyId }: { propertyId: string }) {
 	const user = await currentUser();
+	console.log("user:", user);
 	const renderLeaveReview = user;
 	return (
 		<>
@@ -13,7 +16,9 @@ async function PropertyReviews({ propertyId }: { propertyId: string }) {
 				{renderLeaveReview && <CreateReview propertyId={propertyId} />}
 			</div>
 			<div className="mt-4 col-span-3">
-				<ReviewLists propertyId={propertyId} />
+				<Suspense fallback={RentalsListsFallback()}>
+					<ReviewLists propertyId={propertyId} />
+				</Suspense>
 			</div>
 		</>
 	);

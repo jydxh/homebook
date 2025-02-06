@@ -380,6 +380,7 @@ export const fetchPropertyReviews = async (id: string) => {
 				rating: true,
 				user: {
 					select: {
+						clerkId: true,
 						firstName: true,
 						createAt: true,
 						profileImage: true,

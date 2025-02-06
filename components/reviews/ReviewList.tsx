@@ -25,16 +25,18 @@ async function ReviewList() {
 				const imageStringOfArr = image;
 
 				return (
-					<ReviewCard
-						key={propertyId}
-						comment={comment}
-						country={country}
-						createAt={createAt}
-						rating={rating}
-						propertyId={propertyId}
-						image={imageStringOfArr[0].imageUrl}
-						name={name}
-					/>
+					<div key={propertyId}>
+						<ReviewCard
+							key={propertyId}
+							comment={comment}
+							country={country}
+							createAt={createAt}
+							rating={rating}
+							propertyId={propertyId}
+							image={imageStringOfArr[0].imageUrl}
+							name={name}
+						/>
+					</div>
 				);
 			})}
 		</div>

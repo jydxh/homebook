@@ -24,6 +24,8 @@ import PropertyReviews from "@/components/property/PropertyReviews";
 import PropertyReserve from "@/components/property/PropertyReserve";
 import { currentUser } from "@clerk/nextjs/server";
 import { hasProfile } from "@/utils/actions/ProfileActions";
+import userDefaultImageUrl from "@/utils/userDefaultImageUrl";
+import fetchUserInfo from "@/utils/fetchUserInfo";
 
 const PropertyLeaflet = dynamic(
 	() => import("@/components/property/PropertyLeaflet"),
@@ -32,7 +34,7 @@ const PropertyLeaflet = dynamic(
 
 async function page({ params }: { params: { id: string } }) {
 	const property = await fetchPropertyById(params.id);
-	//	console.log(property);
+
 	const favList = await fetchFavList();
 	if (!property) {
 		return redirect("/");
@@ -58,6 +60,11 @@ async function page({ params }: { params: { id: string } }) {
 	const { count, rating } = await fetchPropertyRating(id);
 	const loginUser = await currentUser();
 	const hasUserProfile = await hasProfile(loginUser?.id);
+	let profileImageFromClerk: string | undefined;
+	if (!user.profileImage) {
+		const reviewerClerkInfo = await fetchUserInfo(user.clerkId);
+		profileImageFromClerk = reviewerClerkInfo?.image_url;
+	}
 	return (
 		<section className="mx-auto max-w-[1280px] px-8">
 			<div className="flex justify-between items-center">
@@ -99,7 +106,8 @@ async function page({ params }: { params: { id: string } }) {
 						<Image
 							src={
 								user.profileImage ||
-								"https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3467.jpg?w=1380"
+								profileImageFromClerk ||
+								userDefaultImageUrl
 							}
 							alt="vendor avatar"
 							width={50}
