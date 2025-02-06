@@ -6,7 +6,6 @@ import RentalsListsFallback from "../rentals/RentalsListsFallback";
 
 async function PropertyReviews({ propertyId }: { propertyId: string }) {
 	const user = await currentUser();
-	console.log("user:", user);
 	const renderLeaveReview = user;
 	return (
 		<>

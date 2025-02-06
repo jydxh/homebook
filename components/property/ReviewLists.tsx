@@ -12,7 +12,7 @@ import fetchUserInfo from "@/utils/fetchUserInfo";
 import userDefaultImageUrl from "@/utils/userDefaultImageUrl";
 async function ReviewLists({ propertyId }: { propertyId: string }) {
 	const reviews = await fetchPropertyReviews(propertyId);
-	console.log("reviews:", reviews);
+
 	if (reviews.length === 0) {
 		return <div> no review yet</div>;
 	} else {
@@ -29,9 +29,7 @@ async function ReviewLists({ propertyId }: { propertyId: string }) {
 					let profileImageFromClerk: string | undefined;
 					if (!profileImage) {
 						const reviewerClerkInfo = await fetchUserInfo(review.user.clerkId);
-						console.log("reviewerClerkInfo:", reviewerClerkInfo);
 						profileImageFromClerk = reviewerClerkInfo?.image_url;
-						console.log("profileImageFromClerk:", profileImageFromClerk);
 					}
 
 					const ratingStars: number[] = [];

@@ -13,9 +13,10 @@ async function ReviewList() {
 		);
 	}
 	return (
-		<div className="px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+		<ul className="px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 			{reviews.map(review => {
 				const {
+					id,
 					comment,
 					createAt,
 					rating,
@@ -25,9 +26,8 @@ async function ReviewList() {
 				const imageStringOfArr = image;
 
 				return (
-					<div key={propertyId}>
+					<li key={id}>
 						<ReviewCard
-							key={propertyId}
 							comment={comment}
 							country={country}
 							createAt={createAt}
@@ -36,10 +36,10 @@ async function ReviewList() {
 							image={imageStringOfArr[0].imageUrl}
 							name={name}
 						/>
-					</div>
+					</li>
 				);
 			})}
-		</div>
+		</ul>
 	);
 }
 export default ReviewList;
