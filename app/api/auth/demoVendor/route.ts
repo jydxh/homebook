@@ -14,6 +14,7 @@ export const POST = async () => {
 		});
 		console.log(sessions);
 		const loginUrl = sessions.url;
+
 		return NextResponse.json({ loginUrl }, { status: 200 });
 	} catch (error) {
 		console.log(error);
