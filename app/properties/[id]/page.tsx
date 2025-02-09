@@ -4,6 +4,7 @@ import {
 	fetchFavList,
 	fetchPropertyById,
 	fetchPropertyRating,
+	findExistingReview,
 } from "@/utils/actions/PropertyActions";
 import { redirect } from "next/navigation";
 import PropertyGallery from "@/components/property/PropertyGallery";
@@ -65,6 +66,12 @@ async function page({ params }: { params: { id: string } }) {
 		const reviewerClerkInfo = await fetchUserInfo(user.clerkId);
 		profileImageFromClerk = reviewerClerkInfo?.image_url;
 	}
+	const isNotOwner = property.user.clerkId !== loginUser?.id;
+	const showReview =
+		loginUser?.id &&
+		isNotOwner &&
+		!(await findExistingReview(loginUser.id, property.id));
+
 	return (
 		<section className="mx-auto max-w-[1280px] px-8">
 			<div className="flex justify-between items-center">
@@ -149,7 +156,7 @@ async function page({ params }: { params: { id: string } }) {
 				/>
 
 				{/* reviews */}
-				<PropertyReviews propertyId={id} />
+				<PropertyReviews propertyId={id} showReview={Boolean(showReview)} />
 			</div>
 		</section>
 	);

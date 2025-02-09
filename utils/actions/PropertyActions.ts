@@ -400,6 +400,18 @@ export const fetchPropertyReviews = async (id: string) => {
 	}
 };
 
+export const findExistingReview = async (
+	userId: string,
+	propertyId: string
+) => {
+	return await db.review.findFirst({
+		where: {
+			userId,
+			propertyId,
+		},
+	});
+};
+
 export const makeReservation = async (
 	prevState: unknown,
 	formData: FormData
