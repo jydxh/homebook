@@ -342,10 +342,14 @@ export const createPropertyReview = async (
 	formData: FormData
 ) => {
 	let message = "";
-	const propertyId = formData.get("propertyId");
+	const propertyId = formData.get("propertyId") as string | null;
 	try {
 		const user = await getAuthUser();
-		//console.log(formData);
+		const madeReview = await findExistingReview(user.id, propertyId || "N/A");
+		if (madeReview) {
+			throw Error("this user cannot make review!");
+		}
+
 		const rawData = Object.fromEntries(formData);
 		const validatedFields = validateZodSchema(reviewZodSchema, rawData);
 		/* sanitize textArea content */
