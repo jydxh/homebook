@@ -1,5 +1,5 @@
 "use client";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
@@ -12,12 +12,67 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { useToast } from "@/hooks/use-toast";
+import {
+	generateDisabledDates,
+	generateDateRange,
+	defaultSelected,
+	generateBlockedPeriods,
+} from "@/utils/calendar";
+import { Booking } from "@/utils/types";
 
-function DatePicker({ className }: React.HTMLAttributes<HTMLDivElement>) {
-	const [date, setDate] = React.useState<DateRange | undefined>({
-		from: new Date(),
-		to: addDays(new Date(), 7),
+export type BookingState = {
+	price: number;
+	propertyId: string;
+	bookings: Booking[];
+	range: undefined | DateRange;
+};
+
+function DatePicker({
+	className,
+	bookState,
+	setBookingState,
+}: {
+	className: string | undefined;
+	bookState: {
+		price: number;
+		propertyId: string;
+		bookings: Booking[];
+		range: undefined | DateRange;
+	};
+	setBookingState: React.Dispatch<React.SetStateAction<BookingState>>;
+}) {
+	const [range, setRange] = React.useState<DateRange | undefined>(
+		defaultSelected
+	);
+	const { toast } = useToast();
+	const blockedPeriods = generateBlockedPeriods({
+		bookings: bookState.bookings,
+		today: new Date(),
 	});
+
+	const unavailableDates = generateDisabledDates(blockedPeriods);
+
+	React.useEffect(() => {
+		// this is to convert the dateRange into like this['2025-02-09','...']
+		const selectedRange = generateDateRange(range);
+		const isDisabledDateIncluded = selectedRange.some(date => {
+			//if selectedRange has any item is the unavailableDate, it will return true, and clear the selected ui and show the toast info
+			if (unavailableDates[date]) {
+				setRange(defaultSelected); //clear the selected ui
+				toast({ description: "Some dates are booked. Please select again" });
+				return true;
+			}
+			return false;
+		});
+		// only if it not include the disabled date will update the range at the state
+		if (!isDisabledDateIncluded) {
+			setBookingState(prev => {
+				return { ...prev, range };
+			});
+		}
+	}, [range]);
+
 	return (
 		<div className={cn("grid gap-2", className)}>
 			<Popover>
@@ -27,17 +82,17 @@ function DatePicker({ className }: React.HTMLAttributes<HTMLDivElement>) {
 						variant={"outline"}
 						className={cn(
 							"w-full justify-start text-left font-normal",
-							!date && "text-muted-foreground"
+							!range && "text-muted-foreground"
 						)}>
 						<CalendarIcon />
-						{date?.from ? (
-							date.to ? (
+						{range?.from ? (
+							range.to ? (
 								<>
-									{format(date.from, "LLL dd, y")} -{" "}
-									{format(date.to, "LLL dd, y")}
+									{format(range.from, "LLL dd, y")} -{" "}
+									{format(range.to, "LLL dd, y")}
 								</>
 							) : (
-								format(date.from, "LLL dd, y")
+								format(range.from, "LLL dd, y")
 							)
 						) : (
 							<span>Pick a date</span>
@@ -48,10 +103,10 @@ function DatePicker({ className }: React.HTMLAttributes<HTMLDivElement>) {
 					<Calendar
 						initialFocus
 						mode="range"
-						defaultMonth={date?.from}
-						selected={date}
-						onSelect={setDate}
-						numberOfMonths={2}
+						selected={range}
+						onSelect={setRange}
+						numberOfMonths={1}
+						disabled={blockedPeriods}
 					/>
 				</PopoverContent>
 			</Popover>

@@ -72,6 +72,9 @@ async function page({ params }: { params: { id: string } }) {
 		isNotOwner &&
 		!(await findExistingReview(loginUser.id, property.id));
 
+	const bookings = property.orders.map(o => {
+		return { checkIn: o.checkIn, checkOut: o.checkOut };
+	});
 	return (
 		<section className="mx-auto max-w-[1280px] px-8">
 			<div className="flex justify-between items-center">
@@ -147,6 +150,8 @@ async function page({ params }: { params: { id: string } }) {
 
 				{/* total review is hard coded here, later will fetch from db */}
 				<PropertyReserve
+					bookings={bookings}
+					propertyId={id}
 					hasUserProfile={Boolean(hasUserProfile)}
 					totalReview={count}
 					price={price}

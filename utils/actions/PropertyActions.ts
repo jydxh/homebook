@@ -328,6 +328,7 @@ export const fetchPropertyById = async (id: string) => {
 				reviews: true,
 				user: true,
 				amenities: true,
+				orders: true,
 			},
 		});
 		return property;

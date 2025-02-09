@@ -4,14 +4,17 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { Card } from "../ui/card";
 import { useState, useEffect, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import DatePicker from "./DatePicker";
+import DatePicker, { BookingState } from "./DatePicker";
 import { useUser } from "@clerk/nextjs";
 import { SiFireship } from "react-icons/si";
 import { Skeleton } from "../ui/skeleton";
 import BookingBtn from "./BookingBtn";
 import UserLoginBtn from "../home/UserLoginBtn";
+import { Booking } from "@/utils/types";
 
 function PropertyReserve({
+	bookings,
+	propertyId,
 	hasUserProfile,
 	price,
 	rating,
@@ -19,6 +22,8 @@ function PropertyReserve({
 	image,
 	totalReview,
 }: {
+	bookings: Booking[];
+	propertyId: string;
 	hasUserProfile: boolean;
 	price: number;
 	rating: string;
@@ -101,6 +106,8 @@ function PropertyReserve({
 		<div ref={divRef} className="col-span-3 lg:col-span-1">
 			<div className={`${showFirstCard ? "block" : "hidden"} `}>
 				<ReserverCard
+					bookings={bookings}
+					propertyId={propertyId}
 					hasUserProfile={hasUserProfile}
 					price={price}
 					image={image}
@@ -115,6 +122,8 @@ function PropertyReserve({
 				}`}>
 				<div className="w-full col-span-3 lg:col-span-2" />
 				<ReserverCard
+					bookings={bookings}
+					propertyId={propertyId}
 					hasUserProfile={hasUserProfile}
 					price={price}
 					image={image}
@@ -127,6 +136,8 @@ function PropertyReserve({
 				className={`${showLastCard ? "block" : "hidden"} relative`}
 				style={{ top: `${divHeight.current - 292}px` }}>
 				<ReserverCard
+					bookings={bookings}
+					propertyId={propertyId}
 					hasUserProfile={hasUserProfile}
 					price={price}
 					image={image}
@@ -140,7 +151,10 @@ function PropertyReserve({
 }
 export default PropertyReserve;
 
+import { DateRange } from "react-day-picker";
 function ReserverCard({
+	bookings,
+	propertyId,
 	price,
 	rating,
 	name,
@@ -148,6 +162,8 @@ function ReserverCard({
 	totalReview,
 	hasUserProfile,
 }: {
+	bookings: Booking[];
+	propertyId: string;
 	price: number;
 	rating: string;
 	name: string;
@@ -156,7 +172,14 @@ function ReserverCard({
 	hasUserProfile: boolean;
 }) {
 	const { isSignedIn, isLoaded } = useUser();
-
+	const initialBookingState = {
+		price,
+		propertyId,
+		bookings,
+		range: undefined,
+	};
+	const [bookState, setBookingState] =
+		useState<BookingState>(initialBookingState);
 	return (
 		<Card className="mt-8 py-4 px-8 lg:px-4 ">
 			<h4 className="font-bold text-3xl text-primary animate-scale flex items-center gap-x-4">
@@ -168,7 +191,11 @@ function ReserverCard({
 			</p>
 			<p className="mt-4">Pick up a date range</p>
 			<div className="mt-4">
-				<DatePicker className="w-full" />
+				<DatePicker
+					className="w-full"
+					bookState={bookState}
+					setBookingState={setBookingState}
+				/>
 			</div>
 			{!isLoaded ? (
 				<Skeleton className="mt-4 w-[8rem] h-[2.4rem]" />
