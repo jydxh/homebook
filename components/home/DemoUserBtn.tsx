@@ -4,9 +4,16 @@ function DemoUserBtn() {
 	const handleLoginDemo = async (endPoint: "demoVendor" | "demoVisitor") => {
 		const loginVisitor = async () => {
 			// for production mode
-			const baseUrl = process.env.NEXT_PUBLIC_PRODUCTION_URL;
+			//const baseUrl = process.env.NEXT_PUBLIC_PRODUCTION_URL;
 			// for location mode
-			//const baseUrl = "http://localhost:3000";
+			let baseUrl = "";
+			if (process.env.NODE_ENV === "production") {
+				baseUrl =
+					process.env.NEXT_PUBLIC_PRODUCTION_URL || "http://localhost:3000";
+			} else {
+				baseUrl = process.env.DOMINE_LOCAL || "http://localhost:3000";
+			}
+			console.log("baseUrl: ", baseUrl);
 			try {
 				const res = await fetch(`${baseUrl}/api/auth/${endPoint}`, {
 					method: "POST",
