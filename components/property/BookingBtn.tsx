@@ -29,7 +29,6 @@ function BookingBtn({
 	name,
 	image,
 	totalReview,
-	numberOfNights,
 	hasUserProfile,
 }: {
 	bookState: BookingState;
@@ -38,7 +37,6 @@ function BookingBtn({
 	name: string;
 	image: string;
 	totalReview: number;
-	numberOfNights: number;
 	hasUserProfile: boolean;
 }) {
 	const { toast } = useToast();
@@ -51,7 +49,7 @@ function BookingBtn({
 		{},
 		{ propertyId: bookState.propertyId, checkIn, checkOut }
 	);
-
+	const numberOfNights = calculateDaysBetween({ checkIn, checkOut });
 	const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
 		evt.preventDefault();
 		const result = await makeReservationAction();
@@ -110,8 +108,7 @@ function BookingBtn({
 						<h3 className="font-medium text-2xl">Price details</h3>
 						<div className="flex justify-between items-center my-2">
 							<p>
-								{formatCurrency(price)} CAD x{" "}
-								{calculateDaysBetween({ checkIn, checkOut })}{" "}
+								{formatCurrency(price)} CAD x {numberOfNights}{" "}
 								{numberOfNights > 1 ? "nights" : "night"}
 							</p>
 							<p>{formatCurrency(price * numberOfNights)} CAD</p>
@@ -124,6 +121,10 @@ function BookingBtn({
 							<p className="underline">Service fee</p>
 							<p>{formatCurrency(serviceFee)} CAD</p>
 						</div>
+						<div className="flex justify-between items-center my-2">
+							<p className="underline">Tax</p>
+							<p>{formatCurrency(price * numberOfNights * 0.13)} CAD</p>
+						</div>
 					</div>
 					{/* total summary */}
 					<Separator className="my-4" />
@@ -134,7 +135,7 @@ function BookingBtn({
 						</p>
 						<p className="font-medium text-xl">
 							{formatCurrency(
-								price * numberOfNights + cleaningFee + serviceFee
+								price * numberOfNights * 1.13 + cleaningFee + serviceFee
 							)}{" "}
 							CAD
 						</p>

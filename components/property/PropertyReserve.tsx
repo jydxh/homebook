@@ -207,7 +207,6 @@ function ReserverCard({
 					name={name}
 					price={price}
 					totalReview={totalReview}
-					numberOfNights={7}
 				/>
 			) : (
 				/* 	<SignInButton mode="modal">
