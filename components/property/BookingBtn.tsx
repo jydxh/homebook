@@ -15,11 +15,15 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import FormContainer from "../form/FormContainer";
 import { makeReservation } from "@/utils/actions/PropertyActions";
 import Link from "next/link";
-
+import type { BookingState } from "./DatePicker";
+import { calculateDaysBetween } from "@/utils/calendar";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 const serviceFee = 200;
 const cleaningFee = 100;
 
 function BookingBtn({
+	bookState,
 	price,
 	rating,
 	name,
@@ -28,6 +32,7 @@ function BookingBtn({
 	numberOfNights,
 	hasUserProfile,
 }: {
+	bookState: BookingState;
 	price: number;
 	rating: string;
 	name: string;
@@ -36,6 +41,24 @@ function BookingBtn({
 	numberOfNights: number;
 	hasUserProfile: boolean;
 }) {
+	const { toast } = useToast();
+	const [open, setOpen] = useState(false);
+
+	const checkIn = bookState.range?.from || (new Date() as Date);
+	const checkOut = bookState.range?.to || (new Date() as Date);
+	const makeReservationAction = makeReservation.bind(
+		null,
+		{},
+		{ propertyId: bookState.propertyId, checkIn, checkOut }
+	);
+
+	const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
+		evt.preventDefault();
+		const result = await makeReservationAction();
+		toast({ description: result.message });
+		// later will redirect to the payment page, for now just close the dialog
+		setOpen(false);
+	};
 	if (!hasUserProfile)
 		return (
 			<Link href="/profile/create">
@@ -43,11 +66,19 @@ function BookingBtn({
 			</Link>
 		);
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button className="mt-4">Book the Date</Button>
+				<Button
+					className="mt-4"
+					disabled={
+						!bookState.range || !bookState.range.from || !bookState.range.to
+					}>
+					Book the Date
+				</Button>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px]">
+			<DialogContent
+				className="sm:max-w-[425px]"
+				aria-description="book the date">
 				<DialogHeader>
 					<DialogTitle>Book the Date</DialogTitle>
 				</DialogHeader>
@@ -79,7 +110,8 @@ function BookingBtn({
 						<h3 className="font-medium text-2xl">Price details</h3>
 						<div className="flex justify-between items-center my-2">
 							<p>
-								{formatCurrency(price)} CAD x {numberOfNights}{" "}
+								{formatCurrency(price)} CAD x{" "}
+								{calculateDaysBetween({ checkIn, checkOut })}{" "}
 								{numberOfNights > 1 ? "nights" : "night"}
 							</p>
 							<p>{formatCurrency(price * numberOfNights)} CAD</p>
@@ -113,9 +145,9 @@ function BookingBtn({
 						<Button variant={"ghost"}>Cancel</Button>
 					</DialogClose>
 					{/* later there will be more logic about the backend and payment api */}
-					<FormContainer action={makeReservation}>
+					<form onSubmit={evt => handleSubmit(evt)}>
 						<Button type="submit">Confirm the Reservation</Button>
-					</FormContainer>
+					</form>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

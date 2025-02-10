@@ -151,7 +151,6 @@ function PropertyReserve({
 }
 export default PropertyReserve;
 
-import { DateRange } from "react-day-picker";
 function ReserverCard({
 	bookings,
 	propertyId,
@@ -173,7 +172,6 @@ function ReserverCard({
 }) {
 	const { isSignedIn, isLoaded } = useUser();
 	const initialBookingState = {
-		price,
 		propertyId,
 		bookings,
 		range: undefined,
@@ -202,6 +200,7 @@ function ReserverCard({
 			) : isSignedIn ? (
 				/* the numberOfNights is hard code so far, later it will get from the date picker, and adding more logic at that component */
 				<BookingBtn
+					bookState={bookState}
 					hasUserProfile={hasUserProfile}
 					image={image}
 					rating={rating}

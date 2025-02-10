@@ -19,6 +19,7 @@ import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { calculateTotals } from "../calculateTotals";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -419,9 +420,49 @@ export const findExistingReview = async (
 
 export const makeReservation = async (
 	prevState: unknown,
-	formData: FormData
+	bookingData: {
+		propertyId: string;
+		checkIn: Date;
+		checkOut: Date;
+	}
 ) => {
-	return { message: "booking the room" };
+	const { propertyId, checkIn, checkOut } = bookingData;
+	try {
+		const user = await getAuthUser();
+		const property = await db.property.findUnique({
+			where: {
+				id: propertyId,
+			},
+			select: {
+				price: true,
+			},
+		});
+		if (!property) {
+			return { message: "No property found!" };
+		}
+		const { totalNights, orderTotal } = calculateTotals({
+			checkIn,
+			checkOut,
+			price: property.price,
+		});
+
+		// insert into order table
+		const order = await db.order.create({
+			data: {
+				checkIn,
+				checkOut,
+				orderTotal,
+				totalNight: totalNights,
+				propertyId,
+				userId: user.id,
+			},
+		});
+		const bookingId = order.id;
+		return { message: `booking the room, with the bookingId ${bookingId}` };
+		//later will add the payment logic
+	} catch (error) {
+		return renderError(error);
+	}
 };
 
 export const fetchPropertyRating = async (propertyId: string) => {

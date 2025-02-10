@@ -22,7 +22,6 @@ import {
 import { Booking } from "@/utils/types";
 
 export type BookingState = {
-	price: number;
 	propertyId: string;
 	bookings: Booking[];
 	range: undefined | DateRange;
@@ -35,7 +34,6 @@ function DatePicker({
 }: {
 	className: string | undefined;
 	bookState: {
-		price: number;
 		propertyId: string;
 		bookings: Booking[];
 		range: undefined | DateRange;
