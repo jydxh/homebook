@@ -3,10 +3,12 @@
 import { useSearchParams } from "next/navigation";
 import React, { useCallback } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import { Separator } from "@/components/ui/separator";
 import {
 	EmbeddedCheckoutProvider,
 	EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
+import { useToast } from "@/hooks/use-toast";
 
 const stripePromise = loadStripe(
 	process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -14,6 +16,7 @@ const stripePromise = loadStripe(
 
 function CheckoutPage() {
 	const searchParams = useSearchParams();
+	const { toast } = useToast();
 	const bookingId = searchParams.get("bookingId");
 	console.log("booingID:", bookingId);
 	const fetchClientSecret = useCallback(async () => {
@@ -34,13 +37,62 @@ function CheckoutPage() {
 	}, [bookingId]);
 
 	const options = { fetchClientSecret };
-
+	const handleClick = async (
+		evt: React.MouseEvent<HTMLInputElement, MouseEvent>
+	) => {
+		const value = evt.currentTarget.value;
+		try {
+			await navigator.clipboard.writeText(value);
+			toast({ description: "copied to the clip board" });
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	return (
-		<div id="checkout">
-			<EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
-				<EmbeddedCheckout />
-			</EmbeddedCheckoutProvider>
-		</div>
+		<>
+			<div className="mx-auto text-center mt-4">
+				<h3 className="font-medium">Payment Card Information</h3>
+				<div className="mt-2 flex justify-center flex-wrap">
+					<div>
+						<label htmlFor="cardNumber">Card Number: </label>
+						<input
+							onClick={evt => handleClick(evt)}
+							id="cardNumber"
+							type="text"
+							value={"4242 4242 4242 4242"}
+							className="ps-2"
+						/>
+					</div>
+					<div>
+						<label htmlFor="MonthYear">Month/Year: </label>
+						<input
+							onClick={evt => handleClick(evt)}
+							id="MonthYear"
+							type="text"
+							value={"12/32"}
+							className="ps-2"
+						/>
+					</div>
+					<div>
+						<label htmlFor="CVC">CVC Number: </label>
+						<input
+							onClick={evt => handleClick(evt)}
+							id="CVC"
+							type="text"
+							value={"111"}
+							className="ps-2"
+						/>
+					</div>
+				</div>
+				<p className="mt-2">The rest fields can be any dummy data</p>
+			</div>
+			<Separator className="my-4" />
+			<div id="checkout" className="mx-auto mt-10">
+				<EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
+					<EmbeddedCheckout />
+				</EmbeddedCheckoutProvider>
+			</div>
+		</>
 	);
 }
 export default CheckoutPage;

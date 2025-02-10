@@ -3,8 +3,10 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 import db from "@/utils/db";
 import { formatDate } from "@/utils/formatDate";
+import { getAuthUser } from "@/utils/actions/actions";
 
 export const POST = async (req: NextRequest) => {
+	const user = await getAuthUser();
 	const origin = new Headers(req.headers).get("origin");
 	const { bookingId } = await req.json();
 	const booking = await db.order.findUnique({
@@ -38,6 +40,7 @@ export const POST = async (req: NextRequest) => {
 		const session = await stripe.checkout.sessions.create({
 			ui_mode: "embedded",
 			metadata: { bookingId: booking.id },
+			customer_email: user.emailAddresses[0].emailAddress || "exmaple@exm.com",
 			line_items: [
 				{
 					price_data: {

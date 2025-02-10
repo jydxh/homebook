@@ -17,6 +17,7 @@ import { makeReservation } from "@/utils/actions/PropertyActions";
 import Link from "next/link";
 import type { BookingState } from "./DatePicker";
 import { calculateDaysBetween } from "@/utils/calendar";
+import { SubmitButton } from "../form/Buttons";
 
 const serviceFee = 200;
 const cleaningFee = 100;
@@ -137,7 +138,7 @@ function BookingBtn({
 					</DialogClose>
 					{/* later there will be more logic about the backend and payment api */}
 					<FormContainer action={makeReservationAction}>
-						<Button type="submit">Confirm the Reservation</Button>
+						<SubmitButton text="Confirm the Reservation" />
 					</FormContainer>
 				</DialogFooter>
 			</DialogContent>
