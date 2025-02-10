@@ -17,8 +17,7 @@ import { makeReservation } from "@/utils/actions/PropertyActions";
 import Link from "next/link";
 import type { BookingState } from "./DatePicker";
 import { calculateDaysBetween } from "@/utils/calendar";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+
 const serviceFee = 200;
 const cleaningFee = 100;
 
@@ -39,9 +38,6 @@ function BookingBtn({
 	totalReview: number;
 	hasUserProfile: boolean;
 }) {
-	const { toast } = useToast();
-	const [open, setOpen] = useState(false);
-
 	const checkIn = bookState.range?.from || (new Date() as Date);
 	const checkOut = bookState.range?.to || (new Date() as Date);
 	const makeReservationAction = makeReservation.bind(
@@ -50,13 +46,7 @@ function BookingBtn({
 		{ propertyId: bookState.propertyId, checkIn, checkOut }
 	);
 	const numberOfNights = calculateDaysBetween({ checkIn, checkOut });
-	const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
-		evt.preventDefault();
-		const result = await makeReservationAction();
-		toast({ description: result.message });
-		// later will redirect to the payment page, for now just close the dialog
-		setOpen(false);
-	};
+
 	if (!hasUserProfile)
 		return (
 			<Link href="/profile/create">
@@ -64,7 +54,7 @@ function BookingBtn({
 			</Link>
 		);
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog>
 			<DialogTrigger asChild>
 				<Button
 					className="mt-4"
@@ -146,9 +136,9 @@ function BookingBtn({
 						<Button variant={"ghost"}>Cancel</Button>
 					</DialogClose>
 					{/* later there will be more logic about the backend and payment api */}
-					<form onSubmit={evt => handleSubmit(evt)}>
+					<FormContainer action={makeReservationAction}>
 						<Button type="submit">Confirm the Reservation</Button>
-					</form>
+					</FormContainer>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

@@ -427,6 +427,7 @@ export const makeReservation = async (
 	}
 ) => {
 	const { propertyId, checkIn, checkOut } = bookingData;
+	let bookingId: null | string = null;
 	try {
 		const user = await getAuthUser();
 		const property = await db.property.findUnique({
@@ -457,12 +458,14 @@ export const makeReservation = async (
 				userId: user.id,
 			},
 		});
-		const bookingId = order.id;
-		return { message: `booking the room, with the bookingId ${bookingId}` };
+		bookingId = order.id;
+
 		//later will add the payment logic
 	} catch (error) {
 		return renderError(error);
 	}
+	// redirect to the checkout front-end page
+	redirect(`/checkout?bookingId=${bookingId}`);
 };
 
 export const fetchPropertyRating = async (propertyId: string) => {
