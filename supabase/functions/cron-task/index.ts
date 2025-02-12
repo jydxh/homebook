@@ -16,10 +16,10 @@ Deno.serve(async (req) => {
   const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
 
   const { data, error } = await supabase
-    .from("orders")
+    .from("order")
     .delete()
     .match({ paymentStatus: false })
-    .lt("created_at", fifteenMinutesAgo);
+    .lt("createdAt", fifteenMinutesAgo);
 
   if (error) {
     console.error("Error deleting orders:", error);
@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
   }
 
   return new Response(
-    JSON.stringify({ message: `Deleted ${data.length} orders` }),
+    JSON.stringify({ message: `Deleted!` }),
     { headers: { "Content-Type": "application/json" } }
   );
 });
