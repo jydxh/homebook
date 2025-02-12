@@ -1,0 +1,2 @@
+name = "cron-task"
+schedule = "* * * * *"   # Every 1 minute
