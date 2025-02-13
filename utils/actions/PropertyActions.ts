@@ -20,6 +20,7 @@ import { Prisma } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { calculateTotals } from "../calculateTotals";
+import { ReceiptPoundSterling } from "lucide-react";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -460,13 +461,52 @@ export const makeReservation = async (
 		});
 		bookingId = order.id;
 
-		//later will add the payment logic
+	
 	} catch (error) {
 		return renderError(error);
 	}
 	// redirect to the checkout front-end page
 	redirect(`/checkout?bookingId=${bookingId}`);
 };
+
+export const fetchBookingList = async()=>{
+	try {
+		const user = await getAuthUser();
+
+		const bookings = await db.order.findMany({
+			where:{
+				userId: user.id
+			},
+			select:{
+				id:true,
+				checkIn: true,
+				checkOut: true,
+				totalNight:true,
+				property:{
+					select:{
+						name:true,
+						image: {
+							select:{
+								imageUrl:true,
+							}
+						}
+					}
+				}
+			},
+			orderBy:{
+				createdAt:'desc'
+			}
+		})
+	
+		return bookings;
+
+	} catch (error) {
+		console.log(error);
+		return []
+	}
+}
+
+
 
 export const fetchPropertyRating = async (propertyId: string) => {
 	try {
