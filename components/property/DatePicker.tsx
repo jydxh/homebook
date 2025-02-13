@@ -61,8 +61,10 @@ function DatePicker({
 				toast({ description: "Some dates are booked. Please select again" });
 				return true;
 			}
+
 			return false;
 		});
+
 		// only if it not include the disabled date will update the range at the state
 		if (!isDisabledDateIncluded) {
 			setBookingState(prev => {
@@ -100,6 +102,7 @@ function DatePicker({
 				<PopoverContent className="w-auto p-0 z-100" align="center">
 					<Calendar
 						initialFocus
+						min={2} // this props is to prevent user select the same date as check_in and check_out
 						mode="range"
 						selected={range}
 						onSelect={setRange}

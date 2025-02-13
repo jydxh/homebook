@@ -19,7 +19,7 @@ export const generateBlockedPeriods = ({
 		...bookings.map(booking => {
 			return {
 				from: booking.checkIn,
-				to: booking.checkOut,
+				to: new Date(booking.checkOut.getTime() - 24 * 60 * 60 * 1000),  // to make sure the check out date can be selected by other user
 			};
 		}),
 		{
@@ -37,7 +37,8 @@ export const generateDateRange = (range: DateRange | undefined): string[] => {
 	const endDate = new Date(range.to);
 	const dateRange: string[] = [];
 
-	while (currentDate <= endDate) {
+	//while (currentDate <= endDate) {
+		while (currentDate < endDate) { // not include the endDate, since we wanna the endDate can be selected by other users
 		const dateString = currentDate.toISOString().split("T")[0];
 		dateRange.push(dateString);
 		currentDate.setDate(currentDate.getDate() + 1);
@@ -64,6 +65,7 @@ export const generateDisabledDates = (
 		if (range.to < today) return;
 
 		while (currentDate <= endDate) {
+		//while (currentDate < endDate) {
 			const dateString = currentDate.toISOString().split("T")[0];
 			disabledDates[dateString] = true;
 			currentDate.setDate(currentDate.getDate() + 1);
