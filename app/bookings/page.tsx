@@ -59,8 +59,8 @@ export const BookingCard = ({
 	name: string;
 }) => {
 	return (
-		<Link href={"/bookings/${id}"}>
-			<Card className="grid sm:grid-cols-3 md:grid-cols-1">
+		<Link href={`/bookings/${id}`}>
+			<Card className="grid sm:grid-cols-3 md:grid-cols-1 hover:scale-105 duration-200">
 				<div className="h-[10rem] w-full lg:w-full lg:h-[10rem] sm:h-[9rem] md:h-[10rem] relative rounded-lg overflow-hidden sm:col-span-1 ">
 					<Image
 						src={src}

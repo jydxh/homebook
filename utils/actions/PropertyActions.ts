@@ -20,7 +20,7 @@ import { Prisma } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { calculateTotals } from "../calculateTotals";
-import { ReceiptPoundSterling } from "lucide-react";
+import * as z from "zod";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -505,6 +505,46 @@ export const fetchBookingList = async()=>{
 		return []
 	}
 }
+
+export const fetchOrderDetail = async (bookingId:string) =>{
+	const bookingIdSchema = z.string().uuid();
+
+	try {
+			const user = await getAuthUser();
+			// validate the bookingId
+		const validatedBookingId= 	validateZodSchema(bookingIdSchema,bookingId);
+		
+			const orderDetail = await db.order.findFirst({
+				where:{
+					id: validatedBookingId,
+					userId:user.id
+				},
+				select:{
+					id:true,
+					checkIn:true,
+					checkOut: true,
+					createdAt: true,
+					orderTotal:true,
+					paymentStatus:true,
+					totalNight:true,
+					property:{
+						select:{
+							address:true,
+							country:true,
+							name:true,
+							id:true,
+							image: true,
+						}
+					}
+				}
+			})
+			return orderDetail
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+
+}	
 
 
 
