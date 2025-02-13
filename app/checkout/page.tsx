@@ -9,6 +9,9 @@ import {
 	EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
 import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const stripePromise = loadStripe(
 	process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -50,42 +53,44 @@ function CheckoutPage() {
 	};
 	return (
 		<>
-			<div className="mx-auto text-center mt-4">
-				<h3 className="font-medium">Payment Card Information</h3>
-				<div className="mt-2 flex justify-center flex-wrap">
+			<Card className="mx-auto w-[300px] md:w-[600px] lg:w-[1080px] text-center mt-4 px-2 py-4 bg-slate-100 dark:bg-stone-900">
+				<h3 className="font-medium mb-2">Payment Card Information</h3>
+				<div className="mt-2 flex justify-center flex-wrap gap-x-4">
 					<div>
-						<label htmlFor="cardNumber">Card Number: </label>
-						<input
+						<Label htmlFor="cardNumber">Card Number: </Label>
+						<Input
 							onClick={evt => handleClick(evt)}
 							id="cardNumber"
 							type="text"
-							value={"4242 4242 4242 4242"}
+							defaultValue={"4242 4242 4242 4242"}
 							className="ps-2"
 						/>
 					</div>
 					<div>
-						<label htmlFor="MonthYear">Month/Year: </label>
-						<input
+						<Label htmlFor="MonthYear">Month/Year: </Label>
+						<Input
 							onClick={evt => handleClick(evt)}
 							id="MonthYear"
 							type="text"
-							value={"12/32"}
+							defaultValue={"12/32"}
 							className="ps-2"
 						/>
 					</div>
 					<div>
-						<label htmlFor="CVC">CVC Number: </label>
-						<input
+						<Label htmlFor="CVC">CVC Number: </Label>
+						<Input
 							onClick={evt => handleClick(evt)}
 							id="CVC"
 							type="text"
-							value={"111"}
+							defaultValue={"111"}
 							className="ps-2"
 						/>
 					</div>
 				</div>
-				<p className="mt-2">The rest fields can be any dummy data</p>
-			</div>
+				<p className="mt-4 font-semibold">
+					The rest fields can be any dummy data
+				</p>
+			</Card>
 			<Separator className="my-4" />
 			<div id="checkout" className="mx-auto mt-10">
 				<EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
