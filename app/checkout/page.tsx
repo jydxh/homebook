@@ -53,9 +53,9 @@ function CheckoutPage() {
 	};
 	return (
 		<>
-			<Card className="mx-auto w-[300px] md:w-[600px] lg:w-[1080px] text-center mt-4 px-2 py-4 bg-slate-100 dark:bg-stone-900">
+			<Card className="mx-auto w-[300px] sm:w-[450px] md:w-[600px] lg:w-[750px] text-center mt-4 px-2 py-4 bg-slate-100 dark:bg-stone-900">
 				<h3 className="font-medium mb-2">Payment Card Information</h3>
-				<div className="mt-2 flex justify-center flex-wrap gap-x-4">
+				<div className="mt-2 flex justify-center flex-wrap gap-x-4 gap-y-2">
 					<div>
 						<Label htmlFor="cardNumber">Card Number: </Label>
 						<Input
