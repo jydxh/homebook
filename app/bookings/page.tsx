@@ -91,7 +91,7 @@ export const BookingCard = ({
 									? "text-yellow-500 bg-yellow-300/40"
 									: ""
 							}  capitalize font-medium px-2 py-1 rounded-xl`}>
-							{orderStatus}
+							{orderStatus.toLowerCase()}
 						</span>
 					</p>
 				</div>

@@ -77,7 +77,7 @@ async function BookingDetailPage({ params }: { params: { id: string } }) {
 									? "text-yellow-600 bg-yellow-300/40"
 									: ""
 							}  font-medium capitalize px-2 py-1 rounded`}>
-							{orderStatus}
+							{orderStatus.toLowerCase()}
 						</p>
 					</div>
 				</div>
