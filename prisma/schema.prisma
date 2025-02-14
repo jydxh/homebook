@@ -143,6 +143,13 @@ model Favorite {
   updatedAt  DateTime @updatedAt
 }
 
+enum OrderStatus {
+  CHECKED
+  CANCELED
+  PENDING
+}
+
+
 model Order {
   id            String   @id @default(uuid())
   user          User     @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
@@ -156,6 +163,7 @@ model Order {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   paymentStatus Boolean  @default(false)
+  orderStatus   OrderStatus @default(PENDING)
 }
 
 model Review {

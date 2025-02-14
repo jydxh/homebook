@@ -2,7 +2,8 @@ import EmptyResult from "@/components/EmptyResult";
 import { Card } from "@/components/ui/card";
 import { fetchBookingList } from "@/utils/actions/PropertyActions";
 import { formatDate } from "@/utils/formatDate";
-import { Label } from "@radix-ui/react-label";
+import { OrderStatus } from "@prisma/client";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -20,6 +21,7 @@ async function BookingsPage() {
 		<section className="p-8 gap-x-8 gap-y-16 grid  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			{bookings.map(booking => {
 				const {
+					orderStatus,
 					id,
 					property: { image, name },
 					checkIn,
@@ -28,6 +30,7 @@ async function BookingsPage() {
 				} = booking;
 				return (
 					<BookingCard
+						orderStatus={orderStatus}
 						key={id}
 						id={id}
 						name={name}
@@ -44,6 +47,7 @@ async function BookingsPage() {
 export default BookingsPage;
 
 export const BookingCard = ({
+	orderStatus,
 	src,
 	checkIn,
 	checkOut,
@@ -51,6 +55,7 @@ export const BookingCard = ({
 	name,
 	id,
 }: {
+	orderStatus: OrderStatus;
 	id: string;
 	src: string;
 	checkIn: Date;
@@ -74,6 +79,21 @@ export const BookingCard = ({
 					<p>Check in: {formatDate({ date: checkIn })}</p>
 					<p>Check out: {formatDate({ date: checkOut })}</p>
 					<p>Total night {totalNight} nights</p>
+					<p className="flex justify-center gap-x-4 mt-2 items-center">
+						Order Status:
+						<span
+							className={`${
+								orderStatus === "CHECKED"
+									? "text-green-500 bg-green-300/50"
+									: orderStatus === "CANCELED"
+									? "text-red-500 bg-red-300/50"
+									: orderStatus === "PENDING"
+									? "text-yellow-500 bg-yellow-300/40"
+									: ""
+							}  capitalize font-medium px-2 py-1 rounded-xl`}>
+							{orderStatus}
+						</span>
+					</p>
 				</div>
 			</Card>
 		</Link>

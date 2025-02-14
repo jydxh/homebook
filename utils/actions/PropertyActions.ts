@@ -478,6 +478,7 @@ export const fetchBookingList = async()=>{
 				userId: user.id
 			},
 			select:{
+				orderStatus:true,
 				id:true,
 				checkIn: true,
 				checkOut: true,
@@ -527,6 +528,7 @@ export const fetchOrderDetail = async (bookingId:string) =>{
 					orderTotal:true,
 					paymentStatus:true,
 					totalNight:true,
+					orderStatus:true,
 					property:{
 						select:{
 							address:true,
@@ -534,6 +536,7 @@ export const fetchOrderDetail = async (bookingId:string) =>{
 							name:true,
 							id:true,
 							image: true,
+							price:true,
 						}
 					}
 				}
@@ -545,6 +548,56 @@ export const fetchOrderDetail = async (bookingId:string) =>{
 	}
 
 }	
+
+export const cancelOrder = async(orderID:string)=>{
+	const orderIDSchema = z.string().uuid();
+	try {
+		const validatedOrderId= 	validateZodSchema(orderIDSchema,orderID);
+		const user = await getAuthUser();
+		const order = await db.order.findFirst({
+			where:{
+				userId:user.id,
+				id:validatedOrderId
+			},
+			select:{
+				checkIn:true,
+				orderStatus:true,
+			}
+		})
+		if(!order){console.log('no order founded');return { message: 'No order found' }}
+		if(order.orderStatus ==='CANCELED'){
+			console.log('the order is cancelled');
+			return {message:'the order is cancelled'}
+		}
+		/* check if the date is 48 hour before the checkIN */
+		const now = new Date();
+		const checkInDate = new Date(order.checkIn);
+		now.setHours(0,0,0,0);
+		checkInDate.setHours(0,0,0,0);
+		const timeDiff = now.getTime() - checkInDate.getTime();
+		const dayDiff = Math.abs(timeDiff)  / (1000* 60*60*24);
+		if(dayDiff<2){
+			console.log('cannot cancel the order in 48 hours of checkIn');
+			return {message:'Cannot cancel the order within 48 hours of check-in'}
+		}
+	
+		await db.order.update({
+			where:{
+				userId:user.id,
+				id:validatedOrderId
+			},
+			data:{
+				orderStatus:'CANCELED'
+			},
+		})
+		redirect('/bookings');
+		
+	} catch (error) {
+		console.log(error);
+		return {message:'failed in cancel order'}
+	}
+	
+}
 
 
 
