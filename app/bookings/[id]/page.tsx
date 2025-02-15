@@ -1,7 +1,8 @@
+export const dynamic = "force-dynamic"; // Ensure the page is not statically generated
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { fetchUserProfile } from "@/utils/actions/ProfileActions";
+
 import { fetchOrderDetail } from "@/utils/actions/PropertyActions";
 import { getCountryName } from "@/utils/country";
 import { formatDate } from "@/utils/formatDate";
