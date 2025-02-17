@@ -1,10 +1,10 @@
-import AirbnbLogo from "@/public/airbnb-ar21.svg";
+import { IoHome } from "react-icons/io5";
 import Link from "next/link";
-import AirbnbVertical from "@/public/airbnb-icon.svg";
+
 function HomeLogo() {
 	return (
 		<Link href="/">
-			<AirbnbLogo />
+			<IoHome className="text-logoColor w-[3rem] h-[3rem]" />
 		</Link>
 	);
 }
@@ -14,9 +14,9 @@ export const FooterLogo = () => {
 	return (
 		<Link href="/">
 			<div className="flex items-center  justify-center flex-col gap-y-4">
-				<AirbnbVertical />
+				<IoHome className="text-logoColor w-[3rem] h-[3rem]" />
 				<span className="text-4xl text-center font-serif font-semibold text-logoColor">
-					airbnb
+					homebook
 				</span>
 			</div>
 		</Link>
