@@ -16,7 +16,17 @@ import {
 } from "react-share";
 import { toast } from "@/hooks/use-toast";
 
-const domineName = process.env.DOMINE_LOCAL || "http://localhost:3000";
+let baseUrl = "";
+if (process.env.NODE_ENV === "production") {
+	baseUrl = process.env.NEXT_PUBLIC_PRODUCTION_URL || "http://localhost:3000";
+} else {
+	baseUrl = process.env.NEXT_PUBLIC_DOMINE_LOCAL || "http://localhost:3000";
+	console.log(
+		"process.env.NEXT_PUBLIC_DOMINE_LOCAL:",
+		process.env.DOMINE_LOCAL
+	);
+}
+console.log("baseUrl: ", baseUrl);
 
 function ShareButtons({
 	title,
@@ -26,7 +36,7 @@ function ShareButtons({
 	category?: string;
 }) {
 	const pathname = usePathname();
-	const url = domineName + pathname;
+	const url = baseUrl + pathname;
 	const handleCopyLink = async () => {
 		try {
 			await navigator.clipboard.writeText(url);
