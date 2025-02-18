@@ -618,6 +618,9 @@ export const fetchVendorsReservation = async()=>{
 				totalNight:true,
 				orderTotal:true,
 				orderStatus:true,
+				user:{
+				select:	{firstName:true, lastName:true}
+				}
 			}
 		})
 		return reservations;
@@ -625,6 +628,42 @@ export const fetchVendorsReservation = async()=>{
 		console.log(error);
 		return []
 	}
+}
+
+export const checkInByVendor = async(orderId:string)=>{
+	let message = "";
+	try {
+		const now = new Date().setHours(0,0,0,0);
+		const user = await getAuthUser();
+		const checkInDate = await db.order.findFirst({
+			where:{
+				id:orderId,
+				userId:user.id
+			},
+			select:{
+				checkIn:true
+			}
+		})
+		if(now !== checkInDate?.checkIn.setHours(0,0,0,0) ){
+			return	 {message: "cannot check in before or after the check in date!"};
+		}
+		await db.order.update({
+			where:{
+				userId:user.id,
+				id:orderId
+			},
+			data:{
+				orderStatus:"CHECKED"
+			}
+		})
+		message = "Checked in the customer";
+		
+	} catch (error) {
+		console.log(error);
+		message="failed in check in customer, please try again!";
+	}
+	revalidatePath("/reservations");
+	return {message}
 }
 
 
