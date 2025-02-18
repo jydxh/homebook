@@ -85,6 +85,7 @@ async function UpdateRentalPage({ params }: { params: { id: string } }) {
 					</div>
 					{/* address Input with google map and google input search */}
 					<AddressInput
+						mode="update"
 						defaultAddress={property.address}
 						defaultLatLng={JSON.parse(property.latLng) as google.maps.LatLng}
 					/>
