@@ -546,7 +546,6 @@ export const fetchOrderDetail = async (bookingId:string) =>{
 		console.log(error);
 		return null;
 	}
-
 }	
 
 export const cancelOrder = async(orderID:string)=>{
@@ -596,9 +595,37 @@ export const cancelOrder = async(orderID:string)=>{
 		console.log(error);
 		return {message:'failed in cancel order'}
 	}
-	
 }
 
+export const fetchVendorsReservation = async()=>{
+	try {
+		const user = await getAuthUser();
+		const reservations = await db.order.findMany({
+			where:{
+				userId:user.id,
+				paymentStatus:true,
+			},
+			select:{
+				checkIn:true,
+				property:{
+					select:{
+						name:true,
+						id:true,
+						address:true,
+					}
+				},
+				id:true,
+				totalNight:true,
+				orderTotal:true,
+				orderStatus:true,
+			}
+		})
+		return reservations;
+	} catch (error) {
+		console.log(error);
+		return []
+	}
+}
 
 
 export const fetchPropertyRating = async (propertyId: string) => {
