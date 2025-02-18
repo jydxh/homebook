@@ -43,7 +43,9 @@ async function BookingDetailPage({ params }: { params: { id: string } }) {
 
 	return (
 		<section className="mt-4 mx-auto px-4">
-			<h1 className="font-semibold tracking-wide text-xl">Order Details</h1>
+			<h1 className="font-semibold tracking-wide text-xl mx-auto text-center">
+				Order Details
+			</h1>
 			<Card className="w-[300px] sm:w-[400px] md:w-[600px] mt-4 mx-auto p-2">
 				{/* order ID part */}
 				<div>
