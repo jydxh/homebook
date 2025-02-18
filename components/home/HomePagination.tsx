@@ -44,10 +44,13 @@ function HomePagination({ totalPage, currentPage, href }: paginationPropsType) {
 
 	return (
 		<Pagination className="mx-auto">
-			<PaginationContent>
+			<PaginationContent className="flex gap-0 sm:gap-1 justify-center items-center">
 				{Number(currentPage) > 1 && (
 					<PaginationItem>
-						<PaginationPrevious onClick={handlePrevPage} className="px-2" />
+						<PaginationPrevious
+							onClick={handlePrevPage}
+							className="px-2 w-[1.8rem] h-[1.8rem] sm:w-[36px] sm:h-[36px]"
+						/>
 					</PaginationItem>
 				)}
 
@@ -57,6 +60,7 @@ function HomePagination({ totalPage, currentPage, href }: paginationPropsType) {
 						return (
 							<PaginationItem key={page}>
 								<PaginationLink
+									className="w-[1.8rem] h-[1.8rem] sm:w-[36px] sm:h-[36px]"
 									href={`/${href ?? ""}?${params.toString()}`}
 									isActive={page === Number(urlPage)}>
 									{page}
@@ -67,7 +71,10 @@ function HomePagination({ totalPage, currentPage, href }: paginationPropsType) {
 
 				{Number(currentPage) < totalPage && (
 					<PaginationItem>
-						<PaginationNext onClick={handleNextPage} className="px-2" />
+						<PaginationNext
+							onClick={handleNextPage}
+							className="px-2 w-[1.8rem] h-[1.8rem] sm:w-[36px] sm:h-[36px]"
+						/>
 					</PaginationItem>
 				)}
 			</PaginationContent>
