@@ -3,6 +3,7 @@ import Link from "next/link";
 import { formatDate } from "@/utils/formatDate";
 import { OrderStatus } from "@prisma/client";
 import { Card } from "@/components/ui/card";
+import BookingStatus from "./BookingStatus";
 export const BookingCard = ({
 	orderStatus,
 	src,
@@ -38,18 +39,7 @@ export const BookingCard = ({
 					<p>Total night {totalNight} nights</p>
 					<p className="flex justify-center gap-x-4 mt-2 items-center">
 						Order Status:
-						<span
-							className={`${
-								orderStatus === "CHECKED"
-									? "text-green-500 bg-green-300/50"
-									: orderStatus === "CANCELED"
-									? "text-red-500 bg-red-300/50"
-									: orderStatus === "PENDING"
-									? "text-yellow-500 bg-yellow-300/40"
-									: ""
-							}  capitalize font-medium px-2 py-1 rounded-xl`}>
-							{orderStatus.toLowerCase()}
-						</span>
+						<BookingStatus orderStatus={orderStatus} />
 					</p>
 				</div>
 			</Card>

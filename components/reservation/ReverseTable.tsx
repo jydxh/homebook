@@ -18,6 +18,7 @@ import FormContainer from "../form/FormContainer";
 import { SubmitButton } from "../form/Buttons";
 import Link from "next/link";
 import { formatCurrency } from "@/utils/formatCurrency";
+import BookingStatus from "../booking/BookingStatus";
 
 async function ReverseTable() {
 	const reservation = await fetchVendorsReservation();
@@ -76,7 +77,9 @@ async function ReverseTable() {
 							<TableCell>{totalNight}</TableCell>
 							<TableCell>{formatCurrency(orderTotal)}</TableCell>
 							<TableCell>{formatDate({ date: checkIn })}</TableCell>
-							<TableCell>{orderStatus}</TableCell>
+							<TableCell>
+								<BookingStatus orderStatus={orderStatus} />
+							</TableCell>
 
 							<TableCell>
 								<FormContainer action={checkInAction}>
