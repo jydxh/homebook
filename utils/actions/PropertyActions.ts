@@ -669,6 +669,9 @@ export const fetchVendorsReservation = async({page,searchName}:{page:string|unde
 	}
 }
 
+
+
+
 export const checkInByVendor = async(orderId:string)=>{
 	let message = "";
 	try {
@@ -1068,3 +1071,49 @@ export const updateRentalImage = async (
 		return renderError(error);
 	}
 };
+
+export const fetchLastSixMonthEarning = async()=>{
+	try {
+
+		const user = await getAuthUser();
+		const today = new Date(new Date().setHours(0,0,0,0));
+		const sixMonthsAgo = new Date();
+		sixMonthsAgo.setMonth(sixMonthsAgo.getMonth()-6);
+
+		const earnings = await db.order.groupBy({
+			by:['checkIn'],
+		_sum:{
+			orderTotal:true,
+		},
+		where:{
+			property:{
+				userId:user.id
+			},
+			checkIn:{
+				gte:sixMonthsAgo,
+				lt: today,
+			},
+			paymentStatus:true
+		},
+		orderBy:{
+			checkIn:'asc'
+		}
+		})
+		console.log(earnings);
+		type EarningsByMonth = {
+			[key:string]:number;
+		}
+ // Format the earnings data by month
+ const earningsByMonth = earnings.reduce((acc: EarningsByMonth, curr) => {
+	const month = new Date(curr.checkIn).toLocaleString('default', { month: 'long' });
+	acc[month] = (acc[month] || 0) + (curr._sum.orderTotal ||0);
+	return acc;
+}, {} as EarningsByMonth);
+
+console.log(earningsByMonth);
+return earningsByMonth;
+	} catch (	error) {
+		console.log(error);
+		return {}
+	}
+}
