@@ -597,13 +597,36 @@ export const cancelOrder = async(orderID:string)=>{
 	}
 }
 
-export const fetchVendorsReservation = async()=>{
+export const fetchVendorsReservation = async({page,searchName}:{page:string|undefined; searchName:string|undefined})=>{
+	const take = 10;
+	if(page!==undefined &&  !Number(page)){
+		console.error('page has to be numeric string!');
+		return {reservations:[],totalCount:0}
+	}
+	const pageNumber= Number(page) ||1;
+	const skip = (pageNumber-1)*take;
+	
 	try {
 		const user = await getAuthUser();
 		const reservations = await db.order.findMany({
+			take,
+			skip,
+			orderBy:{
+				createdAt:'desc',
+			},
 			where:{
-				userId:user.id,
+				property:{
+					userId:user.id
+				},
 				paymentStatus:true,
+				...(searchName && {
+					user:{
+					OR:[
+						{firstName: {contains:searchName, mode:'insensitive'}},
+						{lastName: {contains:searchName, mode:'insensitive'}}
+					]
+				}
+				})
 			},
 			select:{
 				checkIn:true,
@@ -623,10 +646,26 @@ export const fetchVendorsReservation = async()=>{
 				}
 			}
 		})
-		return reservations;
+		const totalCount = await db.order.count({
+			where:{
+				property:{
+					userId:user.id
+				},
+				paymentStatus:true,
+				...(searchName && {
+					user:{
+					OR:[
+						{firstName: {contains:searchName, mode:'insensitive'}},
+						{lastName: {contains:searchName, mode:'insensitive'}}
+					]
+				}
+				})
+			},
+		})
+		return {reservations, totalCount};
 	} catch (error) {
 		console.log(error);
-		return []
+		return{reservations:[], totalCount:0}
 	}
 }
 

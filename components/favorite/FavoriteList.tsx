@@ -16,7 +16,7 @@ async function FavoriteList() {
 	const properties = await fetchFavProperties(); // get the fav properties details
 
 	const user = await currentUser();
-	console.log("user from favList:", user);
+
 	const hasUserProfile = await hasProfile(user?.id);
 
 	console.log("properties:", properties);

@@ -10,7 +10,7 @@ async function FavoritesPage() {
 	return (
 		<>
 			<h2 className="w-full mx-auto mt-8 text-center font-semibold text-xl">
-				My Favourite property Lists
+				My Favorite property Lists
 			</h2>
 			<Separator className="mt-8" />
 			<Suspense fallback={<PropertyListFallBack />}>
