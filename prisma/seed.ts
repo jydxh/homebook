@@ -228,6 +228,21 @@ async function createProperties() {
 	}
 }
 
+// async function createOrders() {
+	
+// 	 await db.order.create({
+// 		data: {
+// 			checkIn: ,
+// 			checkOut:,
+// 			orderTotal:400,
+// 			totalNight: 2,
+// 			propertyId:,
+// 			userId: user.id,
+// 		},
+// 	});
+// }
+
+
 async function main() {
 	await createUsers();
 	await createCategories();

@@ -5,7 +5,6 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -15,11 +14,12 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchLastSixMonthEarning } from "@/utils/actions/PropertyActions";
+import { formatDate } from "@/utils/formatDate";
 
 function ReverseCharts() {
-	const chartData = [
+	const defaultChartData = [
 		{ month: "January", totalEarning: 186 },
 		{ month: "February", totalEarning: 305 },
 		{ month: "March", totalEarning: 237 },
@@ -27,9 +27,50 @@ function ReverseCharts() {
 		{ month: "May", totalEarning: 209 },
 		{ month: "June", totalEarning: 214 },
 	];
+	const lengthOfData = 6;
+	const [chartData, setChartData] = useState<
+		{
+			month: string;
+			totalEarning: number;
+		}[]
+	>();
 
 	useEffect(() => {
-		const fetchData = async () => await fetchLastSixMonthEarning();
+		const fetchData = async () => {
+			const result = await fetchLastSixMonthEarning();
+			//console.log(result);
+
+			if (result.length < lengthOfData) {
+				const now = new Date();
+				// if the fetchedData's length less than the lengthOfData, it means there is no income for certain month, so we need to feed that data like totalEarning = 0
+				for (let i = 0; i < lengthOfData; i++) {
+					const passedMonth = new Date();
+					passedMonth.setMonth(now.getMonth() - lengthOfData + i);
+					const passedMonthLiteral = formatDate({
+						date: passedMonth,
+						withoutDay: true,
+					});
+					let monthExistsInDataArray = false;
+					result.forEach(row => {
+						if (row.month === passedMonthLiteral) monthExistsInDataArray = true;
+					});
+					if (monthExistsInDataArray) {
+						continue;
+					} else {
+						result.push({
+							month: passedMonthLiteral,
+							totalEarning: 0,
+							timeStamp: passedMonth.getTime(),
+						});
+					}
+				}
+			}
+			const formattedData = result.sort((a, b) => {
+				return a.timeStamp - b.timeStamp;
+			});
+			//	console.log(formattedData);
+			setChartData(formattedData);
+		};
 		fetchData();
 	}, []);
 
@@ -39,22 +80,19 @@ function ReverseCharts() {
 			color: "hsl(var(--chart-1))",
 		},
 	} satisfies ChartConfig;
+
 	const currentDate = new Date();
 	const sixMonthsAgo = new Date();
-	const lastMonthAgo = new Date();
-	lastMonthAgo.setMonth(currentDate.getMonth() - 1);
-	sixMonthsAgo.setMonth(currentDate.getMonth() - 6);
-	console.log(sixMonthsAgo.getMonth());
 
-	const lastMonthAgoMonth = lastMonthAgo.toLocaleString("default", {
+	sixMonthsAgo.setMonth(currentDate.getMonth() - 5);
+
+	const currentDateMonth = currentDate.toLocaleString("default", {
 		month: "long",
 	});
 	const sixMonthsAgoMonth = sixMonthsAgo.toLocaleString("default", {
 		month: "long",
 	});
 	const thisYear = new Date().getFullYear();
-	console.log(lastMonthAgoMonth);
-	console.log(sixMonthsAgoMonth);
 
 	return (
 		<Card className="max-w-[720px] mx-auto my-10">
@@ -63,7 +101,7 @@ function ReverseCharts() {
 				<CardDescription>
 					{sixMonthsAgoMonth}{" "}
 					{sixMonthsAgo.getMonth() > 5 ? thisYear - 1 : thisYear} -{" "}
-					{lastMonthAgoMonth} {thisYear}
+					{currentDateMonth} {thisYear}
 				</CardDescription>
 			</CardHeader>
 			<CardContent>

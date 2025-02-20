@@ -15,12 +15,15 @@ function ReservationsPage({
 	return (
 		<section>
 			<h1 className="text-2xl font-semibold my-4 mx-auto text-center">
-				Reservation and Statistics of all your properties
+				All your Properties Reservation
 			</h1>
 			<ReserveSearch />
-			<Suspense fallback={<ReverseChartsFallBack />}>
-				<ReverseCharts />
-			</Suspense>
+			{(page === "1" || page === undefined) && (
+				<Suspense fallback={<ReverseChartsFallBack />}>
+					<ReverseCharts />
+				</Suspense>
+			)}
+
 			<Suspense fallback={<ReverseTableFallBack />}>
 				<ReverseTable searchName={searchName} page={page} />
 			</Suspense>

@@ -21,6 +21,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { calculateTotals } from "../calculateTotals";
 import * as z from "zod";
+import { formatDate } from "../formatDate";
+import { timeStamp } from "console";
 
 export const getVendorUser = async (clerkId: string) => {
 	const isVendor = await db.user.findFirst({
@@ -1071,10 +1073,16 @@ export const updateRentalImage = async (
 		return renderError(error);
 	}
 };
+export 	type EarningsByMonth = 
+{	month:string;
+	totalEarning:number;
+	timeStamp:number;
+}
+
+
 
 export const fetchLastSixMonthEarning = async()=>{
 	try {
-
 		const user = await getAuthUser();
 		const today = new Date(new Date().setHours(0,0,0,0));
 		const sixMonthsAgo = new Date();
@@ -1100,20 +1108,29 @@ export const fetchLastSixMonthEarning = async()=>{
 		}
 		})
 		console.log(earnings);
-		type EarningsByMonth = {
-			[key:string]:number;
-		}
+
+
  // Format the earnings data by month
- const earningsByMonth = earnings.reduce((acc: EarningsByMonth, curr) => {
-	const month = new Date(curr.checkIn).toLocaleString('default', { month: 'long' });
-	acc[month] = (acc[month] || 0) + (curr._sum.orderTotal ||0);
+ const earningsByMonth = earnings.reduce((acc: EarningsByMonth[], curr) => {
+	const date = new Date(curr.checkIn);
+	const month = formatDate({date,withoutDay:true}) 
+	const existingEntry = acc.find(entry => entry.month === month);
+	if(existingEntry){
+		existingEntry.totalEarning += curr._sum.orderTotal || 0;
+	}else{
+		acc.push({
+			month,
+			totalEarning: curr._sum.orderTotal || 0,
+			timeStamp: date.getTime(),
+		})
+	}
 	return acc;
-}, {} as EarningsByMonth);
+}, [] as EarningsByMonth[]);
 
 console.log(earningsByMonth);
 return earningsByMonth;
 	} catch (	error) {
 		console.log(error);
-		return {}
+		return []
 	}
 }
