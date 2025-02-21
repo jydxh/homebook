@@ -17,6 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { fetchLastSixMonthEarning } from "@/utils/actions/PropertyActions";
 import { formatDate } from "@/utils/formatDate";
+import { Skeleton } from "../ui/skeleton";
 
 function ReverseCharts() {
 	const defaultChartData = [
@@ -34,9 +35,11 @@ function ReverseCharts() {
 			totalEarning: number;
 		}[]
 	>();
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
+			setIsLoading(true);
 			const result = await fetchLastSixMonthEarning();
 			//console.log(result);
 
@@ -69,6 +72,7 @@ function ReverseCharts() {
 				return a.timeStamp - b.timeStamp;
 			});
 			//	console.log(formattedData);
+			setIsLoading(false);
 			setChartData(formattedData);
 		};
 		fetchData();
@@ -106,36 +110,40 @@ function ReverseCharts() {
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
-					<BarChart
-						accessibilityLayer
-						data={chartData}
-						margin={{
-							top: 20,
-						}}>
-						<CartesianGrid vertical={false} />
-						<XAxis
-							dataKey="month"
-							tickLine={false}
-							tickMargin={10}
-							axisLine={false}
-							tickFormatter={value => value.slice(0, 3)}
-						/>
-						<ChartTooltip
-							cursor={false}
-							content={<ChartTooltipContent hideLabel />}
-						/>
-						<Bar
-							dataKey="totalEarning"
-							fill="var(--color-totalEarning)"
-							radius={8}>
-							<LabelList
-								position="top"
-								offset={12}
-								className="fill-foreground"
-								fontSize={12}
+					{isLoading ? (
+						<Skeleton className="w-full h-[24rem]" />
+					) : (
+						<BarChart
+							accessibilityLayer
+							data={chartData}
+							margin={{
+								top: 20,
+							}}>
+							<CartesianGrid vertical={false} />
+							<XAxis
+								dataKey="month"
+								tickLine={false}
+								tickMargin={10}
+								axisLine={false}
+								tickFormatter={value => value.slice(0, 3)}
 							/>
-						</Bar>
-					</BarChart>
+							<ChartTooltip
+								cursor={false}
+								content={<ChartTooltipContent hideLabel />}
+							/>
+							<Bar
+								dataKey="totalEarning"
+								fill="var(--color-totalEarning)"
+								radius={8}>
+								<LabelList
+									position="top"
+									offset={12}
+									className="fill-foreground"
+									fontSize={12}
+								/>
+							</Bar>
+						</BarChart>
+					)}
 				</ChartContainer>
 			</CardContent>
 		</Card>
