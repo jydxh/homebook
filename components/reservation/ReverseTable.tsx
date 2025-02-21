@@ -47,7 +47,7 @@ async function ReverseTable({
 
 	return (
 		<>
-			<Table>
+			<Table className="px-2 mx-auto">
 				<TableCaption>
 					A list of the reservation of your properties
 				</TableCaption>
