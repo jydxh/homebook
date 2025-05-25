@@ -11,8 +11,9 @@ export const GET = async(request: NextRequest)=>{
     search:searchParams.get('search') || undefined,
     price:searchParams.get('price') || undefined,
     rating:searchParams.get('rating') || undefined,
+    page:searchParams.get('page') || undefined,
   }
-   // console.log(params);
+  console.log(params);
 
   const products = await fetchProperties({searchParams: params});
 
