@@ -16,7 +16,7 @@ try {
 			},
 		});
 		const result=  userFavList.map(list => list.propertyId);
-    return NextResponse.json({data:result})
+    return NextResponse.json({data:result},{status:200})
 } catch (error) {
   console.log(error);
 } 
