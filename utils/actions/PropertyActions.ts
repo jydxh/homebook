@@ -335,7 +335,9 @@ export const fetchPropertyById = async (id: string) => {
 				orders: true,
 			},
 		});
+		
 		return property;
+		
 	} catch (error) {
 		console.log(error);
 		return null;
