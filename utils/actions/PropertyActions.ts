@@ -333,7 +333,7 @@ export const fetchPropertyById = async (id: string) => {
 					{
 						comment:true,id:true, rating:true,createAt:true,propertyId:true,
 							user:{select: {city:true,country:true,firstName:true,profileImage:true,}}
-					}
+					}, orderBy:{createAt:'desc'},
 				},
 				user: true,
 				amenities: true,

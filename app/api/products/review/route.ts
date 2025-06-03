@@ -16,11 +16,12 @@ export const POST = async (request: NextRequest)=>{
   if(!body.comment || !body.productId ||!body.rating) return  NextResponse.json({msg:'please provide valid params'},{status:400})
   console.log(body);
   const {comment,productId,rating} = body;
-  const madeReview = await findExistingReview(userId,  productId|| "N/A");
-    if (madeReview) {
-      throw Error("this user cannot make review!");
-    }
-  const validatedFields = validateZodSchema(reviewZodSchema, body);
+  // const madeReview = await findExistingReview(userId,  productId|| "N/A");
+  //   if (madeReview) {
+  //     throw Error("this user cannot make review!");
+  //   }
+
+  const validatedFields = validateZodSchema(reviewZodSchema, {rating,comment, propertyId:productId});
   const commentSanitized = sanitizeHtml(validatedFields.comment);
 
 
@@ -33,7 +34,7 @@ export const POST = async (request: NextRequest)=>{
 		});
   return NextResponse.json({msg:'created the review'},{status:200})
   } catch (error) { 
-    
+    console.log(error);
     return NextResponse.json({msg:'internal error'},{status:500})
   }
 }
