@@ -329,7 +329,12 @@ export const fetchPropertyById = async (id: string) => {
 			},
 			include: {
 				image: { select: { imageUrl: true, id: true } },
-				reviews: true,
+				reviews: {select:
+					{
+						comment:true,id:true, rating:true,createAt:true,propertyId:true,
+							user:{select: {city:true,country:true,firstName:true,profileImage:true,}}
+					}
+				},
 				user: true,
 				amenities: true,
 				orders: true,
