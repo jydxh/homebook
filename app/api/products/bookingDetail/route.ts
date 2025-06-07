@@ -49,3 +49,59 @@ export const GET = async (request: NextRequest) => {
 		return NextResponse.json({ msg: "internal error" }, { status: 500 });
 	}
 };
+
+export const POST = async (request: NextRequest) => {
+	const orderIDSchema = z.string().uuid();
+	const { userId } = getAuth(request);
+	if (!userId)
+		return NextResponse.json({ msg: "Unauthorized" }, { status: 401 });
+	const body = await request.json();
+	console.log("body:", body);
+	try {
+		const validatedOrderId = validateZodSchema(orderIDSchema, body.orderId);
+
+		const order = await db.order.findFirst({
+			where: {
+				userId,
+				id: validatedOrderId,
+			},
+			select: {
+				checkIn: true,
+				orderStatus: true,
+			},
+		});
+		if (!order) {
+			console.log("no order founded");
+			throw new Error("no order found");
+		}
+		if (order.orderStatus === "CANCELED") {
+			console.log("the order is cancelled");
+			throw new Error("the order is cancelled");
+		}
+		/* check if the date is 48 hour before the checkIN */
+		const now = new Date();
+		const checkInDate = new Date(order.checkIn);
+		now.setHours(0, 0, 0, 0);
+		checkInDate.setHours(0, 0, 0, 0);
+		const timeDiff = now.getTime() - checkInDate.getTime();
+		const dayDiff = Math.abs(timeDiff) / (1000 * 60 * 60 * 24);
+		if (dayDiff < 2) {
+			console.log("cannot cancel the order in 48 hours of checkIn");
+			throw new Error("Cannot cancel the order within 48 hours of check-in");
+		}
+
+		await db.order.update({
+			where: {
+				userId,
+				id: validatedOrderId,
+			},
+			data: {
+				orderStatus: "CANCELED",
+			},
+		});
+		return NextResponse.json({ msg: "success" }, { status: 200 });
+	} catch (error) {
+		console.log(error);
+		return NextResponse.json({ msg: "internal server error" }, { status: 500 });
+	}
+};
