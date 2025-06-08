@@ -30,9 +30,16 @@ export const POST = async (request: NextRequest) => {
 				profileImage: imageUrl,
 			},
 		});
+
 		return NextResponse.json({ imageUrl }, { status: 200 });
 	} catch (error) {
 		console.log(error);
 		return NextResponse.json({ msg: "internal server error" }, { status: 500 });
 	}
+};
+
+export const config = {
+	api: {
+		bodyParser: false,
+	},
 };
